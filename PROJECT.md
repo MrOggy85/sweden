@@ -119,7 +119,23 @@ What is **not** built yet, and would be the first thing to add under real traffi
 - Per-profile daily write caps (`['rate', userId, dayNum]` as a summed `KvU64`).
 - Per-IP profile-creation caps (`['mint', ipHash, hourNum]`). Note that
   `x-forwarded-for` is client-controlled, so this only raises the cost of casual abuse.
-  If an IP is ever persisted it must be salted and hashed — these are children's IPs.
+
+## What is logged
+
+`api/server.ts` writes one structured line per request containing method, path, status,
+duration, user agent, **the raw client IP**, and the active `userId`. Nothing is written to
+KV; this is stdout, so on Deno Deploy it lives in Deploy's log retention.
+
+This is a deliberate decision, not an oversight. It matches ordinary access-log practice
+and is the main tool for debugging a specific session or spotting abuse from one network.
+The cost is worth stating plainly: an IP alone is transient and a `userId` alone is
+pseudonymous, but the pair links a home network to a named child profile for as long as
+logs are kept. If that ever becomes unacceptable, log `SHA-256(ip + IP_SALT)` truncated
+instead — that keeps "these requests came from one network" while dropping the network
+identity.
+
+The device cookie is **never** logged. It is a bearer credential; `userId` is logged in its
+place, which is what makes the logs useful without making them a way in.
 
 **Moderation is deliberately out of scope**, with a trigger condition: the nickname is the
 only free text, and it is shown only to the child who typed it. If a leaderboard, shared
