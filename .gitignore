@@ -1,6 +1,8 @@
 node_modules/
 api/client/
 api/.data/
+api/db/content.generated.ts
 client/dist/
+client/src/data/pages.generated.ts
 .DS_Store
 *.log

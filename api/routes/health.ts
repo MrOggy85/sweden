@@ -6,8 +6,8 @@ import { jsonResponse } from '../db/validate.ts';
  * Does a real KV read, so this proves the KV binding works inside a Deploy isolate.
  * Check this first after any deploy, before trusting anything built on top of KV.
  *
- * pageIds is the server's allowlist size — it makes drift against the client's copy of
- * PAGE_IDS visible without digging through 400s.
+ * pageIds is the server's allowlist size, generated from content/*.md — a quick sanity
+ * check that content/ made it into this deploy.
  */
 export async function getHealth(): Promise<Response> {
   let ok = true;
