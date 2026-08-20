@@ -1,0 +1,26 @@
+.avatar {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.avatar path,
+.avatar ellipse,
+.avatar circle {
+  fill: currentColor;
+  stroke: #1c1c1c;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Antlers, whiskers and hair: stroke only, no fill. */
+.avatar .line {
+  fill: none;
+  stroke-width: 2px;
+}
+
+.avatar .eye {
+  fill: #1c1c1c;
+  stroke: none;
+}

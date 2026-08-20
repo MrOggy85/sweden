@@ -1,0 +1,126 @@
+.setup {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 2.6rem;
+  color: #005293;
+}
+
+.lead {
+  margin: 0 0 0.75rem;
+  color: #4a4a4a;
+}
+
+.preview {
+  align-self: center;
+  padding: 0.75rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  margin-bottom: 0.75rem;
+}
+
+.label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6a6a6a;
+  margin-top: 0.75rem;
+}
+
+.input {
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 0 #1c1c1c22;
+}
+
+.input:focus {
+  outline: 3px solid #fecc00;
+  outline-offset: 1px;
+}
+
+.animals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 0.5rem;
+}
+
+.animal {
+  display: grid;
+  place-items: center;
+  min-height: 60px;
+  padding: 0.4rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1c1c1c22;
+}
+
+.animalOn {
+  background: #fff3d6;
+  box-shadow: 0 0 0 3px #fecc00;
+}
+
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.color {
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #1c1c1c22;
+}
+
+.colorOn {
+  box-shadow: 0 0 0 3px #1c1c1c;
+}
+
+.error {
+  color: #d1495b;
+  font-weight: 600;
+  margin: 0.5rem 0 0;
+}
+
+.go {
+  margin-top: 1.5rem;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.85rem 1rem;
+  background: #fecc00;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #1c1c1c;
+}
+
+.go:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #1c1c1c;
+}
+
+.go:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+  box-shadow: 0 4px 0 #1c1c1c22;
+}

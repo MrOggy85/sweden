@@ -1,0 +1,45 @@
+.history {
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+}
+
+.heading {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6a6a6a;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #1c1c1c14;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  flex: 1;
+  font-weight: 600;
+}
+
+.when {
+  font-size: 0.8rem;
+  color: #8a8a8a;
+}

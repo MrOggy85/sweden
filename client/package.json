@@ -1,0 +1,21 @@
+{
+  "name": "sweden-client",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "deno run --allow-env --allow-read --allow-ffi=./node_modules --allow-run --allow-sys=uid --allow-write=../api/client build.ts",
+    "check": "tsc --noEmit",
+    "dev": "./dev.sh"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "esbuild": "0.20.2",
+    "esbuild-css-modules-plugin": "^3.1.2",
+    "typescript": "^5.8.0"
+  }
+}
