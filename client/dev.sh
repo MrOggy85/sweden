@@ -7,7 +7,7 @@ deno run \
   --allow-env \
   --allow-read \
   --allow-write=../api/client \
-  --allow-ffi=$DIR/node_modules \
+  --allow-ffi="$DIR"/node_modules \
   --allow-run \
-  --allow-sys=uid \
+  --allow-sys \
   build-watch.ts

@@ -8,13 +8,17 @@ const PORT = Deno.env.get('PORT') || '8777';
 function startClientWatcher() {
   const cmd = new Deno.Command(Deno.execPath(), {
     cwd: '../client',
+    // Permissions must match client/package.json's build script. --allow-sys cannot be
+    // narrowed to uid: esbuild-css-modules-plugin pulls in lightningcss -> detect-libc,
+    // which reads os.cpus(). A narrower grant kills the watcher on startup while the
+    // server keeps happily serving the previous bundle.
     args: [
       'run',
       '--allow-env',
-      '--allow-read=.',
+      '--allow-read',
       '--allow-ffi=./node_modules',
       '--allow-run',
-      '--allow-sys=uid',
+      '--allow-sys',
       '--allow-write=../api/client',
       'build-watch.ts',
     ],

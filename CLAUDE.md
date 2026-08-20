@@ -63,3 +63,10 @@ No other wiring is needed: `PageGrid` renders whatever is in `PAGES`.
 - Cache identity or sessions in module scope, for the same reason.
 - Write a plain number to a key that `sum` mutates — those values must stay `Deno.KvU64`
   or every later `sum` on that key throws.
+- Combine an unscoped `--allow-read` with a scoped `--allow-write` in a task that opens
+  KV. `Deno.openKv` then fails with `NotCapable: Requires write access` no matter how the
+  write path is spelled. Either scope both (see the `start` task) or use `-A` (see `dev`).
+- Narrow the client watcher's `--allow-sys` in `api/main.ts`. `esbuild-css-modules-plugin`
+  reaches `os.cpus()` via lightningcss/detect-libc, and a narrower grant kills the watcher
+  on startup **silently** — the server keeps serving the previously built bundle, so the
+  only symptom is a `client watcher exited` log line.
