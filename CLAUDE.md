@@ -12,14 +12,18 @@ and why the data model looks the way it does. Read it before adding features.
   built client from a single origin on one port.
 - `client/` — React 18 frontend, bundled by esbuild driven from Deno. Build output goes to
   `api/client/` (gitignored).
+- `content/` — one Markdown file per topic (YAML-ish frontmatter + a bullet list of
+  facts). `scripts/generate-content.ts` compiles it into `PAGE_IDS`/`PAGES`; see
+  "Adding a topic page" below.
 
 ```sh
-make install    # npm install for the client (the api needs nothing)
-make dev        # :8777 — also spawns the esbuild watcher as a child process
-make check      # deno check + tsc --noEmit
+make install           # npm install for the client (the api needs nothing)
+make generate-content  # content/*.md -> PAGE_IDS / PAGES (also run by dev/build/check)
+make dev               # :8777 — also spawns the esbuild watcher as a child process
+make check             # deno check + tsc --noEmit
 make fmt
-make build      # production bundle into api/client/
-make deploy     # build, then deployctl to Deno Deploy
+make build             # production bundle into api/client/
+make deploy            # build, then deployctl to Deno Deploy
 ```
 
 ## Conventions
@@ -44,17 +48,23 @@ make deploy     # build, then deployctl to Deno Deploy
 
 1. **Types are hand-duplicated.** `api/db/types.ts` and `client/src/data/types.ts` mirror
    each other, and nothing enforces it. Edit both together.
-2. **So are the allowlists.** `PAGE_IDS`, `ANIMAL_IDS` and `COLOR_IDS` exist in
-   `api/db/content.ts` and again in `client/src/data/pages.ts`. `GET /api/health` reports
-   the server's page count so drift is visible.
+2. **`ANIMAL_IDS` and `COLOR_IDS` are hand-duplicated** between `api/db/content.ts` and
+   `client/src/data/pages.ts` — edit both together. `PAGE_IDS`/`PAGES` used to be a third
+   copy of this problem; they are now both generated from `content/*.md` by
+   `scripts/generate-content.ts`, so they cannot drift from each other.
 
 ## Adding a topic page
 
-1. Add an entry to `PAGES` in `client/src/data/pages.ts` (id, title, emoji, blurb, facts).
-2. Add the same id to `PAGE_IDS` in `api/db/content.ts` — otherwise `POST /api/visits`
-   rejects it with `400 unknown pageId` and the visit is never recorded.
+1. Create `content/<id>.md`: frontmatter with `id`, `order` (an integer — controls grid
+   position, leave gaps between topics so you can insert later), `title`, `emoji`, `blurb`,
+   then a Markdown bullet list of facts in the body. `id` must match the filename stem.
+2. Run `make generate-content` — or just `make dev` / `make build` / `make check`, which
+   depend on it. This writes `api/db/content.generated.ts` and
+   `client/src/data/pages.generated.ts` (both gitignored).
 
-No other wiring is needed: `PageGrid` renders whatever is in `PAGES`.
+No other wiring is needed: `PageGrid` renders whatever ends up in `PAGES`, and an unknown
+`pageId` is rejected by `POST /api/visits` automatically since both come from the same
+`content/` source.
 
 ## Do not
 
