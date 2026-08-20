@@ -9,20 +9,25 @@
 //  - Per-page count and last-seen are SIBLING keys ('c' / 't') rather than one object,
 //    because Deno.KvU64 cannot be nested inside a value. A single prefix scan over
 //    ['pageStat', userId] still returns both for every page.
+//  - APP is the FIRST part of every key. Deno Deploy KV is shared across this account's
+//    projects, so this is what keeps `sweden`'s data from colliding with another
+//    project's keys of the same shape. Never construct a key without going through `k`.
+
+const APP = 'sweden';
 
 export const k = {
-  user: (userId: string): Deno.KvKey => ['user', userId],
-  device: (deviceId: string): Deno.KvKey => ['device', deviceId],
+  user: (userId: string): Deno.KvKey => [APP, 'user', userId],
+  device: (deviceId: string): Deno.KvKey => [APP, 'device', deviceId],
 
-  visit: (userId: string, at: number, seq: string): Deno.KvKey => ['visit', userId, at, seq],
-  visitsPrefix: (userId: string): Deno.KvKey => ['visit', userId],
+  visit: (userId: string, at: number, seq: string): Deno.KvKey => [APP, 'visit', userId, at, seq],
+  visitsPrefix: (userId: string): Deno.KvKey => [APP, 'visit', userId],
 
-  pageCount: (userId: string, pageId: string): Deno.KvKey => ['pageStat', userId, pageId, 'c'],
-  pageLastAt: (userId: string, pageId: string): Deno.KvKey => ['pageStat', userId, pageId, 't'],
-  pageStatPrefix: (userId: string): Deno.KvKey => ['pageStat', userId],
+  pageCount: (userId: string, pageId: string): Deno.KvKey => [APP, 'pageStat', userId, pageId, 'c'],
+  pageLastAt: (userId: string, pageId: string): Deno.KvKey => [APP, 'pageStat', userId, pageId, 't'],
+  pageStatPrefix: (userId: string): Deno.KvKey => [APP, 'pageStat', userId],
 
-  userTotal: (userId: string): Deno.KvKey => ['userTotal', userId],
-  pageTotal: (pageId: string): Deno.KvKey => ['pageTotal', pageId],
+  userTotal: (userId: string): Deno.KvKey => [APP, 'userTotal', userId],
+  pageTotal: (pageId: string): Deno.KvKey => [APP, 'pageTotal', pageId],
 
-  health: (): Deno.KvKey => ['health'],
+  health: (): Deno.KvKey => [APP, 'health'],
 } as const;
