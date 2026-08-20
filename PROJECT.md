@@ -47,15 +47,19 @@ be request-triggered.
 Deno KV, chosen because it is built into Deno Deploy with nothing to provision. Local
 development uses a SQLite file at `api/.data/kv.sqlite3` via `KV_PATH`.
 
+Every key starts with the `'sweden'` app prefix (see `api/db/keys.ts`), because Deno
+Deploy KV is shared across this account's other projects and nothing else keeps their
+key spaces apart.
+
 | Key | Value | Purpose |
 | --- | --- | --- |
-| `['user', userId]` | `User` | nickname + avatar |
-| `['device', deviceId]` | `Device` | which profiles are on this device, and which is active |
-| `['visit', userId, at, seq]` | `Visit` | append-only log, expires after 180 days |
-| `['pageStat', userId, pageId, 'c']` | `Deno.KvU64` | per-page count |
-| `['pageStat', userId, pageId, 't']` | `number` | per-page last seen |
-| `['userTotal', userId]` | `Deno.KvU64` | total interactions |
-| `['pageTotal', pageId]` | `Deno.KvU64` | global popularity across all users |
+| `['sweden', 'user', userId]` | `User` | nickname + avatar |
+| `['sweden', 'device', deviceId]` | `Device` | which profiles are on this device, and which is active |
+| `['sweden', 'visit', userId, at, seq]` | `Visit` | append-only log, expires after 180 days |
+| `['sweden', 'pageStat', userId, pageId, 'c']` | `Deno.KvU64` | per-page count |
+| `['sweden', 'pageStat', userId, pageId, 't']` | `number` | per-page last seen |
+| `['sweden', 'userTotal', userId]` | `Deno.KvU64` | total interactions |
+| `['sweden', 'pageTotal', pageId]` | `Deno.KvU64` | global popularity across all users |
 
 Three decisions worth not undoing:
 

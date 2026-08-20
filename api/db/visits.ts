@@ -63,8 +63,8 @@ export async function listPageProgress(userId: string): Promise<{ pages: PagePro
   const lastAt = new Map<string, number>();
 
   for await (const entry of kv.list({ prefix: k.pageStatPrefix(userId) })) {
-    const pageId = entry.key[2];
-    const field = entry.key[3];
+    const pageId = entry.key[3];
+    const field = entry.key[4];
     if (typeof pageId !== 'string') continue;
 
     if (field === 'c') {

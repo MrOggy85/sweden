@@ -1,4 +1,5 @@
 import kv from '../db/kv.ts';
+import { k } from '../db/keys.ts';
 import { PAGE_IDS } from '../db/content.ts';
 import { jsonResponse } from '../db/validate.ts';
 
@@ -12,7 +13,7 @@ import { jsonResponse } from '../db/validate.ts';
 export async function getHealth(): Promise<Response> {
   let ok = true;
   try {
-    await kv.get(['health']);
+    await kv.get(k.health());
   } catch {
     ok = false;
   }
