@@ -95,10 +95,43 @@ Consequences, accepted:
 - No real names, ages, photos, or avatar uploads. Avatars are an allowlisted set of
   inline SVG shapes; there is nothing to moderate and nothing to leak.
 - No multiplayer, no shared live state, no SSE.
-- No sound.
 - No offline/PWA support.
 - No cross-device sync.
 - No test framework. `deno check` and `tsc --noEmit` are the only automated gates.
+
+## Sound
+
+Not built yet, but decided: sound is not generated at request time, and browser
+`speechSynthesis` is not the primary vehicle for canonical Swedish pronunciation. Voice
+availability and quality vary too much across iPad/iPhone/macOS/Windows/Android for
+something meant to sound the same every time a child hears it.
+
+Canonical Swedish speech, and any sound effects, are **prerecorded, build-time assets** —
+plain static files the app serves, never something a Deno Deploy isolate generates on the
+fly:
+
+- Speech clips can start as Swedish-voice output from a local TTS tool (e.g. macOS `say`)
+  and later move to a cloud TTS API without changing anything downstream — the app only
+  ever serves a static audio file either way.
+- Sound effects prefer a real recording or a properly licensed source over TTS; generated
+  effects are acceptable for abstract UI sounds (achievement, unlock, page transition).
+  Track `source`/`license` next to the file when either is not obvious from the filename.
+- `speechSynthesis` keeps a narrow, progressive-enhancement role: phrases assembled at
+  runtime that were never worth prerecording (e.g. a dynamic "you found three animals!"
+  message). Not for anything a child is meant to hear the same way every time.
+
+Today's 8 topic pages (`client/src/data/pages.ts`) are broad subjects with a title, a
+blurb and a list of facts — not the per-word vocabulary entries ("one concept, one word
+clip, one sentence clip, one sound effect") that model assumes. The first real use is more
+likely a pronunciation clip on `language` (hej, tack) and a sound effect on `animals` than
+a wholesale change to the content shape.
+
+Media storage stays plain Git for now — a handful of small, compressed clips is not a
+problem. Move to object storage plus a CDN only once the library is big enough that binary
+history growth becomes a real cost: GitHub recommends keeping repositories well under 1 GB,
+and Deno Deploy caps aggregate deployment static files at roughly the same order of
+magnitude. Git LFS is not the intended migration target — a CDN gets media-serving benefits
+LFS does not.
 
 ## Abuse surface
 
