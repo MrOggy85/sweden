@@ -99,10 +99,43 @@ Consequences, accepted:
 - No real names, ages, photos, or avatar uploads. Avatars are an allowlisted set of
   inline SVG shapes; there is nothing to moderate and nothing to leak.
 - No multiplayer, no shared live state, no SSE.
-- No sound.
 - No offline/PWA support.
 - No cross-device sync.
 - No test framework. `deno check` and `tsc --noEmit` are the only automated gates.
+
+## Sound
+
+Sound is never generated at request time, and browser `speechSynthesis` is not the vehicle
+for canonical Swedish pronunciation. Voice availability and quality vary too much across
+iPad/iPhone/macOS/Windows/Android for something meant to sound the same every time a child
+hears it.
+
+Canonical Swedish speech, and any sound effects, are **prerecorded, build-time assets** —
+plain static files under `client/static/media/`, copied into `api/client/` by the build and
+served like any other file:
+
+- Clips start as macOS `say` output (`scripts/generate-audio.ts`, run by hand) and can move
+  to a cloud TTS API later without changing anything downstream — the app only ever fetches
+  a static file either way.
+- Sound effects prefer a real recording or a properly licensed source over TTS; generated
+  effects are acceptable for abstract UI sounds (achievement, unlock, page transition).
+  Track `source`/`license` next to the file when neither is obvious from the filename.
+- `speechSynthesis` keeps a narrow, progressive-enhancement role: phrases assembled at
+  runtime that were never worth prerecording (e.g. a dynamic "you found three animals!").
+  Not for anything a child is meant to hear the same way every time.
+
+The issue this came from assumed one file per *concept* (word clip + sentence clip + sound
+effect). The content model is one file per *topic*, so the pilot is narrower: an optional
+`## Words` section in `content/*.md`, live on `language` only. Each word's filename is
+derived from the Swedish word by `scripts/content.ts`, and `make generate-content` fails
+when a clip is missing — including on Deno Deploy, where it is the first step of the build.
+A missing clip is therefore a failed deploy, never a silent mute button.
+
+Media stays in Git for now — a handful of small AAC clips is not a problem. Move to object
+storage plus a CDN only once binary history growth becomes a real cost: GitHub recommends
+keeping repositories well under 1 GB, and Deno Deploy caps aggregate deployment files at
+roughly the same order of magnitude. Git LFS is not the intended migration target — a CDN
+gets media-serving benefits LFS does not.
 
 ## Abuse surface
 

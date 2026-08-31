@@ -22,6 +22,24 @@ make check    # deno check + tsc --noEmit
 make fmt
 ```
 
+## Audio
+
+Words under a `## Words` heading in `content/*.md` get a tappable pronunciation clip.
+The clips are prerecorded and committed, not generated at runtime:
+
+```sh
+make generate-audio                  # macOS only — say + afconvert -> client/static/media/*.m4a
+make generate-audio ARGS=--force     # existing clips are skipped without this
+make audio-variants WORD=tack        # size one word at 64/48/32/24/16 kbps before changing settings
+```
+
+Clips are mono 22.05 kHz AAC at 24 kbps, about 3 KB each: 64, 32, 24 and 16 kbps were
+indistinguishable on a single word. Generation also strips the ~3 KB `free` padding box
+afconvert writes, which costs more than the bitrate does at this length.
+
+`make generate-content` fails if a word has no clip, so a forgotten run breaks the build
+rather than shipping a silent button. See the Sound section of `PROJECT.md`.
+
 ## Build
 
 ```sh

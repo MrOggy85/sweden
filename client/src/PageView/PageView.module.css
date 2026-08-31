@@ -56,6 +56,51 @@
   line-height: 1.45;
 }
 
+.wordsHeading {
+  margin: 0.8rem 0 0;
+  font-size: 1rem;
+  color: #005293;
+}
+
+.words {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.word {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  text-align: left;
+  background: #fecc00;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.word:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1c1c1c22;
+}
+
+.sv {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.en {
+  font-size: 0.9rem;
+  color: #4a4a4a;
+}
+
 .count {
   margin: 0.4rem 0 0;
   font-size: 0.85rem;

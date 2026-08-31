@@ -1,5 +1,5 @@
-// Reads content/*.md (one Markdown file per topic, YAML-ish frontmatter + a bullet list
-// of facts) and writes two generated, gitignored TypeScript modules:
+// Reads content/*.md (see scripts/content.ts for the format) and writes two generated,
+// gitignored TypeScript modules:
 //
 //   api/db/content.generated.ts        — PAGE_IDS, as a literal `as const` array
 //   client/src/data/pages.generated.ts — PAGES, as a literal Page[] array
@@ -7,96 +7,39 @@
 // This is the single source both apps read PAGE_IDS/PAGES from, so there is nothing left
 // to hand-duplicate between client and server. Run via `make generate-content`, or
 // `make dev` / `make build` / `make check`, which depend on it.
-//
-// No YAML library and no schema validator: the frontmatter here is flat scalar
-// `key: value` pairs, so a full parser buys nothing, and the checks below fail loudly
-// enough (file name + missing field) that a validator would mostly repeat the message.
 
-type Page = {
-  id: string;
-  order: number;
-  title: string;
-  emoji: string;
-  blurb: string;
-  facts: string[];
-};
+import { audioFileUrl, loadPages, type Page } from './content.ts';
 
-const CONTENT_DIR = new URL('../content/', import.meta.url);
 const API_OUT = new URL('../api/db/content.generated.ts', import.meta.url);
 const CLIENT_OUT = new URL('../client/src/data/pages.generated.ts', import.meta.url);
 
-function parseFrontmatter(raw: string, filename: string): Record<string, string> {
-  const fields: Record<string, string> = {};
-  for (const line of raw.split('\n')) {
-    if (!line.trim()) continue;
-    const match = line.match(/^([a-zA-Z][a-zA-Z0-9_]*):\s*(.*)$/);
-    if (!match) throw new Error(`${filename}: unparseable frontmatter line: ${JSON.stringify(line)}`);
-    fields[match[1]] = match[2].trim();
-  }
-  return fields;
-}
+// A word whose clip is missing would render a play button that does nothing, and the
+// failure would only show up on a device with the volume up. Failing the build instead
+// means content and audio assets cannot drift — including on Deno Deploy, where this runs
+// as the first step of `deno task build`.
+async function assertClipsExist(pages: Page[]): Promise<void> {
+  const missing: string[] = [];
 
-function parseFacts(body: string): string[] {
-  return body
-    .split('\n')
-    .filter((line) => line.trimStart().startsWith('- '))
-    .map((line) => line.trim().slice(2).trim());
-}
-
-function requireField(fields: Record<string, string>, name: string, filename: string): string {
-  const value = fields[name];
-  if (!value) throw new Error(`${filename}: missing required frontmatter field "${name}"`);
-  return value;
-}
-
-async function loadPage(entryName: string): Promise<Page> {
-  const stem = entryName.replace(/\.md$/, '');
-  const raw = await Deno.readTextFile(new URL(entryName, CONTENT_DIR));
-
-  const frontmatterMatch = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-  if (!frontmatterMatch) throw new Error(`${entryName}: expected leading --- frontmatter block`);
-  const [, frontmatterRaw, body] = frontmatterMatch;
-
-  const fields = parseFrontmatter(frontmatterRaw, entryName);
-
-  const id = requireField(fields, 'id', entryName);
-  if (id !== stem) throw new Error(`${entryName}: frontmatter id "${id}" must match the filename ("${stem}")`);
-
-  const orderRaw = requireField(fields, 'order', entryName);
-  const order = Number(orderRaw);
-  if (!Number.isFinite(order)) throw new Error(`${entryName}: order "${orderRaw}" is not a number`);
-
-  const title = requireField(fields, 'title', entryName);
-  const emoji = requireField(fields, 'emoji', entryName);
-  const blurb = requireField(fields, 'blurb', entryName);
-
-  const facts = parseFacts(body);
-  if (facts.length === 0) throw new Error(`${entryName}: no facts found — expected a Markdown bullet list ("- ...")`);
-
-  return { id, order, title, emoji, blurb, facts };
-}
-
-async function loadPages(): Promise<Page[]> {
-  const entries: string[] = [];
-  for await (const entry of Deno.readDir(CONTENT_DIR)) {
-    if (entry.isFile && entry.name.endsWith('.md')) entries.push(entry.name);
-  }
-  if (entries.length === 0) throw new Error(`no content found in ${CONTENT_DIR.pathname}`);
-
-  const pages = await Promise.all(entries.map(loadPage));
-  pages.sort((a, b) => a.order - b.order);
-
-  const seen = new Set<string>();
   for (const page of pages) {
-    if (seen.has(page.id)) throw new Error(`duplicate content id: "${page.id}"`);
-    seen.add(page.id);
+    for (const word of page.words) {
+      const url = audioFileUrl(word);
+      try {
+        await Deno.stat(url);
+      } catch {
+        missing.push(`  ${page.id}: "${word.sv}" -> ${url.pathname}`);
+      }
+    }
   }
 
-  return pages;
+  if (missing.length > 0) {
+    throw new Error(
+      `missing audio clips:\n${missing.join('\n')}\n` +
+        'Run `make generate-audio` on macOS, then commit the clips.',
+    );
+  }
 }
 
-const HEADER =
-  '// GENERATED by scripts/generate-content.ts from content/*.md — do not edit by hand.\n' +
+const HEADER = '// GENERATED by scripts/generate-content.ts from content/*.md — do not edit by hand.\n' +
   '// Rerun `make generate-content` (or `make dev` / `make build` / `make check`, which do\n' +
   '// this for you) after changing anything under content/.\n\n';
 
@@ -107,7 +50,11 @@ function renderApiModule(pages: Page[]): string {
 
 function renderClientModule(pages: Page[]): string {
   const literal = JSON.stringify(
-    pages.map(({ id, title, emoji, blurb, facts }) => ({ id, title, emoji, blurb, facts })),
+    pages.map(({ id, title, emoji, blurb, facts, words }) => (
+      // Omit `words` entirely for topics without any, so the generated module stays
+      // readable and `page.words` is undefined rather than an empty array to render.
+      words.length > 0 ? { id, title, emoji, blurb, facts, words } : { id, title, emoji, blurb, facts }
+    )),
     null,
     2,
   );
@@ -115,6 +62,7 @@ function renderClientModule(pages: Page[]): string {
 }
 
 const pages = await loadPages();
+await assertClipsExist(pages);
 await Deno.writeTextFile(API_OUT, renderApiModule(pages));
 await Deno.writeTextFile(CLIENT_OUT, renderClientModule(pages));
 console.log(`generated ${pages.length} pages from content/ -> ${API_OUT.pathname}, ${CLIENT_OUT.pathname}`);

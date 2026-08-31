@@ -63,12 +63,22 @@ export const ANIMAL_LABELS: Record<AnimalId, string> = {
   'dala-horse': 'Dala horse',
 };
 
+// One tappable vocabulary entry. `audio` is a path under /media/, derived from `sv` by
+// scripts/content.ts — the clip is guaranteed to exist because generate-content fails the
+// build when one is missing.
+export type Word = {
+  sv: string;
+  en: string;
+  audio: string;
+};
+
 export type Page = {
   id: string;
   title: string;
   emoji: string;
   blurb: string;
   facts: string[];
+  words?: Word[];
 };
 
 export const PAGE_IDS = PAGES.map((p) => p.id);

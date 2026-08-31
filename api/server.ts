@@ -9,7 +9,21 @@ import { getVisits, postVisits } from './routes/visits.ts';
 import { getPages } from './routes/pages.ts';
 import { getHealth } from './routes/health.ts';
 
-const RESOURCE_FILE_ENDING = ['.ico', '.css', '.js', '.json', '.png', '.jpg', '.svg', '.map', '.webmanifest'];
+// Anything not listed here falls through to the SPA and is answered with index.html and a
+// 200 — a missing audio extension looks like a working request that plays nothing.
+const RESOURCE_FILE_ENDING = [
+  '.ico',
+  '.css',
+  '.js',
+  '.json',
+  '.png',
+  '.jpg',
+  '.svg',
+  '.map',
+  '.webmanifest',
+  '.m4a',
+  '.mp3',
+];
 
 // Resolved from this module's own location rather than Deno.cwd(). On Deno Deploy cwd is
 // the root of the uploaded tree, which is not necessarily api/ — resolving relative to

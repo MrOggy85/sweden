@@ -1,5 +1,6 @@
 import cssModulesPlugin from 'npm:esbuild-css-modules-plugin';
 import esbuild from 'npm:esbuild';
+import { copyStatic } from './copy-static.ts';
 
 async function resolveBuildHash(): Promise<string> {
   const envHash = Deno.env.get('BUILD_HASH') || Deno.env.get('GITHUB_SHA');
@@ -25,13 +26,8 @@ async function resolveBuildHash(): Promise<string> {
 const BUILD_HASH = await resolveBuildHash();
 console.log('BUILD_HASH:', BUILD_HASH);
 
-// Copy static assets into the api's client folder
-await Deno.mkdir('../api/client', { recursive: true });
-for await (const entry of Deno.readDir('static')) {
-  if (entry.isFile) {
-    await Deno.copyFile(`static/${entry.name}`, `../api/client/${entry.name}`);
-  }
-}
+// Copy static assets (index.html, media/) into the api's client folder
+await copyStatic();
 
 await esbuild.build({
   logLevel: 'info',

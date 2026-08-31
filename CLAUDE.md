@@ -13,12 +13,16 @@ and why the data model looks the way it does. Read it before adding features.
 - `client/` — React 18 frontend, bundled by esbuild driven from Deno. Build output goes to
   `api/client/` (gitignored).
 - `content/` — one Markdown file per topic (YAML-ish frontmatter + a bullet list of
-  facts). `scripts/generate-content.ts` compiles it into `PAGE_IDS`/`PAGES`; see
-  "Adding a topic page" below.
+  facts, optionally a `## Words` section). `scripts/generate-content.ts` compiles it into
+  `PAGE_IDS`/`PAGES`; see "Adding a topic page" below.
+- `client/static/` — copied recursively into `api/client/` by the build. `media/` holds the
+  committed pronunciation clips.
 
 ```sh
 make install           # npm install for the client (the api needs nothing)
 make generate-content  # content/*.md -> PAGE_IDS / PAGES (also run by dev/build/check)
+make generate-audio    # `## Words` -> client/static/media/*.m4a (macOS only, by hand)
+make audio-variants    # encode one word at several bitrates and print the sizes (macOS)
 make dev               # :8777 — also spawns the esbuild watcher as a child process
 make check             # deno check + tsc --noEmit
 make fmt
@@ -65,6 +69,29 @@ make deploy            # build, then deployctl to Deno Deploy
 No other wiring is needed: `PageGrid` renders whatever ends up in `PAGES`, and an unknown
 `pageId` is rejected by `POST /api/visits` automatically since both come from the same
 `content/` source.
+
+## Adding a spoken word
+
+A topic can end with a `## Words` section — bullets of `swedish | english`. Facts are the
+bullets *before* the first `##` heading; bullets under any other heading are ignored.
+
+```md
+## Words
+
+- hej då | bye
+```
+
+1. Add the row, then run `make generate-audio` **on macOS** — `say` and `afconvert` do not
+   exist on Deno Deploy or in the dev container. It writes `client/static/media/<slug>.m4a`
+   and skips clips that already exist. Script flags go through `ARGS`, since bare flags
+   would be read by make itself: `make generate-audio ARGS=--force`, or
+   `ARGS=--voice=Klara`.
+2. Commit the `.m4a`. Unlike the generated TypeScript, clips are committed assets.
+
+The filename is derived from the Swedish word by `scripts/content.ts` — never write a path
+in `content/`. `make generate-content` fails when a clip is missing, so a forgotten
+`make generate-audio` breaks the Deno Deploy build rather than shipping a button that
+plays nothing.
 
 ## Do not
 

@@ -1,12 +1,8 @@
 import cssModulesPlugin from 'npm:esbuild-css-modules-plugin';
 import esbuild from 'npm:esbuild';
+import { copyStatic } from './copy-static.ts';
 
-await Deno.mkdir('../api/client', { recursive: true });
-for await (const entry of Deno.readDir('static')) {
-  if (entry.isFile) {
-    await Deno.copyFile(`static/${entry.name}`, `../api/client/${entry.name}`);
-  }
-}
+await copyStatic();
 
 // Write a non-cache-busted index.html for dev so we don't have to rebuild HTML on each change
 const indexHtml = await Deno.readTextFile('static/index.html');
