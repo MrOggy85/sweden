@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { ConnectGame } from './ConnectGame/ConnectGame';
 import { DevPage } from './Dev/DevPage';
 import { Header } from './Header/Header';
 import { History } from './History/History';
@@ -13,9 +14,12 @@ import { navigate, navigateReplace, registerNavigate } from './core/navigate';
 import { useMe } from './data/useMe';
 import styles from './App.module.css';
 
-// The whole route table: `/` is the grid, `/<pageId>` is a topic, `/dev...` is the
-// diagnostics area. Page ids come from content/*.md, so no list needs maintaining here —
-// an id that does not resolve is treated as a typo and rewritten to `/`.
+// The whole route table: `/` is the grid, `/connect` is the matching game, `/<pageId>` is
+// a topic, `/dev...` is the diagnostics area. Page ids come from content/*.md, so no list
+// needs maintaining here — an id that does not resolve is treated as a typo and rewritten
+// to `/`.
+const GAME_PATH = '/connect';
+
 function pageIdFromPath(path: string): string | null {
   const id = path.replace(/^\/+|\/+$/g, '');
   return id === '' ? null : id;
@@ -65,7 +69,10 @@ function App() {
   }, []);
 
   const devPath = devSubPath(path);
-  const openPageId = devPath === null ? pageIdFromPath(path) : null;
+  const isGame = devPath === null && path === GAME_PATH;
+  // Neither /dev nor /connect is a page id, so they must not reach the lookup below —
+  // otherwise the unknown-page rewrite would bounce them straight back to the grid.
+  const openPageId = devPath === null && !isGame ? pageIdFromPath(path) : null;
   const currentPage = openPageId ? pageById(openPageId) : undefined;
 
   // A URL naming a page that does not exist should not survive the next refresh.
@@ -149,10 +156,18 @@ function App() {
       <main className={styles.main}>
         {currentPage
           ? <PageView page={currentPage} count={openCount} onBack={() => navigate('/')} />
-          : <PageGrid progress={progress} onOpen={(id) => navigate(`/${id}`)} />}
+          : isGame
+          ? <ConnectGame onBack={() => navigate('/')} />
+          : (
+            <PageGrid
+              progress={progress}
+              onOpen={(id) => navigate(`/${id}`)}
+              onOpenGame={() => navigate(GAME_PATH)}
+            />
+          )}
       </main>
 
-      {!currentPage && <History visits={visits} />}
+      {!currentPage && !isGame && <History visits={visits} />}
 
       <footer className={styles.footer}>
         <button type='button' className={styles.buildTap} onClick={onFooterTap}>build {BUILD_HASH}</button>

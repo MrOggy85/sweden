@@ -1,0 +1,178 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 1.1rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+}
+
+.back {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #888;
+  background: transparent;
+  border: none;
+  padding: 0.4rem 0;
+  min-height: 44px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.back:hover {
+  color: #005293;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #005293;
+}
+
+.blurb {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #4a4a4a;
+}
+
+.panel {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 2.5rem;
+  width: 100%;
+  margin-top: 0.4rem;
+  /* Keeps a drag gesture from also scrolling the page on a touch device. */
+  touch-action: none;
+}
+
+.column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.solvedLine {
+  stroke: #2a9d8f;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.dragLine {
+  stroke: #005293;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 6 6;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 64px;
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  cursor: grab;
+  user-select: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.card:active {
+  cursor: grabbing;
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1c1c1c22;
+}
+
+.wordCard {
+  justify-content: flex-start;
+  background: #fecc00;
+  font-size: 1.15rem;
+}
+
+.imageCard {
+  justify-content: flex-end;
+}
+
+.solved {
+  background: #d7f0ec;
+  border-color: #2a9d8f;
+  cursor: pointer;
+}
+
+.wrong {
+  animation: shake 0.3s ease;
+  border-color: #d1495b;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.celebration {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(253, 246, 236, 0.94);
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+  animation: pop 0.35s ease;
+  text-align: center;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.celebrationEmoji {
+  font-size: 3rem;
+}
+
+.celebrationPhrase {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #005293;
+}

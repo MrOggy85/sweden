@@ -1,0 +1,25 @@
+.icon {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.icon path,
+.icon ellipse,
+.icon circle,
+.icon rect {
+  stroke: #1c1c1c;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Manes, whiskers and wing lines: stroke only, no fill. Same idiom as Avatar.module.css. */
+.icon .line {
+  fill: none;
+  stroke-width: 2px;
+}
+
+.icon .eye {
+  stroke: none;
+}

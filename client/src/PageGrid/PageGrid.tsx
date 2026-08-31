@@ -5,13 +5,20 @@ import styles from './PageGrid.module.css';
 type Props = {
   progress: PageProgress[];
   onOpen: (pageId: string) => void;
+  onOpenGame: () => void;
 };
 
-export function PageGrid({ progress, onOpen }: Props) {
+export function PageGrid({ progress, onOpen, onOpenGame }: Props) {
   const counts = new Map(progress.map((p) => [p.pageId, p.count]));
 
   return (
     <div className={styles.grid}>
+      <button type='button' className={styles.card} onClick={onOpenGame}>
+        <span className={styles.emoji} aria-hidden='true'>🔗</span>
+        <span className={styles.title}>Connect the words</span>
+        <span className={styles.blurb}>Match words to pictures.</span>
+      </button>
+
       {PAGES.map((page) => {
         const count = counts.get(page.id) ?? 0;
         return (

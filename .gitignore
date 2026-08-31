@@ -4,6 +4,7 @@ api/.data/
 api/db/content.generated.ts
 client/dist/
 client/src/data/pages.generated.ts
+client/src/data/gameContent.generated.ts
 .DS_Store
 *.log
 .claude/settings.local.json

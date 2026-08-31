@@ -43,7 +43,7 @@ export type Page = {
 
 // Page ids become URLs (`/flag`), so anything the client routes itself is off limits — a
 // content/dev.md would be unreachable behind the diagnostics area.
-const RESERVED_IDS = ['dev', 'api', 'media'];
+const RESERVED_IDS = ['dev', 'api', 'media', 'connect'];
 
 export const CONTENT_DIR = new URL('../content/', import.meta.url);
 export const MEDIA_DIR = new URL('../client/static/media/', import.meta.url);
