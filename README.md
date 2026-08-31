@@ -57,6 +57,18 @@ Two details that matter:
 - **Deploy from `api/`, not the repo root**, so that the uploaded tree's root is `api/`.
   `CLIENT_ROOT` can override the static root if you need to deploy differently.
 
+If instead you build on Deno Deploy (git integration, root directory `api/`), set the
+build command to:
+
+```sh
+deno task build
+```
+
+That task lives in `api/deno.json`, so the command stays in the repo. It must start with
+`scripts/generate-content.ts`: `content.generated.ts` and `pages.generated.ts` are
+gitignored, so on a fresh checkout the esbuild bundle fails with
+`Could not resolve "./pages.generated"` and the server has no `PAGE_IDS`.
+
 After deploying, confirm KV is bound before trusting anything else:
 
 ```sh
