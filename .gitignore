@@ -6,3 +6,4 @@ client/dist/
 client/src/data/pages.generated.ts
 .DS_Store
 *.log
+.claude/settings.local.json
