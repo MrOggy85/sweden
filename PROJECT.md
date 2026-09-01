@@ -125,11 +125,18 @@ served like any other file:
   Not for anything a child is meant to hear the same way every time.
 
 The issue this came from assumed one file per *concept* (word clip + sentence clip + sound
-effect). The content model is one file per *topic*, so the pilot is narrower: an optional
-`## Words` section in `content/*.md`, live on `language` only. Each word's filename is
-derived from the Swedish word by `scripts/content.ts`, and `make generate-content` fails
-when a clip is missing — including on Deno Deploy, where it is the first step of the build.
-A missing clip is therefore a failed deploy, never a silent mute button.
+effect). The content model is one file per *topic*, so it stayed narrower: an optional
+`## Words` section in `content/*.md`. Each word's filename is derived from the Swedish word
+by `scripts/content.ts`, and `make generate-content` fails when a clip is missing, or when
+two different words derive the same filename — including on Deno Deploy, where it is the
+first step of the build. A missing clip is therefore a failed deploy, never a silent mute
+button.
+
+Prerecording turns out to be what makes free composition possible rather than what limits
+it. `content/sentence.md` is a page of ~29 words a child taps into a box and plays back in
+order: because every word in the palette is a file that already exists, a sentence nobody
+anticipated still speaks, with no runtime TTS and no network call beyond the clips. The
+palette is the vocabulary — growing it is one content row plus `make generate-audio`.
 
 Media stays in Git for now — a handful of small AAC clips is not a problem. Move to object
 storage plus a CDN only once binary history growth becomes a real cost: GitHub recommends

@@ -65,15 +65,21 @@ export const ANIMAL_LABELS: Record<AnimalId, string> = {
 
 // One tappable vocabulary entry. `audio` is a path under /media/, derived from `sv` by
 // scripts/content.ts — the clip is guaranteed to exist because generate-content fails the
-// build when one is missing.
+// build when one is missing. `group` labels the row it renders under, when the content
+// file supplies one.
 export type Word = {
   sv: string;
   en: string;
   audio: string;
+  group?: string;
 };
+
+// How the page renders: a fact list, or the sentence builder. Absent means 'topic'.
+export type PageKind = 'topic' | 'sentence';
 
 export type Page = {
   id: string;
+  kind?: PageKind;
   title: string;
   emoji: string;
   blurb: string;

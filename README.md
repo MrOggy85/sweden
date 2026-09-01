@@ -37,6 +37,9 @@ Clips are mono 22.05 kHz AAC at 24 kbps, about 3 KB each: 64, 32, 24 and 16 kbps
 indistinguishable on a single word. Generation also strips the ~3 KB `free` padding box
 afconvert writes, which costs more than the bitrate does at this length.
 
+`content/sentence.md` uses the same clips for the sentence builder — tap words into a box,
+press Speak, hear them in order. Adding a word there is a content row plus a clip.
+
 `make generate-content` fails if a word has no clip, so a forgotten run breaks the build
 rather than shipping a silent button. See the Sound section of `PROJECT.md`.
 

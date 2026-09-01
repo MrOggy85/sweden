@@ -8,7 +8,7 @@
 // to hand-duplicate between client and server. Run via `make generate-content`, or
 // `make dev` / `make build` / `make check`, which depend on it.
 
-import { audioFileUrl, loadPages, type Page } from './content.ts';
+import { audioFileUrl, loadPages, type Page, slug } from './content.ts';
 
 const API_OUT = new URL('../api/db/content.generated.ts', import.meta.url);
 const CLIENT_OUT = new URL('../client/src/data/pages.generated.ts', import.meta.url);
@@ -17,6 +17,28 @@ const CLIENT_OUT = new URL('../client/src/data/pages.generated.ts', import.meta.
 // failure would only show up on a device with the volume up. Failing the build instead
 // means content and audio assets cannot drift — including on Deno Deploy, where this runs
 // as the first step of `deno task build`.
+// slug() folds å/ä/ö onto a/a/o, so "har" (have) and "här" (here) both want har.m4a. The
+// same word appearing on two pages is fine and shares one clip; two *different* words
+// landing on one filename would silently swap one child's word for another's, and
+// generate-audio would overwrite whichever it wrote first.
+function assertNoSlugCollisions(pages: Page[]): void {
+  const owners = new Map<string, { sv: string; page: string }>();
+
+  for (const page of pages) {
+    for (const word of page.words) {
+      const key = slug(word.sv);
+      const owner = owners.get(key);
+      if (!owner) owners.set(key, { sv: word.sv, page: page.id });
+      else if (owner.sv !== word.sv) {
+        throw new Error(
+          `both "${owner.sv}" (${owner.page}) and "${word.sv}" (${page.id}) derive /media/${key}.m4a — ` +
+            'rename one, or give it a distinct spelling',
+        );
+      }
+    }
+  }
+}
+
 async function assertClipsExist(pages: Page[]): Promise<void> {
   const missing: string[] = [];
 
@@ -50,11 +72,17 @@ function renderApiModule(pages: Page[]): string {
 
 function renderClientModule(pages: Page[]): string {
   const literal = JSON.stringify(
-    pages.map(({ id, title, emoji, blurb, facts, words }) => (
-      // Omit `words` entirely for topics without any, so the generated module stays
-      // readable and `page.words` is undefined rather than an empty array to render.
-      words.length > 0 ? { id, title, emoji, blurb, facts, words } : { id, title, emoji, blurb, facts }
-    )),
+    // `kind` and `words` are omitted when they carry no information, so the generated
+    // module stays readable and the client treats a missing `kind` as an ordinary topic.
+    pages.map(({ id, kind, title, emoji, blurb, facts, words }) => ({
+      id,
+      ...(kind === 'topic' ? {} : { kind }),
+      title,
+      emoji,
+      blurb,
+      facts,
+      ...(words.length > 0 ? { words } : {}),
+    })),
     null,
     2,
   );
@@ -62,6 +90,7 @@ function renderClientModule(pages: Page[]): string {
 }
 
 const pages = await loadPages();
+assertNoSlugCollisions(pages);
 await assertClipsExist(pages);
 await Deno.writeTextFile(API_OUT, renderApiModule(pages));
 await Deno.writeTextFile(CLIENT_OUT, renderClientModule(pages));

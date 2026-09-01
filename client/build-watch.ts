@@ -31,10 +31,23 @@ async function main() {
   ctx.watch();
 
   let debounceTimer: number | undefined;
+  let staticTimer: number | undefined;
 
-  console.log('[build-watch] watching ./src');
-  const watcher = Deno.watchFs('./src', { recursive: true });
+  console.log('[build-watch] watching ./src and ./static');
+  const watcher = Deno.watchFs(['./src', './static'], { recursive: true });
   for await (const event of watcher) {
+    // A new clip from `make generate-audio` lands in static/media/ while this is running.
+    // Without re-copying, the server keeps serving whatever was there at startup, and the
+    // only symptom is a word that plays nothing.
+    if (event.paths.some((p) => p.includes('/static/'))) {
+      clearTimeout(staticTimer);
+      staticTimer = setTimeout(async () => {
+        await copyStatic();
+        console.log('[build-watch] static copied:', event.paths.length, 'path(s) changed');
+      }, 100);
+      continue;
+    }
+
     // esbuild's own watch does not reliably pick up CSS-module changes, so the whole
     // context is torn down and recreated on any .css write.
     if (event.paths.some((p) => p.endsWith('.css'))) {

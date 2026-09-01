@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import type { Page } from '../data/pages';
+import { SentenceBuilder } from '../SentenceBuilder/SentenceBuilder';
 import styles from './PageView.module.css';
 
 type Props = {
@@ -35,26 +36,28 @@ export function PageView({ page, count, onBack }: Props) {
         {page.facts.map((fact) => <li key={fact} className={styles.fact}>{fact}</li>)}
       </ul>
 
-      {page.words && page.words.length > 0 && (
-        <>
-          <h3 className={styles.wordsHeading}>Tap to hear it</h3>
-          <ul className={styles.words}>
-            {page.words.map((word) => (
-              <li key={word.sv}>
-                <button
-                  type='button'
-                  className={styles.word}
-                  onClick={() => play(word.audio)}
-                  aria-label={`Play ${word.sv}, ${word.en}`}
-                >
-                  <span className={styles.sv}>{word.sv}</span>
-                  <span className={styles.en}>{word.en}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      {page.kind === 'sentence'
+        ? <SentenceBuilder words={page.words ?? []} />
+        : page.words && page.words.length > 0 && (
+          <>
+            <h3 className={styles.wordsHeading}>Tap to hear it</h3>
+            <ul className={styles.words}>
+              {page.words.map((word) => (
+                <li key={word.sv}>
+                  <button
+                    type='button'
+                    className={styles.word}
+                    onClick={() => play(word.audio)}
+                    aria-label={`Play ${word.sv}, ${word.en}`}
+                  >
+                    <span className={styles.sv}>{word.sv}</span>
+                    <span className={styles.en}>{word.en}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
       {count > 1 && <p className={styles.count}>You have been here {count} times.</p>}
     </article>

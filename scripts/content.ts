@@ -13,11 +13,19 @@ export type Word = {
   sv: string;
   en: string;
   audio: string;
+  // Optional third field on a word row, used to group the buttons. Groups render in the
+  // order they first appear in the file, so the content file controls the layout.
+  group?: string;
 };
+
+// How the client renders the page: a fact list, or the tap-a-word sentence builder.
+export const PAGE_KINDS = ['topic', 'sentence'] as const;
+export type PageKind = typeof PAGE_KINDS[number];
 
 export type Page = {
   id: string;
   order: number;
+  kind: PageKind;
   title: string;
   emoji: string;
   blurb: string;
@@ -60,12 +68,16 @@ function parseFrontmatter(raw: string, filename: string): Record<string, string>
 }
 
 function parseWord(item: string, filename: string): Word {
-  const [sv, en, ...rest] = item.split('|').map((part) => part.trim());
+  const [sv, en, group, ...rest] = item.split('|').map((part) => part.trim());
   if (!sv || !en || rest.length > 0) {
-    throw new Error(`${filename}: word "${item}" must be written as "swedish | english"`);
+    throw new Error(
+      `${filename}: word "${item}" must be written as "swedish | english" or "swedish | english | group"`,
+    );
   }
   if (!slug(sv)) throw new Error(`${filename}: word "${sv}" has no letters to build a filename from`);
-  return { sv, en, audio: `${AUDIO_URL_PREFIX}${slug(sv)}.m4a` };
+  const word: Word = { sv, en, audio: `${AUDIO_URL_PREFIX}${slug(sv)}.m4a` };
+  if (group) word.group = group;
+  return word;
 }
 
 // Bullets before the first `##` heading are facts; bullets under `## Words` are
@@ -121,10 +133,16 @@ async function loadPage(entryName: string): Promise<Page> {
   const emoji = requireField(fields, 'emoji', entryName);
   const blurb = requireField(fields, 'blurb', entryName);
 
+  // Optional: a page with no `kind` is an ordinary fact list.
+  const kind = (fields.kind ?? 'topic') as PageKind;
+  if (!PAGE_KINDS.includes(kind)) {
+    throw new Error(`${entryName}: kind "${kind}" must be one of ${PAGE_KINDS.join(', ')}`);
+  }
+
   const { facts, words } = parseBody(body, entryName);
   if (facts.length === 0) throw new Error(`${entryName}: no facts found — expected a Markdown bullet list ("- ...")`);
 
-  return { id, order, title, emoji, blurb, facts, words };
+  return { id, order, kind, title, emoji, blurb, facts, words };
 }
 
 export async function loadPages(): Promise<Page[]> {

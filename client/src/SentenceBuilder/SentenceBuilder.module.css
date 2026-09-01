@@ -1,0 +1,138 @@
+.builder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  width: 100%;
+}
+
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 76px;
+  padding: 0.8rem;
+  background: #fff3d6;
+  border: 1.5px dashed #1c1c1c;
+  border-radius: 14px;
+}
+
+.empty {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #8a8a8a;
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 700;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 3px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.speaking {
+  background: #005293;
+  color: #fff;
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1c1c1c22;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.speak,
+.clear {
+  min-height: 52px;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.speak {
+  background: #fecc00;
+}
+
+.clear {
+  background: #fff;
+  font-weight: 600;
+}
+
+.speak:disabled,
+.clear:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: default;
+}
+
+.speak:active:not(:disabled),
+.clear:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1c1c1c22;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.groupLabel {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6a6a6a;
+}
+
+.palette {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.word {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  text-align: left;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 3px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.word:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1c1c1c22;
+}
+
+.sv {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.en {
+  font-size: 0.8rem;
+  color: #6a6a6a;
+}

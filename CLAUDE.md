@@ -48,11 +48,13 @@ make deploy            # build, then deployctl to Deno Deploy
   in `api/deno.json` and `client/deno.json`. Run `make fmt`.
 - **Touch targets** are at least 44px. The target devices are an iPad and an iPhone.
 
-## Two invariants that are easy to break
+## Three invariants that are easy to break
 
 1. **Types are hand-duplicated.** `api/db/types.ts` and `client/src/data/types.ts` mirror
    each other, and nothing enforces it. Edit both together.
-2. **`ANIMAL_IDS` and `COLOR_IDS` are hand-duplicated** between `api/db/content.ts` and
+2. **`PageKind` is hand-duplicated** between `scripts/content.ts` (`PAGE_KINDS`) and
+   `client/src/data/pages.ts` — edit both together.
+3. **`ANIMAL_IDS` and `COLOR_IDS` are hand-duplicated** between `api/db/content.ts` and
    `client/src/data/pages.ts` — edit both together. `PAGE_IDS`/`PAGES` used to be a third
    copy of this problem; they are now both generated from `content/*.md` by
    `scripts/generate-content.ts`, so they cannot drift from each other.
@@ -72,13 +74,15 @@ No other wiring is needed: `PageGrid` renders whatever ends up in `PAGES`, and a
 
 ## Adding a spoken word
 
-A topic can end with a `## Words` section — bullets of `swedish | english`. Facts are the
-bullets *before* the first `##` heading; bullets under any other heading are ignored.
+A topic can end with a `## Words` section — bullets of `swedish | english`, plus an
+optional third field naming the group the button renders under. Facts are the bullets
+*before* the first `##` heading; bullets under any other heading are ignored.
 
 ```md
 ## Words
 
 - hej då | bye
+- katt | cat | things
 ```
 
 1. Add the row, then run `make generate-audio` **on macOS** — `say` and `afconvert` do not
@@ -92,6 +96,23 @@ The filename is derived from the Swedish word by `scripts/content.ts` — never 
 in `content/`. `make generate-content` fails when a clip is missing, so a forgotten
 `make generate-audio` breaks the Deno Deploy build rather than shipping a button that
 plays nothing.
+
+It also fails when two *different* words derive the same filename. `slug()` folds å/ä/ö
+onto a/a/o, so `har` and `här` collide; the same word on two pages is fine and shares one
+clip. Rename one of the pair — there is no per-page namespace, on purpose, so a word is
+recorded once however many topics use it.
+
+## Page kinds
+
+`kind` in the frontmatter picks the renderer, defaulting to `topic`:
+
+- `topic` — blurb, facts, and any `## Words` as tap-to-hear buttons (`PageView.tsx`).
+- `sentence` — facts as instructions, then `SentenceBuilder`: tap words into a box, press
+  Speak, and the clips play in order. `content/sentence.md` is the only one today.
+
+An unknown `kind` is a generate-content error. Adding one means a new value in `PAGE_KINDS`
+(`scripts/content.ts`), a branch in `PageView.tsx`, and the matching union in
+`client/src/data/pages.ts` — that union is hand-duplicated, like `ANIMAL_IDS`.
 
 ## Do not
 
