@@ -37,6 +37,12 @@ make deploy            # build, then deployctl to Deno Deploy
   params; the subject of a request is the active profile from the cookie.
 - **One file per endpoint group** under `api/routes/`, each exporting a function that
   returns a `Response`.
+- **Client routing is hand-written too.** `client/src/core/navigate.ts` is `pushState` plus
+  one registered callback; `App.tsx` holds `location.pathname` in state, listens for
+  `popstate`, and picks a component from it. No router library. The route table is `/` for
+  the grid and `/<pageId>` for a topic, which works on refresh only because the server
+  answers every extensionless path with `index.html` — do not add an extension-like segment
+  to a route, or the static branch in `api/server.ts` will try to serve it as a file.
 - **All KV access goes through `api/db/`.** Routes never call `kv` directly — that
   indirection is what makes the storage layer swappable.
 - **Key layout lives only in `api/db/keys.ts`.** Read the comments there before adding a
