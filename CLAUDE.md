@@ -110,6 +110,26 @@ onto a/a/o, so `har` and `här` collide; the same word on two pages is fine and 
 clip. Rename one of the pair — there is no per-page namespace, on purpose, so a word is
 recorded once however many topics use it.
 
+## Runtime speech (`speechSynthesis`)
+
+Available and known to work — the browser's own TTS, present in every browser on macOS and
+iOS (on iOS every browser is WebKit underneath). `client/src/Dev/Voices.tsx` is the only
+caller today, and it is a diagnostic. **Nothing user-facing uses it, deliberately.**
+
+Reach for it only for text assembled at runtime that could not have been prerecorded — a
+count that varies, a name typed by a child. Everything a child is meant to *learn* stays a
+prerecorded clip, because the voice comes from the OS and the same word will sound
+different on the next device. That is the line `PROJECT.md`'s Sound section draws.
+
+- Disposable and varies per interaction → `speechSynthesis`. e.g. "Bra! Fem ord!"
+- Vocabulary, or anything repeated back as correct → a clip from `## Words`.
+- Don't put the two in one breath. A device voice straight after Alva's clips reads as a
+  different speaker interrupting, which is worse than staying silent.
+
+Two traps if you do use it: `getVoices()` returns `[]` on the first synchronous call (wait
+for `voiceschanged`), and iOS needs a user gesture to start speech. `/dev/voices` reports
+what a given device actually has.
+
 ## Page kinds
 
 `kind` in the frontmatter picks the renderer, defaulting to `topic`:
