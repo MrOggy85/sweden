@@ -20,10 +20,13 @@
   min-height: 100vh;
 }
 
+/* Launched from the iOS home screen there is no browser chrome, so the app paints under
+   the status bar and the home indicator. The insets are 0 in a normal browser tab. */
 .app {
   max-width: 46rem;
   margin: 0 auto;
-  padding: 1rem 0.9rem 2.5rem;
+  padding: calc(1rem + env(safe-area-inset-top)) calc(0.9rem + env(safe-area-inset-right))
+    calc(2.5rem + env(safe-area-inset-bottom)) calc(0.9rem + env(safe-area-inset-left));
   display: flex;
   flex-direction: column;
   gap: 1rem;

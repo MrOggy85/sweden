@@ -105,3 +105,10 @@ curl -s https://sweden.deno.dev/api/health    # {"ok":true,"kv":true,"pageIds":8
 | `DEV` | unset | `1` spawns the client watcher and drops `Secure` from the cookie |
 | `KV_PATH` | unset | local SQLite path; ignored on Deno Deploy |
 | `CLIENT_ROOT` | resolved from `api/server.ts` | static file root |
+
+## Credits
+
+The favicon and home-screen icon are derived from the Swedish flag emoji in
+[Twemoji](https://github.com/twitter/twemoji) (`1f1f8-1f1ea.svg`, v14.0.2), © Twitter, Inc
+and other contributors, licensed [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+CC-BY requires this attribution to be kept.

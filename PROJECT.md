@@ -99,7 +99,10 @@ Consequences, accepted:
 - No real names, ages, photos, or avatar uploads. Avatars are an allowlisted set of
   inline SVG shapes; there is nothing to moderate and nothing to leak.
 - No multiplayer, no shared live state, no SSE.
-- No offline/PWA support.
+- No service worker and no offline support. The app *is* installable to an iOS home
+  screen — `site.webmanifest` plus the `apple-mobile-web-app-*` meta tags, so it launches
+  without Safari chrome — but that is an icon and a display mode, not a cache. With no
+  network it shows nothing.
 - No cross-device sync.
 - No test framework. `deno check` and `tsc --noEmit` are the only automated gates.
 

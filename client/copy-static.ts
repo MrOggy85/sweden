@@ -6,6 +6,9 @@
 export async function copyStatic(src = 'static', dest = '../api/client'): Promise<void> {
   await Deno.mkdir(dest, { recursive: true });
   for await (const entry of Deno.readDir(src)) {
+    // Skip .DS_Store and friends: macOS drops them into any folder Finder opens, and the
+    // build would otherwise deploy them.
+    if (entry.name.startsWith('.')) continue;
     if (entry.isDirectory) await copyStatic(`${src}/${entry.name}`, `${dest}/${entry.name}`);
     else if (entry.isFile) await Deno.copyFile(`${src}/${entry.name}`, `${dest}/${entry.name}`);
   }
