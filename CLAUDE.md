@@ -40,9 +40,11 @@ make deploy            # build, then deployctl to Deno Deploy
 - **Client routing is hand-written too.** `client/src/core/navigate.ts` is `pushState` plus
   one registered callback; `App.tsx` holds `location.pathname` in state, listens for
   `popstate`, and picks a component from it. No router library. The route table is `/` for
-  the grid and `/<pageId>` for a topic, which works on refresh only because the server
-  answers every extensionless path with `index.html` — do not add an extension-like segment
-  to a route, or the static branch in `api/server.ts` will try to serve it as a file.
+  the grid, `/<pageId>` for a topic and `/dev...` for diagnostics, which works on refresh
+  only because the server answers every extensionless path with `index.html` — do not add
+  an extension-like segment to a route, or the static branch in `api/server.ts` will try to
+  serve it as a file. Routes that are not page ids belong in `RESERVED_IDS`
+  (`scripts/content.ts`), so a content file cannot be authored into an unreachable URL.
 - **All KV access goes through `api/db/`.** Routes never call `kv` directly — that
   indirection is what makes the storage layer swappable.
 - **Key layout lives only in `api/db/keys.ts`.** Read the comments there before adding a
@@ -119,6 +121,20 @@ recorded once however many topics use it.
 An unknown `kind` is a generate-content error. Adding one means a new value in `PAGE_KINDS`
 (`scripts/content.ts`), a branch in `PageView.tsx`, and the matching union in
 `client/src/data/pages.ts` — that union is hand-duplicated, like `ANIMAL_IDS`.
+
+## The dev area
+
+`/dev` is a permanent diagnostics area, opened by **tapping the `build …` footer five
+times within 1.5 s** — the Android build-number gesture. There is no link to it, since the
+users are children; the footer stays visually identical to the text it replaced.
+
+It renders before the loading and error branches in `App.tsx`, deliberately: the
+diagnostics are most wanted when the app itself will not come up. It needs no profile.
+
+Add a tool by writing a component under `client/src/Dev/` and adding one entry to `TOOLS`
+in `DevPage.tsx`. `/dev/voices` is the first: it answers what `speechSynthesis` offers on
+the device in hand, which is the thing PROJECT.md's sound section says varies and which no
+amount of local testing on a Mac can settle for an iPad.
 
 ## Do not
 

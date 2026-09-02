@@ -48,3 +48,14 @@
   font-size: 0.75rem;
   color: #b0a89c;
 }
+
+/* A button only so that five taps can open /dev. It must look exactly like the text it
+   replaced — the point of the gesture is that there is nothing to notice. */
+.buildTap {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: default;
+}

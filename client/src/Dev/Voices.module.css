@@ -1,0 +1,106 @@
+.voices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.verdict,
+.good,
+.bad,
+.hint {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  line-height: 1.4;
+}
+
+.good {
+  background: #dff3e4;
+}
+
+.bad {
+  background: #ffe0e0;
+}
+
+.verdict,
+.hint {
+  background: #fff3d6;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.input {
+  font: inherit;
+  min-height: 44px;
+  padding: 0.5rem 0.7rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.button {
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  font: inherit;
+  font-weight: 600;
+  background: #fecc00;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 3px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1c1c1c22;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.lang {
+  font-size: 0.8rem;
+  color: #6a6a6a;
+}

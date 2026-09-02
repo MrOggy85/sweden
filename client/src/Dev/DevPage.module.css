@@ -1,0 +1,107 @@
+.dev {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-size: 0.95rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.back {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0.4rem 0;
+  font: inherit;
+  font-weight: 600;
+  color: #888;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #005293;
+}
+
+.subtitle {
+  margin: 0.6rem 0 0;
+  font-size: 1rem;
+  color: #005293;
+}
+
+.note {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  background: #fff3d6;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+}
+
+.tools {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  text-align: left;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 3px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.toolTitle {
+  font-weight: 700;
+}
+
+.toolBlurb {
+  font-size: 0.85rem;
+  color: #6a6a6a;
+}
+
+.env {
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) 1fr;
+  gap: 0.35rem 0.8rem;
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+}
+
+.env dt {
+  font-weight: 700;
+  color: #4a4a4a;
+}
+
+.env dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ua {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+}

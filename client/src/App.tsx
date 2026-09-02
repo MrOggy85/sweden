@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { DevPage } from './Dev/DevPage';
 import { Header } from './Header/Header';
 import { History } from './History/History';
 import { PageGrid } from './PageGrid/PageGrid';
@@ -12,13 +13,25 @@ import { navigate, navigateReplace, registerNavigate } from './core/navigate';
 import { useMe } from './data/useMe';
 import styles from './App.module.css';
 
-// The whole route table: `/` is the grid, `/<pageId>` is a topic. Page ids come from
-// content/*.md, so no list needs maintaining here — an id that does not resolve is
-// treated as a typo and rewritten to `/`.
+// The whole route table: `/` is the grid, `/<pageId>` is a topic, `/dev...` is the
+// diagnostics area. Page ids come from content/*.md, so no list needs maintaining here —
+// an id that does not resolve is treated as a typo and rewritten to `/`.
 function pageIdFromPath(path: string): string | null {
   const id = path.replace(/^\/+|\/+$/g, '');
   return id === '' ? null : id;
 }
+
+/** The path below /dev, or null when this is not a dev route. `dev` is a reserved page id. */
+function devSubPath(path: string): string | null {
+  if (path === '/dev') return '/';
+  return path.startsWith('/dev/') ? path.slice('/dev'.length) : null;
+}
+
+// Five taps on the build footer opens the dev area — the Android build-number gesture.
+// Invisible to a child, one tap short of impossible to hit by accident, and no visible
+// affordance to explain away.
+const DEV_TAPS = 5;
+const DEV_TAP_WINDOW_MS = 1500;
 
 function App() {
   const { me, setMe, error, refresh, loading } = useMe();
@@ -27,6 +40,8 @@ function App() {
   const [progress, setProgress] = useState<PageProgress[]>([]);
   const [total, setTotal] = useState(0);
   const [visits, setVisits] = useState<Visit[]>([]);
+  const devTaps = useRef(0);
+  const devTapTimer = useRef(0);
 
   const user = me?.user ?? null;
 
@@ -49,7 +64,8 @@ function App() {
     return () => globalThis.removeEventListener('popstate', onPopState);
   }, []);
 
-  const openPageId = pageIdFromPath(path);
+  const devPath = devSubPath(path);
+  const openPageId = devPath === null ? pageIdFromPath(path) : null;
   const currentPage = openPageId ? pageById(openPageId) : undefined;
 
   // A URL naming a page that does not exist should not survive the next refresh.
@@ -73,6 +89,10 @@ function App() {
       }
     })();
   }, [user?.id, currentPage?.id]);
+
+  // Before the loading and error branches on purpose: diagnostics are most wanted when the
+  // app itself will not come up.
+  if (devPath !== null) return <DevPage path={devPath} />;
 
   if (loading) return <div className={styles.app} />;
 
@@ -100,6 +120,19 @@ function App() {
 
   const openCount = progress.find((p) => p.pageId === openPageId)?.count ?? 0;
 
+  function onFooterTap() {
+    globalThis.clearTimeout(devTapTimer.current);
+    devTaps.current += 1;
+    if (devTaps.current >= DEV_TAPS) {
+      devTaps.current = 0;
+      navigate('/dev');
+      return;
+    }
+    devTapTimer.current = globalThis.setTimeout(() => {
+      devTaps.current = 0;
+    }, DEV_TAP_WINDOW_MS);
+  }
+
   return (
     <div className={styles.app}>
       <Header
@@ -121,7 +154,9 @@ function App() {
 
       {!currentPage && <History visits={visits} />}
 
-      <footer className={styles.footer}>build {BUILD_HASH}</footer>
+      <footer className={styles.footer}>
+        <button type='button' className={styles.buildTap} onClick={onFooterTap}>build {BUILD_HASH}</button>
+      </footer>
     </div>
   );
 }

@@ -33,6 +33,10 @@ export type Page = {
   words: Word[];
 };
 
+// Page ids become URLs (`/flag`), so anything the client routes itself is off limits — a
+// content/dev.md would be unreachable behind the diagnostics area.
+const RESERVED_IDS = ['dev', 'api', 'media'];
+
 export const CONTENT_DIR = new URL('../content/', import.meta.url);
 export const MEDIA_DIR = new URL('../client/static/media/', import.meta.url);
 
@@ -124,6 +128,9 @@ async function loadPage(entryName: string): Promise<Page> {
 
   const id = requireField(fields, 'id', entryName);
   if (id !== stem) throw new Error(`${entryName}: frontmatter id "${id}" must match the filename ("${stem}")`);
+  if (RESERVED_IDS.includes(id)) {
+    throw new Error(`${entryName}: id "${id}" is reserved — it is a route, so the page would be unreachable`);
+  }
 
   const orderRaw = requireField(fields, 'order', entryName);
   const order = Number(orderRaw);
