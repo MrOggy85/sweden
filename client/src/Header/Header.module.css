@@ -37,11 +37,25 @@
   color: #6a6a6a;
 }
 
-.total {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #6a6a6a;
-  text-align: right;
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-content: center;
+  gap: 0.3rem;
+  max-width: 8.5rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.dotOn {
+  background: #005293;
 }
 
 .menu {

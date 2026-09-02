@@ -7,9 +7,9 @@ emoji: 🗣️
 blurb: Tap words, then press Speak.
 ---
 
-- Tap words to put them in the box, in the order you want them.
-- Press Speak and the machine says your sentence out loud.
-- Silly sentences are allowed. A cat can absolutely have an ice cream.
+- Tap words. They go in the box.
+- Press Speak and hear your sentence.
+- Silly sentences are the best ones.
 
 ## Words
 

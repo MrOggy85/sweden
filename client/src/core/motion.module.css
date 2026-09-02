@@ -1,0 +1,98 @@
+/* Shared entrance animations. Keyframes and the classes that use them live in the same
+   module on purpose: CSS Modules scopes keyframe names per file, so a class in one module
+   cannot reliably reference a @keyframes declared in another. Anything bespoke to one
+   component (a chip popping, a line drawing itself) stays in that component's own module.
+
+   Timings are "playful": 150-250ms with a small overshoot. Long enough to notice, short
+   enough that a child tapping fast is never waiting on us. */
+
+.popIn {
+  animation: popIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.slideUp {
+  animation: slideUp 200ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.float {
+  animation: float 3.5s ease-in-out infinite;
+}
+
+.stamp {
+  animation: stamp 500ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.pulse {
+  animation: pulse 700ms ease-in-out infinite;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Just enough drift to look alive; any more and it competes with the buttons. */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+}
+
+@keyframes stamp {
+  from {
+    opacity: 0;
+    transform: scale(1.6) rotate(-12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94) rotate(3deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+/* One switch for the whole app. A child with vestibular sensitivity, or a parent who has
+   turned motion off system-wide, gets a completely still app — and every animation above
+   is an entrance, so ending instantly at the final frame leaves nothing hidden. */
+@media (prefers-reduced-motion: reduce) {
+  :global(*),
+  :global(*::before),
+  :global(*::after) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -6,6 +6,12 @@ emoji: 🌸
 blurb: The longest day of the year.
 ---
 
-- People raise a flower-covered pole and dance around it.
-- In the far north the sun does not set at all — this is the midnight sun.
-- One of the dances is about small frogs. Everyone hops.
+- Dance around a pole covered in flowers.
+- Up north the sun never goes down.
+- One dance is about frogs. Everybody hops.
+
+## Words
+
+- sommar | summer
+- blomma | flower
+- sol | sun

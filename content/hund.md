@@ -6,9 +6,9 @@ emoji: 🐶
 blurb: What a Swedish dog says.
 ---
 
-- Hund is the Swedish word for dog.
-- A Swedish dog does not say woof. It says *voff*.
-- Swedish dogs get to come along on trains and into most parks.
+- A dog is a hund.
+- It does not say woof. It says voff.
+- Swedish dogs get to ride the train.
 
 ## Words
 

@@ -1,38 +1,46 @@
 import { pageById } from '../data/pages';
 import type { Visit } from '../data/types';
+import motion from '../core/motion.module.css';
 import styles from './History.module.css';
 
 type Props = {
   visits: Visit[];
 };
 
-function when(at: number): string {
-  const mins = Math.round((Date.now() - at) / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins} min ago`;
-  const hours = Math.round(mins / 60);
-  if (hours < 24) return `${hours} h ago`;
-  return `${Math.round(hours / 24)} d ago`;
-}
+// How many stickers fit on one shelf before it starts to look like a list again.
+const MAX_STICKERS = 8;
 
+// A shelf of the places you have been, newest first. Deliberately no titles and no "5 min
+// ago": the emoji is the memory, and a timestamp is for someone who can read one.
 export function History({ visits }: Props) {
-  if (visits.length === 0) return null;
+  const seen = new Set<string>();
+  const stickers: { pageId: string; emoji: string }[] = [];
+
+  for (const visit of visits) {
+    if (seen.has(visit.pageId)) continue;
+    const page = pageById(visit.pageId);
+    if (!page) continue;
+    seen.add(visit.pageId);
+    stickers.push({ pageId: visit.pageId, emoji: page.emoji });
+    if (stickers.length >= MAX_STICKERS) break;
+  }
+
+  if (stickers.length === 0) return null;
 
   return (
     <section className={styles.history}>
-      <h3 className={styles.heading}>Where you have been</h3>
-      <ol className={styles.list}>
-        {visits.map((visit) => {
-          const page = pageById(visit.pageId);
-          return (
-            <li key={`${visit.pageId}-${visit.at}`} className={styles.row}>
-              <span aria-hidden='true'>{page?.emoji ?? '•'}</span>
-              <span className={styles.label}>{page?.title ?? visit.pageId}</span>
-              <span className={styles.when}>{when(visit.at)}</span>
-            </li>
-          );
-        })}
-      </ol>
+      <h3 className={styles.heading}>Your stickers</h3>
+      <ul className={styles.shelf}>
+        {stickers.map((sticker, index) => (
+          <li
+            key={sticker.pageId}
+            className={`${styles.sticker} ${motion.popIn}`}
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
+            <span aria-hidden='true'>{sticker.emoji}</span>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

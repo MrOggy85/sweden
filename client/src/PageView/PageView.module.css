@@ -1,7 +1,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.6rem;
   padding: 1.1rem;
   background: #fff;
@@ -11,6 +11,7 @@
 }
 
 .back {
+  align-self: flex-start;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
@@ -27,21 +28,26 @@
   color: #005293;
 }
 
+/* The whole point of the page: a picture big enough to be the content. */
+.hero {
+  font-size: 6rem;
+  line-height: 1;
+  /* Keeps the emoji's own glyph box from clipping the float and stamp transforms. */
+  display: block;
+  padding: 0.2rem 0.4rem;
+}
+
 .title {
   margin: 0;
   font-size: 1.8rem;
   color: #005293;
-}
-
-.blurb {
-  margin: 0;
-  font-size: 1.05rem;
-  color: #4a4a4a;
+  text-align: center;
 }
 
 .facts {
   margin: 0.4rem 0 0;
   padding: 0;
+  width: 100%;
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -49,11 +55,12 @@
 }
 
 .fact {
-  padding: 0.7rem 0.85rem;
+  padding: 0.8rem 0.95rem;
+  font-size: 1.15rem;
   background: #fff3d6;
   border: 1.5px solid #1c1c1c;
   border-radius: 12px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .sounds {
@@ -81,31 +88,27 @@
 }
 
 .sound:active {
-  transform: translateY(2px);
+  transform: scale(0.96) translateY(2px);
   box-shadow: 0 2px 0 #1c1c1c22;
 }
 
-.wordsHeading {
-  margin: 0.8rem 0 0;
-  font-size: 1rem;
-  color: #005293;
-}
-
 .words {
-  margin: 0;
+  margin: 0.2rem 0 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.6rem;
 }
 
+/* No "Tap to hear it" heading any more — the speaker glyph on each button says it. */
 .word {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
-  min-height: 44px;
-  padding: 0.6rem 0.9rem;
+  gap: 0.45rem;
+  min-height: 52px;
+  padding: 0.7rem 1rem;
   font: inherit;
   text-align: left;
   background: #fecc00;
@@ -113,10 +116,11 @@
   border-radius: 12px;
   box-shadow: 0 4px 0 #1c1c1c22;
   cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .word:active {
-  transform: translateY(2px);
+  transform: scale(0.96) translateY(2px);
   box-shadow: 0 2px 0 #1c1c1c22;
 }
 
@@ -128,11 +132,4 @@
 .en {
   font-size: 0.9rem;
   color: #4a4a4a;
-}
-
-.count {
-  margin: 0.4rem 0 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #6a6a6a;
 }

@@ -6,9 +6,9 @@ emoji: 💬
 blurb: A few to try out loud.
 ---
 
-- Hej means hello. It sounds like "hey".
+- Hej sounds like "hey". It means hello.
 - Tack means thank you.
-- The alphabet has three extra letters at the end: å, ä and ö.
+- Three extra letters: å, ä and ö.
 
 ## Words
 

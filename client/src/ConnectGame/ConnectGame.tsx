@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { PointerEvent as ReactPointerEvent } from 'react';
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { GameIcon } from '../GameIcons/GameIcons';
 import { pickRound, randomPhrase, shuffled } from '../data/gameContent';
 import type { GamePair } from '../data/gameContent';
@@ -21,6 +21,14 @@ const TAP_THRESHOLD_PX = 6;
 function cardKey(side: Side, sv: string): string {
   return `${side}:${sv}`;
 }
+
+// Fixed rather than random: the same burst every time is cheaper, and a child does not
+// audit confetti for entropy. Spread across the panel with staggered starts.
+const CONFETTI = Array.from({ length: 16 }, (_, i) => ({
+  left: `${4 + (i * 6.2) % 92}%`,
+  color: ['#fecc00', '#005293', '#2a9d8f', '#e07a9c', '#ef8354'][i % 5],
+  delay: `${(i % 8) * 90}ms`,
+}));
 
 export function ConnectGame({ onBack }: { onBack: () => void }) {
   const [round, setRound] = useState<GamePair[]>(() => pickRound());
@@ -242,6 +250,9 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
               x2={line.x2}
               y2={line.y2}
               className={styles.solvedLine}
+              // The draw animation needs the line's length as a dash length; only the
+              // component knows the geometry.
+              style={{ '--len': Math.hypot(line.x2 - line.x1, line.y2 - line.y1) } as CSSProperties}
             />
           ))}
           {dragPreview && (
@@ -277,6 +288,15 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
 
         {celebrating && (
           <div className={styles.celebration}>
+            <div className={styles.confetti} aria-hidden='true'>
+              {CONFETTI.map((piece, i) => (
+                <span
+                  key={i}
+                  className={styles.piece}
+                  style={{ left: piece.left, background: piece.color, animationDelay: piece.delay }}
+                />
+              ))}
+            </div>
             <span className={styles.celebrationEmoji} aria-hidden='true'>🎉</span>
             <span className={styles.celebrationPhrase}>{phrase}</span>
           </div>

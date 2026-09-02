@@ -6,6 +6,12 @@ emoji: 🍰
 blurb: A coffee break, but important.
 ---
 
-- Fika means stopping for something to drink and something sweet, with people.
-- The classic fika bun is the kanelbulle, a cinnamon bun.
-- Cinnamon Bun Day is 4 October. It is a real day.
+- Stop everything. Eat something sweet.
+- The best bun is the kanelbulle.
+- There is a whole day for cinnamon buns.
+
+## Words
+
+- bulle | bun
+- kaffe | coffee
+- kaka | cake

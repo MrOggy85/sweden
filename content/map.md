@@ -6,6 +6,12 @@ emoji: 🗺️
 blurb: Long and thin, up in the north.
 ---
 
-- Sweden is in northern Europe, between Norway and Finland.
-- It is so long that driving from the bottom to the top takes about 20 hours.
-- The very north sits inside the Arctic Circle.
+- Way up north, next to Norway.
+- Long and thin, like a stick.
+- Twenty hours to drive from end to end.
+
+## Words
+
+- karta | map
+- norr | north
+- söder | south

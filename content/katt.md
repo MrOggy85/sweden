@@ -6,9 +6,9 @@ emoji: 🐱
 blurb: What a Swedish cat says.
 ---
 
-- Katt is the Swedish word for cat.
-- A Swedish cat does not say meow. It says *mjau*.
-- Many Swedish cats go outside all year, even in the snow.
+- A cat is a katt.
+- It does not say meow. It says mjau.
+- Swedish cats go out in the snow too.
 
 ## Words
 

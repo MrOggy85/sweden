@@ -7,7 +7,7 @@ import { History } from './History/History';
 import { PageGrid } from './PageGrid/PageGrid';
 import { PageView } from './PageView/PageView';
 import { ProfileSetup } from './ProfileSetup/ProfileSetup';
-import { pageById } from './data/pages';
+import { pageById, PAGES } from './data/pages';
 import type { PageProgress, User, Visit } from './data/types';
 import { getPages, getVisits, recordVisit } from './data/api';
 import { navigate, navigateReplace, registerNavigate } from './core/navigate';
@@ -42,7 +42,6 @@ function App() {
   const [path, setPath] = useState(() => globalThis.location.pathname);
   const [addingProfile, setAddingProfile] = useState(false);
   const [progress, setProgress] = useState<PageProgress[]>([]);
-  const [total, setTotal] = useState(0);
   const [visits, setVisits] = useState<Visit[]>([]);
   const devTaps = useRef(0);
   const devTapTimer = useRef(0);
@@ -53,7 +52,6 @@ function App() {
     if (!user) return;
     const [pages, history] = await Promise.all([getPages(), getVisits(10)]);
     setProgress(pages.pages);
-    setTotal(pages.total);
     setVisits(history.items);
   }, [user]);
 
@@ -126,6 +124,7 @@ function App() {
   }
 
   const openCount = progress.find((p) => p.pageId === openPageId)?.count ?? 0;
+  const seen = progress.filter((p) => p.count > 0).length;
 
   function onFooterTap() {
     globalThis.clearTimeout(devTapTimer.current);
@@ -145,7 +144,8 @@ function App() {
       <Header
         user={user}
         profiles={me?.profiles ?? [user]}
-        total={total}
+        seen={seen}
+        pageCount={PAGES.length}
         onSwitched={(next) => {
           setMe({ user: next, profiles: me?.profiles ?? [next] });
           navigate('/');

@@ -1,6 +1,6 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 0.75rem;
 }
 
@@ -8,21 +8,24 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   font: inherit;
-  text-align: left;
-  padding: 0.9rem;
-  min-height: 120px;
+  text-align: center;
+  padding: 0.9rem 0.7rem;
+  min-height: 132px;
   background: #fff;
   border: 1.5px solid #1c1c1c;
   border-radius: 14px;
   box-shadow: 0 4px 0 #1c1c1c22;
   cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
+/* Squash rather than only sinking: the card gives way under a finger. */
 .card:active {
-  transform: translateY(3px);
+  transform: scale(0.96) translateY(2px);
   box-shadow: 0 1px 0 #1c1c1c22;
 }
 
@@ -30,34 +33,24 @@
   background: #fff3d6;
 }
 
+/* The game is the thing he came for, so it gets the width of two topics. */
+.game {
+  grid-column: span 2;
+  background: #005293;
+  color: #fff;
+}
+
 .emoji {
-  font-size: 1.9rem;
-  line-height: 1.1;
+  font-size: 3.4rem;
+  line-height: 1;
+}
+
+.gameEmoji {
+  font-size: 2.6rem;
+  line-height: 1;
 }
 
 .title {
   font-weight: 700;
-  font-size: 1.05rem;
-}
-
-.blurb {
-  font-size: 0.85rem;
-  color: #5a5a5a;
-}
-
-.badge {
-  position: absolute;
-  top: -0.4rem;
-  right: -0.4rem;
-  display: grid;
-  place-items: center;
-  min-width: 1.6rem;
-  height: 1.6rem;
-  padding: 0 0.35rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #fff;
-  background: #005293;
-  border: 1.5px solid #1c1c1c;
-  border-radius: 999px;
+  font-size: 0.95rem;
 }

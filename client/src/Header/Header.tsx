@@ -7,12 +7,13 @@ import styles from './Header.module.css';
 type Props = {
   user: User;
   profiles: User[];
-  total: number;
+  seen: number;
+  pageCount: number;
   onSwitched: (user: User) => void;
   onAddProfile: () => void;
 };
 
-export function Header({ user, profiles, total, onSwitched, onAddProfile }: Props) {
+export function Header({ user, profiles, seen, pageCount, onSwitched, onAddProfile }: Props) {
   const [open, setOpen] = useState(false);
 
   async function switchTo(id: string) {
@@ -30,8 +31,17 @@ export function Header({ user, profiles, total, onSwitched, onAddProfile }: Prop
         <span className={styles.caret} aria-hidden='true'>▾</span>
       </button>
 
-      <span className={styles.total}>
-        {total} {total === 1 ? 'thing' : 'things'} explored
+      {
+        /* One dot per topic, filled once it has been opened — a total interaction count is
+          not a number a child can do anything with. */
+      }
+      <span className={styles.dots} aria-label={`${seen} of ${pageCount} topics opened`}>
+        {Array.from(
+          { length: pageCount },
+          (_, i) => (
+            <span key={i} className={i < seen ? `${styles.dot} ${styles.dotOn}` : styles.dot} aria-hidden='true' />
+          ),
+        )}
       </span>
 
       {open && (
