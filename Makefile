@@ -5,10 +5,12 @@ install:
 	npm --prefix client install
 
 # Parse content/*.md into api/db/content.generated.ts and
-# client/src/data/pages.generated.ts. Both are gitignored build output; dev/build/check
+# client/src/data/pages.generated.ts, and content/games/*.md into
+# client/src/data/gameContent.generated.ts. All gitignored build output; dev/build/check
 # below depend on this so you never have to run it by hand.
 generate-content:
 	deno run --allow-read=content,client/static/media --allow-write=api/db,client/src/data scripts/generate-content.ts
+	deno run --allow-read=content/games,client/static/media --allow-write=client/src/data scripts/generate-game-content.ts
 
 # Regenerate the pronunciation clips for every `## Words` entry. macOS only (`say` +
 # `afconvert`), run by hand: the clips are committed, so build/dev/check do not depend on
@@ -42,7 +44,7 @@ build: generate-content
 
 check: generate-content
 	deno task --cwd api check
-	deno check scripts/generate-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/convert-sfx.ts scripts/mp4.ts
+	deno check scripts/generate-content.ts scripts/generate-game-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/convert-sfx.ts scripts/mp4.ts
 	npm --prefix client run check
 
 fmt:

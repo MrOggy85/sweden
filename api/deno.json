@@ -2,7 +2,7 @@
   "unstable": ["kv"],
   "tasks": {
     "check": "deno check main.ts",
-    "build": "deno run -A ../scripts/generate-content.ts && cd ../client && npm install --ignore-scripts && deno run -A build.ts",
+    "build": "deno run -A ../scripts/generate-content.ts && deno run -A ../scripts/generate-game-content.ts && cd ../client && npm install --ignore-scripts && deno run -A build.ts",
     "start": "KV_PATH=./.data/kv.sqlite3 deno run --allow-net --allow-read=./client,./.data --allow-write=./.data --allow-env main.ts",
     "dev": "DEV=1 KV_PATH=./.data/kv.sqlite3 deno run -A main.ts"
   },

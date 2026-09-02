@@ -15,12 +15,15 @@ and why the data model looks the way it does. Read it before adding features.
 - `content/` — one Markdown file per topic (YAML-ish frontmatter + a bullet list of
   facts, optionally a `## Words` section). `scripts/generate-content.ts` compiles it into
   `PAGE_IDS`/`PAGES`; see "Adding a topic page" below.
+- `content/games/` — content for mini-games rather than topic pages: `connect-pairs.md`
+  (word/icon pairs) and `phrases.md` (celebration phrases), compiled by
+  `scripts/generate-game-content.ts`; see "Adding a game word pair" below.
 - `client/static/` — copied recursively into `api/client/` by the build. `media/` holds the
   committed pronunciation clips.
 
 ```sh
 make install           # npm install for the client (the api needs nothing)
-make generate-content  # content/*.md -> PAGE_IDS / PAGES (also run by dev/build/check)
+make generate-content  # content/**/*.md -> PAGE_IDS/PAGES + game content (also run by dev/build/check)
 make generate-audio    # `## Words` -> client/static/media/*.m4a (macOS only, by hand)
 make audio-variants    # encode one word at several bitrates and print the sizes (macOS)
 make dev               # :8777 — also spawns the esbuild watcher as a child process
@@ -105,7 +108,9 @@ in `content/`. `make generate-content` fails when a clip is missing, so a forgot
 `make generate-audio` breaks the Deno Deploy build rather than shipping a button that
 plays nothing.
 
-It also fails when two *different* words derive the same filename. `slug()` folds å/ä/ö
+It also fails when two *different* words derive the same filename. Game pairs share this
+namespace: `katt` in `content/games/connect-pairs.md` is the same clip as `katt` on a
+topic page, recorded once. `slug()` folds å/ä/ö
 onto a/a/o, so `har` and `här` collide; the same word on two pages is fine and shares one
 clip. Rename one of the pair — there is no per-page namespace, on purpose, so a word is
 recorded once however many topics use it.
@@ -185,6 +190,29 @@ Add a tool by writing a component under `client/src/Dev/` and adding one entry t
 in `DevPage.tsx`. `/dev/voices` is the first: it answers what `speechSynthesis` offers on
 the device in hand, which is the thing PROJECT.md's sound section says varies and which no
 amount of local testing on a Mac can settle for an iPad.
+
+## Adding a game word pair
+
+The "connect the words" game (`client/src/ConnectGame/`) draws its content from
+`content/games/`, not from a topic page — a game pair isn't a topic (no facts, no
+frontmatter) and games have no visits/score, so nothing here touches the server or KV.
+
+```md
+- ko | cow | cow
+```
+
+1. Add a bullet to `content/games/connect-pairs.md`, written as
+   `swedish | english | icon`. `icon` must match a key in
+   `client/src/GameIcons/GameIcons.tsx` — either an object icon (add one if the pair needs
+   a new picture) or `color-<name>` for one of the eight `COLOR_IDS`.
+2. Run `make generate-audio` **on macOS**, same as a topic word — it covers both
+   `content/*.md` and `content/games/connect-pairs.md` in one pass. Commit the new `.m4a`.
+3. Run `make generate-content` (or `make dev` / `make build` / `make check`) to regenerate
+   `client/src/data/gameContent.generated.ts`. This fails the same way a missing topic clip
+   does if the audio was not generated first.
+
+To add a celebration phrase (shown at random when a round is finished), add a bullet to
+`content/games/phrases.md` — plain Swedish text, no audio.
 
 ## Do not
 

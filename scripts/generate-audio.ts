@@ -1,5 +1,6 @@
-// Generates the pronunciation clips referenced by `## Words` sections in content/*.md
-// into client/static/media/<slug>.m4a, using macOS' built-in Swedish voice.
+// Generates the pronunciation clips referenced by `## Words` sections in content/*.md, and
+// by content/games/connect-pairs.md, into client/static/media/<slug>.m4a, using macOS'
+// built-in Swedish voice.
 //
 // Run by hand — `make generate-audio` — not from build/dev/check. The clips are committed
 // editorial assets, unlike the generated TypeScript modules: Deno Deploy has no `say`, and
@@ -14,6 +15,7 @@
 // and then pick a Swedish one (Alva). `say -v '?'` lists what is installed.
 
 import { audioFileUrl, loadPages, MEDIA_DIR, slug, type Word } from './content.ts';
+import { gamePairAudioUrl, loadGamePairs } from './gameContent.ts';
 import { requireMacos, run } from './macos.ts';
 import { stripFreeBoxes } from './mp4.ts';
 
@@ -40,8 +42,7 @@ async function exists(url: URL): Promise<boolean> {
   }
 }
 
-async function generate(word: Word): Promise<void> {
-  const out = audioFileUrl(word);
+async function generate(word: Pick<Word, 'sv'>, out: URL): Promise<void> {
   const aiff = new URL(`${slug(word.sv)}.aiff`, MEDIA_DIR);
 
   await run('say', ['-v', VOICE, '-o', aiff.pathname, word.sv]);
@@ -59,6 +60,7 @@ async function generate(word: Word): Promise<void> {
 await Deno.mkdir(MEDIA_DIR, { recursive: true });
 
 const pages = await loadPages();
+const gamePairs = await loadGamePairs();
 let written = 0;
 let skipped = 0;
 
@@ -69,10 +71,21 @@ for (const page of pages) {
       skipped++;
       continue;
     }
-    await generate(word);
+    await generate(word, out);
     written++;
     console.log(`${page.id}: "${word.sv}" -> ${out.pathname}`);
   }
+}
+
+for (const pair of gamePairs) {
+  const out = gamePairAudioUrl(pair);
+  if (!FORCE && await exists(out)) {
+    skipped++;
+    continue;
+  }
+  await generate(pair, out);
+  written++;
+  console.log(`games/connect-pairs: "${pair.sv}" -> ${out.pathname}`);
 }
 
 console.log(`voice ${VOICE}: ${written} written, ${skipped} already present (--force to redo)`);
