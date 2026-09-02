@@ -201,7 +201,9 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
     <article className={styles.game}>
       <button type='button' className={styles.back} onClick={onBack}>&larr; All topics</button>
 
-      <h2 className={styles.title}><span aria-hidden='true'>🔗</span> Connect the words</h2>
+      <h2 className={styles.title}>
+        <span aria-hidden='true'>🔗</span> Connect the words
+      </h2>
       <p className={styles.blurb}>Drag a word to its picture, or a picture to its word.</p>
 
       <div

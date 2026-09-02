@@ -204,7 +204,12 @@ frontmatter) and games have no visits/score, so nothing here touches the server 
 1. Add a bullet to `content/games/connect-pairs.md`, written as
    `swedish | english | icon`. `icon` must match a key in
    `client/src/GameIcons/GameIcons.tsx` — either an object icon (add one if the pair needs
-   a new picture) or `color-<name>` for one of the eight `COLOR_IDS`.
+   a new picture) or `color-<name>` for a key in that file's `GAME_COLORS`.
+
+   `GAME_COLORS` is deliberately separate from `COLORS` in `client/src/data/pages.ts`.
+   Those are avatar colours: server-validated and stored in every profile, so they cannot
+   be retuned without a migration. The game's swatches exist only to be told apart, and are
+   picked so they differ in lightness as well as hue.
 2. Run `make generate-audio` **on macOS**, same as a topic word — it covers both
    `content/*.md` and `content/games/connect-pairs.md` in one pass. Commit the new `.m4a`.
 3. Run `make generate-content` (or `make dev` / `make build` / `make check`) to regenerate

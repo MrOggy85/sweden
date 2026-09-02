@@ -23,3 +23,16 @@
 .icon .eye {
   stroke: none;
 }
+
+/* Seeds, speckles, nostrils, potato eyes: small marks that would be swallowed by a 1.5px
+   outline at 44px. */
+.icon .dot {
+  stroke: none;
+}
+
+/* Internal detail that must read as texture rather than structure — corn kernels, a
+   highlight on fruit. Thinner than .line so it never competes with the silhouette. */
+.icon .fine {
+  fill: none;
+  stroke-width: 1px;
+}

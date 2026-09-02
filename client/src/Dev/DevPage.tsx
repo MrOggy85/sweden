@@ -1,4 +1,5 @@
 import { navigate } from '../core/navigate';
+import { Icons } from './Icons';
 import { Voices } from './Voices';
 import styles from './DevPage.module.css';
 
@@ -9,6 +10,7 @@ type Props = {
 
 const TOOLS = [
   { path: '/voices', title: 'Speech voices', blurb: 'What speechSynthesis offers on this device' },
+  { path: '/icons', title: 'Game icons', blurb: 'Every connect-the-words picture, large and small' },
 ];
 
 // Diagnostics, reachable only by tapping the build footer five times. Deliberately
@@ -30,7 +32,7 @@ export function DevPage({ path }: Props) {
         <h1 className={styles.title}>{tool ? tool.title : 'Dev'}</h1>
       </header>
 
-      {tool?.path === '/voices' ? <Voices /> : <Index unknown={path !== '/'} />}
+      {tool?.path === '/voices' ? <Voices /> : tool?.path === '/icons' ? <Icons /> : <Index unknown={path !== '/'} />}
     </div>
   );
 }
