@@ -15,3 +15,8 @@ blurb: A coffee break, but important.
 - bulle | bun
 - kaffe | coffee
 - kaka | cake
+
+## Links
+
+- midsummer
+- language

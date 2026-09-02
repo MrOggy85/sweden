@@ -93,6 +93,9 @@ export type Page = {
   facts: string[];
   words?: Word[];
   sounds?: Sound[];
+  // Ids of related pages — authored in the content file plus the reverse of every link
+  // pointing at this page. `connect` is the one id here that is not a page.
+  links?: string[];
 };
 
 export const PAGE_IDS = PAGES.map((p) => p.id);

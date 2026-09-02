@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import type { Page } from '../data/pages';
+import { PageLinks } from '../PageLinks/PageLinks';
 import { SentenceBuilder } from '../SentenceBuilder/SentenceBuilder';
 import { Stars } from '../Stars/Stars';
 import motion from '../core/motion.module.css';
@@ -89,6 +90,8 @@ export function PageView({ page, count, onBack }: Props) {
             ))}
           </ul>
         )}
+
+      <PageLinks ids={page.links ?? []} />
     </article>
   );
 }

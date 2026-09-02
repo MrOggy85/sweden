@@ -165,6 +165,28 @@ filename; the folder and `.m4a` are implied, and writing either is an error:
 Unlike a word clip, this filename is authored rather than derived, so `generate-content`
 checks the file exists and names it when it does not.
 
+## Linking pages
+
+A `## Links` section holds bare page ids — never labels. The card a link renders takes its
+emoji and title from the target page, so a link cannot go stale when a title changes.
+
+```md
+## Links
+
+- katt
+- connect
+```
+
+**Author each connection once.** `scripts/content.ts` adds the reverse of every link after
+loading all pages, so `animals -> katt` gives `katt -> animals` for free; writing both
+directions is a duplicate-link error, not a no-op. Authored links keep file order and come
+first, backlinks follow in page order.
+
+`generate-content` fails on an id that is not a page, a link to the page's own id, and the
+same id twice in one section. `connect` is the one valid non-page target (`LINKABLE_ROUTES`
+in `scripts/content.ts`) and gets no backlink, having no content file to render one on.
+`PageLinks.tsx` caps what it displays at six.
+
 ## Page kinds
 
 `kind` in the frontmatter picks the renderer, defaulting to `topic`:

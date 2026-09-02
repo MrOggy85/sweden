@@ -39,11 +39,19 @@ export type Page = {
   facts: string[];
   words: Word[];
   sounds: Sound[];
+  // Ids of other pages, authored in `## Links` plus the reverse of every link pointing
+  // here. Never labels: the card a link renders comes from the target page itself.
+  links: string[];
 };
 
 // Page ids become URLs (`/flag`), so anything the client routes itself is off limits — a
 // content/dev.md would be unreachable behind the diagnostics area.
 const RESERVED_IDS = ['dev', 'api', 'media', 'connect'];
+
+// Routes that are not content pages but may still be linked to. Only the game: it is
+// somewhere a child would want to go from `language` or `sentence`. It gets no automatic
+// backlink, having no content file of its own to render one on.
+const LINKABLE_ROUTES = ['connect'];
 
 export const CONTENT_DIR = new URL('../content/', import.meta.url);
 export const MEDIA_DIR = new URL('../client/static/media/', import.meta.url);
@@ -114,20 +122,31 @@ function parseSound(item: string, filename: string): Sound {
   return { label, audio: `${SFX_URL_PREFIX}${file}.m4a` };
 }
 
+function parseLink(item: string, filename: string): string {
+  if (!/^[a-z0-9-]+$/.test(item)) {
+    throw new Error(`${filename}: link "${item}" must be a bare page id — the card comes from the target page`);
+  }
+  return item;
+}
+
+type Body = { facts: string[]; words: Word[]; sounds: Sound[]; links: string[] };
+
 // Bullets before the first `##` heading are facts; bullets under `## Words` are
-// vocabulary and under `## Sounds` are effects. Bullets under any other heading are
-// ignored, so prose sections can be added to a topic without turning into facts.
-function parseBody(body: string, filename: string): { facts: string[]; words: Word[]; sounds: Sound[] } {
+// vocabulary, under `## Sounds` are effects, and under `## Links` are page ids. Bullets
+// under any other heading are ignored, so prose sections can be added to a topic without
+// turning into facts.
+function parseBody(body: string, filename: string): Body {
   const facts: string[] = [];
   const words: Word[] = [];
   const sounds: Sound[] = [];
-  let section: 'facts' | 'words' | 'sounds' | 'other' = 'facts';
+  const links: string[] = [];
+  let section: 'facts' | 'words' | 'sounds' | 'links' | 'other' = 'facts';
 
   for (const line of body.split('\n')) {
     const heading = line.match(/^##\s+(.*?)\s*$/);
     if (heading) {
       const name = heading[1].toLowerCase();
-      section = name === 'words' ? 'words' : name === 'sounds' ? 'sounds' : 'other';
+      section = name === 'words' || name === 'sounds' || name === 'links' ? name : 'other';
       continue;
     }
 
@@ -138,9 +157,10 @@ function parseBody(body: string, filename: string): { facts: string[]; words: Wo
     if (section === 'facts') facts.push(item);
     else if (section === 'words') words.push(parseWord(item, filename));
     else if (section === 'sounds') sounds.push(parseSound(item, filename));
+    else if (section === 'links') links.push(parseLink(item, filename));
   }
 
-  return { facts, words, sounds };
+  return { facts, words, sounds, links };
 }
 
 function requireField(fields: Record<string, string>, name: string, filename: string): string {
@@ -179,10 +199,46 @@ async function loadPage(entryName: string): Promise<Page> {
     throw new Error(`${entryName}: kind "${kind}" must be one of ${PAGE_KINDS.join(', ')}`);
   }
 
-  const { facts, words, sounds } = parseBody(body, entryName);
+  const { facts, words, sounds, links } = parseBody(body, entryName);
   if (facts.length === 0) throw new Error(`${entryName}: no facts found — expected a Markdown bullet list ("- ...")`);
 
-  return { id, order, kind, title, emoji, blurb, facts, words, sounds };
+  return { id, order, kind, title, emoji, blurb, facts, words, sounds, links };
+}
+
+// Link targets can only be checked once every page is known, so this runs after the whole
+// set is loaded. A bad id here would otherwise render a card that navigates nowhere.
+function assertLinksResolve(pages: Page[]): void {
+  const ids = new Set(pages.map((p) => p.id));
+
+  for (const page of pages) {
+    const seen = new Set<string>();
+    for (const link of page.links) {
+      if (link === page.id) throw new Error(`${page.id}.md: links to itself`);
+      if (seen.has(link)) throw new Error(`${page.id}.md: links to "${link}" twice`);
+      seen.add(link);
+      if (!ids.has(link) && !LINKABLE_ROUTES.includes(link)) {
+        throw new Error(`${page.id}.md: links to "${link}", which is not a page id`);
+      }
+    }
+  }
+}
+
+/**
+ * Adds the reverse of every authored link, so a connection only has to be written once and
+ * cannot be half-present. Authored links keep their file order and stay first; backlinks
+ * follow in page order, which keeps the generated module stable between runs.
+ */
+function addBacklinks(pages: Page[]): void {
+  const byId = new Map(pages.map((p) => [p.id, p]));
+
+  for (const page of pages) {
+    // Snapshot: appending to another page's list must not feed back into this loop.
+    for (const link of [...page.links]) {
+      const target = byId.get(link);
+      if (!target || target.links.includes(page.id)) continue;
+      target.links.push(page.id);
+    }
+  }
 }
 
 export async function loadPages(): Promise<Page[]> {
@@ -200,6 +256,9 @@ export async function loadPages(): Promise<Page[]> {
     if (seen.has(page.id)) throw new Error(`duplicate content id: "${page.id}"`);
     seen.add(page.id);
   }
+
+  assertLinksResolve(pages);
+  addBacklinks(pages);
 
   return pages;
 }

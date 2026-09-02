@@ -15,3 +15,8 @@ blurb: A few to try out loud.
 - hej | hello
 - tack | thank you
 - hej då | bye
+
+## Links
+
+- sentence
+- connect

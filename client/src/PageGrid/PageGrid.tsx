@@ -1,4 +1,5 @@
 import { PAGES } from '../data/pages';
+import { GAME } from '../data/game';
 import type { PageProgress } from '../data/types';
 import { Stars } from '../Stars/Stars';
 import motion from '../core/motion.module.css';
@@ -28,8 +29,8 @@ export function PageGrid({ progress, onOpen, onOpenGame }: Props) {
         style={delay(0)}
         onClick={onOpenGame}
       >
-        <span className={styles.gameEmoji} aria-hidden='true'>🔗</span>
-        <span className={styles.title}>Connect the words</span>
+        <span className={styles.gameEmoji} aria-hidden='true'>{GAME.emoji}</span>
+        <span className={styles.title}>{GAME.title}</span>
       </button>
 
       {PAGES.map((page, index) => {

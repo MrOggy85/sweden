@@ -15,3 +15,8 @@ blurb: The capital, built on 14 islands.
 - stad | city
 - bro | bridge
 - ö | island
+
+## Links
+
+- fika
+- flag

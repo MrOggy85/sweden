@@ -15,3 +15,8 @@ blurb: Blue with a yellow cross.
 - flagga | flag
 - blå | blue
 - gul | yellow
+
+## Links
+
+- map
+- language

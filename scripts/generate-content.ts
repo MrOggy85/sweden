@@ -123,7 +123,7 @@ function renderClientModule(pages: Page[]): string {
   const literal = JSON.stringify(
     // `kind` and `words` are omitted when they carry no information, so the generated
     // module stays readable and the client treats a missing `kind` as an ordinary topic.
-    pages.map(({ id, kind, title, emoji, blurb, facts, words, sounds }) => ({
+    pages.map(({ id, kind, title, emoji, blurb, facts, words, sounds, links }) => ({
       id,
       ...(kind === 'topic' ? {} : { kind }),
       title,
@@ -132,6 +132,7 @@ function renderClientModule(pages: Page[]): string {
       facts,
       ...(words.length > 0 ? { words } : {}),
       ...(sounds.length > 0 ? { sounds } : {}),
+      ...(links.length > 0 ? { links } : {}),
     })),
     null,
     2,

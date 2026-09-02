@@ -8,18 +8,17 @@ import { PageGrid } from './PageGrid/PageGrid';
 import { PageView } from './PageView/PageView';
 import { ProfileSetup } from './ProfileSetup/ProfileSetup';
 import { pageById, PAGES } from './data/pages';
+import { GAME } from './data/game';
 import type { PageProgress, User, Visit } from './data/types';
 import { getPages, getVisits, recordVisit } from './data/api';
 import { navigate, navigateReplace, registerNavigate } from './core/navigate';
 import { useMe } from './data/useMe';
 import styles from './App.module.css';
 
-// The whole route table: `/` is the grid, `/connect` is the matching game, `/<pageId>` is
+// The whole route table: `/` is the grid, `GAME.path` is the matching game, `/<pageId>` is
 // a topic, `/dev...` is the diagnostics area. Page ids come from content/*.md, so no list
 // needs maintaining here — an id that does not resolve is treated as a typo and rewritten
 // to `/`.
-const GAME_PATH = '/connect';
-
 function pageIdFromPath(path: string): string | null {
   const id = path.replace(/^\/+|\/+$/g, '');
   return id === '' ? null : id;
@@ -67,7 +66,7 @@ function App() {
   }, []);
 
   const devPath = devSubPath(path);
-  const isGame = devPath === null && path === GAME_PATH;
+  const isGame = devPath === null && path === GAME.path;
   // Neither /dev nor /connect is a page id, so they must not reach the lookup below —
   // otherwise the unknown-page rewrite would bounce them straight back to the grid.
   const openPageId = devPath === null && !isGame ? pageIdFromPath(path) : null;
@@ -162,7 +161,7 @@ function App() {
             <PageGrid
               progress={progress}
               onOpen={(id) => navigate(`/${id}`)}
-              onOpenGame={() => navigate(GAME_PATH)}
+              onOpenGame={() => navigate(GAME.path)}
             />
           )}
       </main>

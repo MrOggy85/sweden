@@ -42,3 +42,7 @@ blurb: Tap words, then press Speak.
 - ett | a | glue
 - och | and | glue
 - inte | not | glue
+
+## Links
+
+- connect
