@@ -17,6 +17,7 @@ generate-content:
 # this. Existing clips are skipped; pass script flags through ARGS, e.g.
 #   make generate-audio ARGS=--force
 #   make generate-audio ARGS=--voice=Klara
+#   make generate-audio ARGS=--only=banan   # redo one clip, implies --force
 generate-audio:
 	deno run --allow-read=content,client/static --allow-write=client/static --allow-run=say,afconvert scripts/generate-audio.ts $(ARGS)
 
@@ -44,7 +45,7 @@ build: generate-content
 
 check: generate-content
 	deno task --cwd api check
-	deno check scripts/generate-content.ts scripts/generate-game-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/convert-sfx.ts scripts/mp4.ts
+	deno check scripts/generate-content.ts scripts/generate-game-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/convert-sfx.ts scripts/mp4.ts scripts/pronounce.ts scripts/aiff.ts
 	npm --prefix client run check
 
 fmt:

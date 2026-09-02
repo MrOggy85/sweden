@@ -108,6 +108,28 @@ in `content/`. `make generate-content` fails when a clip is missing, so a forgot
 `make generate-audio` breaks the Deno Deploy build rather than shipping a button that
 plays nothing.
 
+### When the voice says the wrong word
+
+Swedish has homographs: `banan` is both the fruit (ba-NAN) and "the track" (BA-nan), and
+Alva reads it as the track. The generator only ever sees the spelling, so it cannot know
+which was meant.
+
+`content/audio/pronounce.md` maps a written word to the text `say` is handed. The display
+word, the filename, and the link between them are unchanged; only the synthesiser's input
+differs. Test a candidate by ear first, then redo that one clip:
+`make generate-audio ARGS=--only=banan`.
+
+**An override ending in the word itself is a carrier**, and the words in front of it get cut
+back out of the audio. `en banan` gets the stress right where `banán` does not, and a
+`[[slnc]]` pause between the two loses it again — so the carrier is spoken contiguously and
+removed from the PCM by `scripts/aiff.ts` before `afconvert` runs. The committed clip is
+therefore still one word, still reproducible from content, and still safe to chain in the
+sentence builder. If no gap is found to cut at, generation fails rather than shipping a clip
+with the carrier in it.
+
+An override for a word no content uses is an error: it means the word was renamed, and the
+override would silently stop applying to it.
+
 It also fails when two *different* words derive the same filename. Game pairs share this
 namespace: `katt` in `content/games/connect-pairs.md` is the same clip as `katt` on a
 topic page, recorded once. `slug()` folds å/ä/ö
@@ -241,6 +263,9 @@ frontmatter) and games have no visits/score, so nothing here touches the server 
 To add a celebration phrase (shown at random when a round is finished), add a bullet to
 `content/games/phrases.md` — plain Swedish text, no audio.
 
+## Inline Comments
+Keep it breif, tight, shorter is better. No prose.
+
 ## Do not
 
 - Add a `setInterval` tick loop or any background timer. Deno Deploy isolates are
@@ -255,3 +280,4 @@ To add a celebration phrase (shown at random when a round is finished), add a bu
   reaches `os.cpus()` via lightningcss/detect-libc, and a narrower grant kills the watcher
   on startup **silently** — the server keeps serving the previously built bundle, so the
   only symptom is a `client watcher exited` log line.
+

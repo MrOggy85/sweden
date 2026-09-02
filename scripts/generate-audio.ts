@@ -18,9 +18,17 @@ import { audioFileUrl, loadPages, MEDIA_DIR, slug, type Word } from './content.t
 import { gamePairAudioUrl, loadGamePairs } from './gameContent.ts';
 import { requireMacos, run } from './macos.ts';
 import { stripFreeBoxes } from './mp4.ts';
+import { assertOverridesUsed, loadPronunciations } from './pronounce.ts';
+import { readAiff, speechDurationMs, trimCarrier, writeAiff } from './aiff.ts';
 
 const VOICE = Deno.args.find((a) => a.startsWith('--voice='))?.slice('--voice='.length) ?? 'Alva';
 const FORCE = Deno.args.includes('--force');
+
+// Redo one word without re-encoding the other seventy: `ARGS=--only=banan`. Matches on the
+// derived filename, so either the word or its slug works, and it implies --force — asking
+// to regenerate one clip and being told it already exists would be absurd.
+const ONLY = Deno.args.find((a) => a.startsWith('--only='))?.slice('--only='.length);
+const ONLY_SLUG = ONLY ? slug(ONLY) : null;
 
 // The one place the encoder settings live. `make audio-variants` encodes a single word at
 // a range of settings and prints the resulting sizes, so this line can be changed against
@@ -42,11 +50,42 @@ async function exists(url: URL): Promise<boolean> {
   }
 }
 
+/** Speaks the carrier on its own and reports how long it lasts, in milliseconds. */
+async function measureCarrier(carrier: string): Promise<number> {
+  const probe = new URL('carrier-probe.aiff', MEDIA_DIR);
+  await run('say', ['-v', VOICE, '-o', probe.pathname, carrier]);
+  try {
+    return speechDurationMs(readAiff(await Deno.readFile(probe)));
+  } finally {
+    await Deno.remove(probe);
+  }
+}
+
 async function generate(word: Pick<Word, 'sv'>, out: URL): Promise<void> {
   const aiff = new URL(`${slug(word.sv)}.aiff`, MEDIA_DIR);
+  // The filename still comes from the written word; only the spoken text can differ.
+  const spoken = overrides.get(word.sv) ?? word.sv;
+  // An override ending in the word itself is a carrier: extra words in front that fix the
+  // stress, spoken contiguously because a pause loses it again, then cut from the audio.
+  const carried = spoken !== word.sv && spoken.endsWith(` ${word.sv}`);
 
-  await run('say', ['-v', VOICE, '-o', aiff.pathname, word.sv]);
+  await run('say', ['-v', VOICE, '-o', aiff.pathname, spoken]);
   try {
+    if (carried) {
+      // How long the carrier takes on its own, as the prior for where the boundary is.
+      // Two words run together leave no silence to search for, only a dip.
+      const carrierMs = await measureCarrier(spoken.slice(0, -(word.sv.length + 1)));
+      const parsed = readAiff(await Deno.readFile(aiff));
+      const cut = trimCarrier(parsed, carrierMs);
+      if (!cut) {
+        throw new Error(
+          `"${word.sv}" is said as "${spoken}", but the carrier boundary was not where a ` +
+            `${Math.round(carrierMs)}ms carrier put it. Try a different carrier word, or drop the override.`,
+        );
+      }
+      await Deno.writeFile(aiff, writeAiff(cut.trimmed));
+      console.log(`  cut ${cut.cutMs}ms of carrier from "${word.sv}"`);
+    }
     await run('afconvert', ['-f', 'm4af', ...ENCODE_ARGS, aiff.pathname, out.pathname]);
   } finally {
     await Deno.remove(aiff);
@@ -61,31 +100,43 @@ await Deno.mkdir(MEDIA_DIR, { recursive: true });
 
 const pages = await loadPages();
 const gamePairs = await loadGamePairs();
+const overrides = await loadPronunciations();
+assertOverridesUsed(overrides, [
+  ...pages.flatMap((page) => page.words.map((word) => word.sv)),
+  ...gamePairs.map((pair) => pair.sv),
+]);
+
 let written = 0;
 let skipped = 0;
 
-for (const page of pages) {
-  for (const word of page.words) {
-    const out = audioFileUrl(word);
-    if (!FORCE && await exists(out)) {
-      skipped++;
-      continue;
-    }
-    await generate(word, out);
-    written++;
-    console.log(`${page.id}: "${word.sv}" -> ${out.pathname}`);
+/** Whether this word is being asked for, and whether an existing clip should be replaced. */
+function wanted(sv: string): boolean {
+  return ONLY_SLUG === null || slug(sv) === ONLY_SLUG;
+}
+
+async function maybeGenerate(word: Pick<Word, 'sv'>, out: URL, source: string): Promise<void> {
+  if (!wanted(word.sv)) return;
+  if (!FORCE && ONLY_SLUG === null && await exists(out)) {
+    skipped++;
+    return;
   }
+  await generate(word, out);
+  written++;
+  const spoken = overrides.get(word.sv);
+  const via = spoken ? ` (said as "${spoken}"${spoken.endsWith(` ${word.sv}`) ? ', carrier trimmed' : ''})` : '';
+  console.log(`${source}: "${word.sv}"${via} -> ${out.pathname}`);
+}
+
+for (const page of pages) {
+  for (const word of page.words) await maybeGenerate(word, audioFileUrl(word), page.id);
 }
 
 for (const pair of gamePairs) {
-  const out = gamePairAudioUrl(pair);
-  if (!FORCE && await exists(out)) {
-    skipped++;
-    continue;
-  }
-  await generate(pair, out);
-  written++;
-  console.log(`games/connect-pairs: "${pair.sv}" -> ${out.pathname}`);
+  await maybeGenerate(pair, gamePairAudioUrl(pair), 'games/connect-pairs');
+}
+
+if (ONLY_SLUG !== null && written === 0) {
+  throw new Error(`--only=${ONLY}: no word in content derives ${ONLY_SLUG}.m4a`);
 }
 
 console.log(`voice ${VOICE}: ${written} written, ${skipped} already present (--force to redo)`);
