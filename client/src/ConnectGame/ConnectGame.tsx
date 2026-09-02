@@ -188,7 +188,9 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
     }
   }
 
-  function cardClassName(side: Side, sv: string, base: string) {
+  // `base` comes from a CSS module, and noUncheckedIndexedAccess types those lookups as
+  // possibly undefined — join() drops them, same as passing one to className directly.
+  function cardClassName(side: Side, sv: string, base: string | undefined) {
     const classes = [styles.card, base];
     if (connected.has(sv)) classes.push(styles.solved);
     if (wrongKeys.has(cardKey(side, sv))) classes.push(styles.wrong);
