@@ -28,7 +28,7 @@ function createContext() {
 
 const STATIC_POLL_MS = 2000;
 
-/** Every file under static/, as path:size:mtime — cheap enough at a few dozen files. */
+/** static/ as path:size:mtime — cheap at a few dozen files. */
 async function staticSignature(dir = 'static'): Promise<string> {
   const parts: string[] = [];
   for await (const entry of Deno.readDir(dir)) {
@@ -42,10 +42,8 @@ async function staticSignature(dir = 'static'): Promise<string> {
   return parts.sort().join('|');
 }
 
-// Polled, not Deno.watchFs: clips are generated on the host (`make generate-audio`,
-// `make convert-sfx`) and this may run in a container, where inotify events do not cross
-// the bind mount. A watch would look like it worked and silently miss every real change —
-// the symptom being a word or effect that plays nothing.
+// Polled, not Deno.watchFs: clips are generated on the host, and inotify events do not
+// cross a container bind mount. A watch looks like it works and misses every real change.
 async function pollStatic() {
   let previous = await staticSignature();
   while (true) {

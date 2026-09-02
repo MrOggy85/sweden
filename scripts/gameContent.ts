@@ -1,10 +1,5 @@
-// Parses content/games/*.md for the "connect the words" game. Deliberately separate from
-// scripts/content.ts's topic loader: a game pair isn't a topic (no frontmatter, no facts,
-// and it carries an icon id instead of prose), and this library is picked from at random
-// rather than shown in full.
-//
-// Shared by scripts/generate-game-content.ts and scripts/generate-audio.ts, the same way
-// scripts/content.ts is shared by the topic equivalents of those two scripts.
+// Parses content/games/*.md. Separate from the topic loader: a game pair has no
+// frontmatter and no facts, and the library is sampled rather than shown in full.
 
 import { MEDIA_DIR, slug } from './content.ts';
 
@@ -17,15 +12,14 @@ export type GamePair = {
 
 export const GAMES_DIR = new URL('../content/games/', import.meta.url);
 
-// Where the browser asks for a clip — see scripts/content.ts's identical constant.
+// Same as scripts/content.ts's constant.
 const AUDIO_URL_PREFIX = '/media/';
 
 export function gamePairAudioUrl(pair: GamePair): URL {
   return new URL(`${slug(pair.sv)}.m4a`, MEDIA_DIR);
 }
 
-// Bullets anywhere in the file; everything else (a leading explanation, blank lines) is
-// ignored, so the file can carry a short comment for whoever adds the next pair.
+// Bullets anywhere; everything else is ignored, so the file can explain itself.
 function bullets(raw: string): string[] {
   return raw
     .split('\n')

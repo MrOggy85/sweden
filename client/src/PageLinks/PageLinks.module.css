@@ -24,8 +24,7 @@
   gap: 0.6rem;
 }
 
-/* The home-grid card at about half size: same outline, same offset shadow, same squash on
-   press, so a link reads as "a place you can go" rather than as a button. */
+/* The home-grid card at half size, so a link reads as a place rather than a button. */
 .link {
   display: flex;
   flex-direction: column;

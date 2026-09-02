@@ -20,8 +20,7 @@
   min-height: 100vh;
 }
 
-/* Launched from the iOS home screen there is no browser chrome, so the app paints under
-   the status bar and the home indicator. The insets are 0 in a normal browser tab. */
+/* No browser chrome when launched from the home screen. Insets are 0 in a normal tab. */
 .app {
   max-width: 46rem;
   margin: 0 auto;
@@ -52,8 +51,7 @@
   color: #b0a89c;
 }
 
-/* A button only so that five taps can open /dev. It must look exactly like the text it
-   replaced — the point of the gesture is that there is nothing to notice. */
+/* A button only so five taps can open /dev; must look exactly like plain text. */
 .buildTap {
   font: inherit;
   color: inherit;

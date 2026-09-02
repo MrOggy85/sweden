@@ -3,19 +3,15 @@ import styles from './Voices.module.css';
 
 const TEST_PHRASE = 'Hej! Jag heter Alva. Katten har en bok.';
 
-// Prerecorded clips are the app's canonical Swedish (see PROJECT.md). This page exists to
-// answer whether speechSynthesis could ever cover the phrases no one can prerecord —
-// praise with a number in it, say — on the devices actually used. The API is present in
-// every browser here; whether a Swedish *voice* is installed is per-device and per-OS.
+// Whether a device has a Swedish voice at all — the API is everywhere, the voices are not.
+// Why it matters, and why nothing user-facing uses it: CLAUDE.md, "Runtime speech".
 export function Voices() {
   const supported = 'speechSynthesis' in globalThis;
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [swedishOnly, setSwedishOnly] = useState(true);
   const [phrase, setPhrase] = useState(TEST_PHRASE);
 
-  // getVoices() populates asynchronously: the first call usually returns [] and the list
-  // arrives with the voiceschanged event. Anything relying on one synchronous call is
-  // reading an empty list on a device that has voices.
+  // getVoices() populates asynchronously: the first call usually returns [].
   useEffect(() => {
     if (!supported) return;
     const read = () => setVoices(speechSynthesis.getVoices());

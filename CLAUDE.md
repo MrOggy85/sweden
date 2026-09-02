@@ -264,7 +264,13 @@ To add a celebration phrase (shown at random when a round is finished), add a bu
 `content/games/phrases.md` — plain Swedish text, no audio.
 
 ## Inline Comments
-Keep it breif, tight, shorter is better. No prose.
+
+Minimal. The code is what actually happens, so a comment restating behaviour is redundant
+at best and wrong as soon as the code moves — delete those rather than update them.
+
+Comment only what the code cannot say: intent, a decision and what it rules out, a gotcha,
+a constraint imposed from outside the file. One line where you can. If it needs a
+paragraph it belongs in this file or a content file, with a pointer from the code.
 
 ## Do not
 

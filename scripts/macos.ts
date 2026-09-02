@@ -1,6 +1,5 @@
-// The audio scripts drive macOS' built-in `say`, `afconvert` and `afplay`. Neither Deno
-// Deploy nor the Linux dev container has them, so both scripts exit early with a clear
-// message rather than failing on a missing binary halfway through.
+// `say`/`afconvert`/`afplay` exist on macOS only, so exit early rather than failing
+// halfway through.
 
 export function requireMacos(script: string): void {
   if (Deno.build.os === 'darwin') return;

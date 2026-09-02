@@ -1,21 +1,10 @@
-// Normalises whatever lands in client/static/media/sfx/ into the format the app serves:
-// AAC in an .m4a container, same as the word clips, because that is what plays everywhere
-// on an iPad without argument.
+// Whatever lands in media/sfx/ -> AAC in .m4a, like the word clips. macOS only.
 //
-//   make convert-sfx                        # convert anything not already .m4a
-//   make convert-sfx ARGS=--force           # redo files that already have an .m4a
-//   make convert-sfx ARGS=--bitrate=96000   # denser material, ambience
-//   make convert-sfx ARGS=--mono            # downmix
+//   make convert-sfx ARGS=--force / --bitrate=96000 / --mono / --keep
 //
-// macOS only, like generate-audio: afconvert is a system tool.
-//
-// 64 kbps by default, not the 24 kbps the speech clips use. A spoken word survives 24;
-// an animal call or a chime has real spectral content and audibly falls apart. A
-// two-second effect at 64 kbps is still ~16 KB.
-//
-// The source is deleted once its .m4a is written and checked, since the build copies
-// static/ wholesale and a leftover download would ship next to its own output. Pass
-// --keep to hold on to it; generate-content will then refuse to run until it is gone.
+// 64 kbps, not the speech clips' 24: a word survives 24, an animal call does not. The
+// source is deleted once the output is checked, or it would ship beside its own output.
+// See CLAUDE.md, "Adding a sound effect".
 
 import { SFX_DIR, SFX_SOURCE_EXTENSIONS } from './content.ts';
 import { requireMacos, run } from './macos.ts';
@@ -35,7 +24,7 @@ async function exists(url: URL): Promise<boolean> {
   }
 }
 
-/** Deleting the only copy of a download on the strength of an exit code is not enough. */
+/** An exit code is not enough to delete the only copy of a download. */
 async function assertPlayable(out: URL): Promise<void> {
   const buf = await Deno.readFile(out);
   const brand = new TextDecoder().decode(buf.subarray(4, 8));

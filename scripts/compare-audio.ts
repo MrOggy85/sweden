@@ -1,12 +1,8 @@
-// Encodes one word at a range of AAC settings and prints what each one costs, so
-// ENCODE_ARGS in generate-audio.ts can be set from measurements. macOS only.
+// One word at a range of AAC settings, so ENCODE_ARGS in generate-audio.ts can be set from
+// measurements. macOS only. `make audio-variants WORD=tack ARGS=--play`.
 //
-//   make audio-variants                          # the word "hej"
-//   make audio-variants WORD=tack ARGS=--play    # play each variant after encoding
-//
-// Sizes are broken down because a one-word clip is mostly not audio: `afconvert` reserves
-// a `free` padding box, and the `moov` index costs a few hundred bytes whatever the
-// bitrate. Halving the bitrate does not halve the file.
+// Sizes are broken down because a one-word clip is mostly not audio: halving the bitrate
+// does not halve the file.
 
 import { requireMacos, run } from './macos.ts';
 
@@ -14,8 +10,7 @@ const VOICE = Deno.args.find((a) => a.startsWith('--voice='))?.slice('--voice='.
 const PLAY = Deno.args.includes('--play');
 const WORD = Deno.args.find((a) => !a.startsWith('--')) ?? 'hej';
 
-// Scratch space, not part of the build. /tmp is a symlink to /private/tmp on macOS, which
-// is why the Makefile grants both.
+// Scratch space. /tmp symlinks to /private/tmp on macOS, hence both in the Makefile.
 const OUT_DIR = '/tmp/sweden-audio';
 
 const VARIANTS = [
@@ -27,7 +22,7 @@ const VARIANTS = [
   { label: 'mono 16k', args: ['-d', 'aac', '-c', '1', '-b', '16000'] },
 ];
 
-// Walks the top-level MP4 boxes: `mdat` is the encoded audio, everything else is overhead.
+// `mdat` is the audio; everything else is overhead.
 async function measure(path: string): Promise<{ total: number; audio: number; free: number }> {
   const buf = await Deno.readFile(path);
   const dv = new DataView(buf.buffer);

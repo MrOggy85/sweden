@@ -10,20 +10,17 @@ type Side = 'word' | 'image';
 type Drag = { side: Side; sv: string; startX: number; startY: number; moved: boolean };
 type Point = { x1: number; y1: number; x2: number; y2: number };
 
-// How long the celebration overlay stays up before the next round starts on its own —
-// there is no "next" button, per the issue: infinite rounds, no lives, no score.
+// No "next" button, per the issue: infinite rounds, no lives, no score.
 const CELEBRATION_MS = 2200;
 
-// A tap (as opposed to a drag) moves less than this many CSS pixels between pointerdown
-// and pointerup.
+// A tap moves less than this between pointerdown and pointerup; more is a drag.
 const TAP_THRESHOLD_PX = 6;
 
 function cardKey(side: Side, sv: string): string {
   return `${side}:${sv}`;
 }
 
-// Fixed rather than random: the same burst every time is cheaper, and a child does not
-// audit confetti for entropy. Spread across the panel with staggered starts.
+// Fixed, not random: a child does not audit confetti for entropy.
 const CONFETTI = Array.from({ length: 16 }, (_, i) => ({
   left: `${4 + (i * 6.2) % 92}%`,
   color: ['#fecc00', '#005293', '#2a9d8f', '#e07a9c', '#ef8354'][i % 5],
@@ -109,9 +106,7 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
     };
   }, [recomputeLines]);
 
-  // A round is done once every pair in it has been connected. Kept in its own effect from
-  // the timeout below so setting `celebrating` here does not cancel the timeout that reacts
-  // to it.
+  // Separate from the timeout below, so setting `celebrating` does not cancel it.
   useEffect(() => {
     if (!celebrating && round.length > 0 && connected.size === round.length) {
       setPhrase(randomPhrase());
@@ -250,8 +245,7 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
               x2={line.x2}
               y2={line.y2}
               className={styles.solvedLine}
-              // The draw animation needs the line's length as a dash length; only the
-              // component knows the geometry.
+              // The draw animation needs the length as a dash; only we know the geometry.
               style={{ '--len': Math.hypot(line.x2 - line.x1, line.y2 - line.y1) } as CSSProperties}
             />
           ))}

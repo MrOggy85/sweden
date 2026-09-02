@@ -23,7 +23,7 @@
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-/* Squash rather than only sinking: the card gives way under a finger. */
+/* Squash, not just sink: the card gives way under a finger. */
 .card:active {
   transform: scale(0.96) translateY(2px);
   box-shadow: 0 1px 0 #1c1c1c22;
@@ -33,7 +33,7 @@
   background: #fff3d6;
 }
 
-/* The game is the thing he came for, so it gets the width of two topics. */
+/* The game is what he came for: two topics wide. */
 .game {
   grid-column: span 2;
   background: #005293;

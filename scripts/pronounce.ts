@@ -1,13 +1,6 @@
-// Pronunciation overrides: what `say` is given, when that has to differ from what the app
-// displays.
-//
-// The spoken text is normally the Swedish word itself, which is right until the word is a
-// homograph. "banan" is both the fruit (ba-NAN) and "the track" (BA-nan), and Alva reads it
-// as the track — nothing in the pipeline can know which was meant, because it only ever
-// sees the spelling.
-//
-// Keyed by the word as written in content, so the display text, the filename and the link
-// between them are all unchanged; only the string handed to the synthesiser differs.
+// What `say` is given when that must differ from the displayed word — homographs, mostly.
+// Keyed by the written word, so filenames and content are unaffected. Format and reasoning:
+// content/audio/pronounce.md.
 
 export const PRONOUNCE_FILE = new URL('../content/audio/pronounce.md', import.meta.url);
 
@@ -37,11 +30,7 @@ export async function loadPronunciations(): Promise<Map<string, string>> {
   return overrides;
 }
 
-/**
- * An override for a word nobody uses any more is worse than none: the word it was written
- * for has been renamed or removed, so the next regeneration silently produces the wrong
- * sound for whatever replaced it.
- */
+/** A stale override means the word was renamed, and it now silently applies to nothing. */
 export function assertOverridesUsed(overrides: Map<string, string>, words: Iterable<string>): void {
   const known = new Set(words);
   const stale = [...overrides.keys()].filter((word) => !known.has(word));

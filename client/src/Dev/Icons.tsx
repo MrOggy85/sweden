@@ -1,9 +1,8 @@
 import { GAME_COLOR_IDS, GameIcon, OBJECT_ICON_IDS } from '../GameIcons/GameIcons';
 import styles from './Icons.module.css';
 
-// Every game picture on one screen. Drawing these is guesswork until they are seen at the
-// size a child sees them, on the device a child holds — and 88px next to 44px is where a
-// shape that only works large gives itself away.
+// Both sizes side by side: a shape that only works large gives itself away in the small
+// column.
 export function Icons() {
   return (
     <div className={styles.icons}>

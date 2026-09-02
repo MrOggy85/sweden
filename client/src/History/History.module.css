@@ -23,7 +23,7 @@
   gap: 0.5rem;
 }
 
-/* Round, outlined, tilted: a sticker stuck on rather than a row in a table. */
+/* Round, outlined, tilted — a sticker, not a table row. */
 .sticker {
   display: grid;
   place-items: center;

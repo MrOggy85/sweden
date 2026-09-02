@@ -1,24 +1,14 @@
 import type { ReactNode } from 'react';
 import styles from './GameIcons.module.css';
 
-// Inline SVG icons for the connect-the-words game, drawn in the same outline style as
-// Avatar.tsx (fixed colours here, rather than currentColor, because each object has an
-// expected colour a child will recognise it by).
-//
-// `color-<name>` icons are swatches rather than hand-drawn shapes, so a new colour pair
-// never needs a new icon.
+// Inline SVG for the connect game, in Avatar.tsx's outline style. Fixed colours, not
+// currentColor: a child recognises these by colour. Drawing rules: ./CLAUDE.md.
 const COLOR_ICON_PREFIX = 'color-';
 
-// The game's own palette, deliberately not `COLORS` from data/pages.ts. Those are avatar
-// colours: validated server-side and stored in every profile, so they cannot be retuned for
-// contrast without a migration. These exist only to be told apart.
-//
-// Chosen so the swatches differ in *lightness* as well as hue, which is what carries the
-// distinction when hue perception does not: yellow and pink are light, orange and green
-// mid, red mid-dark, blue and purple dark. Green is the bluish green from the Okabe-Ito
-// colourblind-safe set rather than a grass green, since it has to sit next to red — that
-// pair is the one red-green colour blindness collapses, and shifting green toward blue is
-// the only lever a palette has.
+// Not `COLORS` from data/pages.ts — those are avatar colours, stored in profiles and not
+// retunable. These differ in lightness as well as hue, which is what carries the difference
+// when hue perception does not. Green is Okabe-Ito's bluish green because it sits next to
+// red. See ./CLAUDE.md.
 const GAME_COLORS: Record<string, string> = {
   yellow: '#ffd400',
   pink: '#f07cb0',
@@ -29,12 +19,11 @@ const GAME_COLORS: Record<string, string> = {
   purple: '#6a2ba8',
 };
 
-/** Colour swatch ids, for the /dev/icons gallery. */
+/** Colour swatch ids, for /dev/icons. */
 export const GAME_COLOR_IDS = Object.keys(GAME_COLORS);
 
 const OBJECT_ICONS: Record<string, ReactNode> = {
-  // White eyes with a pupil, not bare black dots: a black eye vanishes the moment it lands
-  // on one of the patches, which is what made this one look eyeless.
+  // White eyes with pupils: a black dot vanishes on a black patch.
   cow: (
     <>
       <path d='M15 15 Q10 9 14 6 Q18 9 19 14 Z M33 15 Q38 9 34 6 Q30 9 29 14 Z' fill='#e8dcc8' />
@@ -52,8 +41,8 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <circle className={styles.eye} cx='29' cy='26' r='1.5' fill='#1c1c1c' />
     </>
   ),
-  // Floppy ears rooted inside the skull, a lighter muzzle, and a nose high on that muzzle
-  // with a mouth under it — the old nose sat where a mouth belongs, so it read as one.
+  // Ears rooted in the skull; nose high on the muzzle with a mouth under it, or the nose
+  // reads as the mouth.
   dog: (
     <>
       <path d='M13 20 C7 20 5 30 9 36 C14 34 15 26 15 21 Z' fill='#7a4a20' />
@@ -70,8 +59,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <circle className={styles.eye} cx='29' cy='25' r='1.7' fill='#1c1c1c' />
     </>
   ),
-  // What separates a cat from a mouse here: pink triangular nose, whiskers springing from
-  // the cheeks rather than the middle of the face, forehead stripes, and tall eyes.
+  // Not a mouse: pink nose, whiskers from the cheeks not the centre, stripes, tall eyes.
   cat: (
     <>
       <path d='M12 20 L11 8 L22 15 Z M36 20 L37 8 L26 15 Z' fill='#e8a33d' />
@@ -92,8 +80,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <ellipse className={styles.eye} cx='29.5' cy='26' rx='1' ry='2.2' fill='#1c1c1c' />
     </>
   ),
-  // A long head that narrows to the muzzle, with a blaze down it — a plain oval with ears
-  // was reading as any quadruped at all.
+  // Long head narrowing to the muzzle, plus a blaze: an oval with ears is any quadruped.
   horse: (
     <>
       <path d='M16 15 L14 5 L21.5 13 Z M32 15 L34 5 L26.5 13 Z' fill='#a9682f' />
@@ -110,9 +97,8 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <circle className={styles.eye} cx='29' cy='25' r='1.7' fill='#1c1c1c' />
     </>
   ),
-  // A whole bird in profile rather than a head: a bird's head alone is not recognisable,
-  // and a side view makes one visible eye obviously right instead of looking like a face
-  // missing the other one.
+  // Whole bird in profile: a bird's head alone is unrecognisable, and in profile one eye
+  // is obviously right.
   bird: (
     <>
       <path d='M11 26 L2 21 L4 32 Z' fill='#2b7fa8' />
@@ -203,8 +189,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <circle className={styles.eye} cx='33' cy='21' r='1.8' fill='#1c1c1c' />
     </>
   ),
-  // Two lobes meeting in a dip at the stem, not a circle — the dip is the whole difference
-  // between an apple and a tomato at this size.
+  // The dip at the stem is the whole difference between an apple and a tomato.
   apple: (
     <>
       <path className={styles.line} d='M24 17 L25 8' stroke='#5c3a17' />
@@ -230,9 +215,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       />
     </>
   ),
-  // A crescent with two tips, not a blob: the outer edge sweeps from the bottom-left tip up
-  // to the stem, the inner edge comes back under it, and the ridge line down the middle is
-  // what stops it reading as a slice of melon.
+  // Crescent with two tips. The ridge line is what stops it reading as a melon slice.
   banana: (
     <>
       <path d='M10 30 C9 16 21 9 35 9 L37 12 C24 12 17 21 16 31 C16 35 10 35 10 30 Z' fill='#fecc00' />
@@ -289,8 +272,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <path d='M24 20 L16 14 L21 17 L19 10 L24 16 L29 10 L27 17 L32 14 Z' fill='#2a9d8f' />
     </>
   ),
-  // A capsule, not a crescent: parallel sides with rounded ends read as a cylinder, which
-  // is what a cucumber is. Tilted so it does not sit like a pill.
+  // Parallel sides read as a cylinder. Tilted so it is not a pill.
   cucumber: (
     <g transform='rotate(-18 24 24)'>
       <rect x='18' y='7' width='12' height='34' rx='5.5' fill='#3f8f4a' />
@@ -309,8 +291,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <circle className={styles.dot} cx='25' cy='31' r='1.3' fill='#8a6a3d' />
     </>
   ),
-  // Husk leaves that hug the cob and taper upwards. The first pair flared out at the
-  // bottom, which is exactly the silhouette of a rocket's fins.
+  // Husks hug the cob and taper up; flared at the bottom they were rocket fins.
   corn: (
     <>
       <path d='M18 41 C10 35 9 23 14 14 C18 21 19 31 18 41 Z' fill='#3f8f4a' />
@@ -323,8 +304,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       />
     </>
   ),
-  // Side profile with a cabin set back from the bonnet, facing left. The old one was a
-  // single wedge with two windows punched in it, which read as a bus.
+  // Cabin set back from the bonnet, facing left. A single wedge reads as a bus.
   car: (
     <>
       <path d='M14 24 L18 14 Q19 12 22 12 L30 12 Q33 12 34.5 14.5 L39 24 Z' fill='#005293' />
@@ -341,7 +321,7 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
   ),
 };
 
-/** Every drawn icon, for the /dev/icons gallery. Colour swatches are generated, not drawn. */
+/** Every drawn icon, for /dev/icons. */
 export const OBJECT_ICON_IDS = Object.keys(OBJECT_ICONS);
 
 type Props = {
@@ -356,8 +336,8 @@ export function GameIcon({ icon, size = 56 }: Props) {
     return (
       <svg className={styles.icon} width={size} height={size} viewBox='0 0 48 48' aria-hidden='true'>
         {
-          /* A rounded square rather than a circle: more area of the colour to judge, and a
-            2px outline so a light swatch still separates from the card behind it. */
+          /* Square, not circle: more colour to judge. 2px outline so light swatches
+            separate from the card. */
         }
         <rect x='7' y='7' width='34' height='34' rx='9' fill={fill} stroke='#1c1c1c' strokeWidth={2} />
       </svg>

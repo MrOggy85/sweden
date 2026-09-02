@@ -1,13 +1,8 @@
-// Copies client/static/** into api/client/, preserving subdirectories.
-//
-// Shared by build.ts and build-watch.ts. Both used to copy top-level files only, which
-// silently skipped static/media/ — the audio clips would 404 in production with nothing in
-// the build output to explain why.
+// Recursive: a top-level-only copy silently skipped media/ and 404'd in production.
 export async function copyStatic(src = 'static', dest = '../api/client'): Promise<void> {
   await Deno.mkdir(dest, { recursive: true });
   for await (const entry of Deno.readDir(src)) {
-    // Skip .DS_Store and friends: macOS drops them into any folder Finder opens, and the
-    // build would otherwise deploy them.
+    // macOS drops .DS_Store into any folder Finder opens; it would otherwise deploy.
     if (entry.name.startsWith('.')) continue;
     if (entry.isDirectory) await copyStatic(`${src}/${entry.name}`, `${dest}/${entry.name}`);
     else if (entry.isFile) await Deno.copyFile(`${src}/${entry.name}`, `${dest}/${entry.name}`);

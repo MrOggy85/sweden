@@ -1,9 +1,6 @@
-// PAGES is generated from content/*.md by scripts/generate-content.ts — see
-// pages.generated.ts. api/db/content.ts's PAGE_IDS comes from the same generator run, so
-// the two cannot drift from each other. ANIMAL_IDS and COLOR_IDS below are still
-// hand-duplicated in api/db/content.ts — edit both together.
-//
-// The page copy (title/emoji/facts) is client-only: the server stores ids, not content.
+// PAGES is generated from content/*.md; PAGE_IDS in api/db/content.ts comes from the same
+// run, so the two cannot drift. ANIMAL_IDS and COLOR_IDS below are still hand-duplicated
+// there — edit both together. Page copy is client-only: the server stores ids.
 
 import { PAGES } from './pages.generated';
 export { PAGES };
@@ -36,9 +33,7 @@ export type AnimalId = typeof ANIMAL_IDS[number];
 export type ColorId = typeof COLOR_IDS[number];
 export type VisitKind = typeof VISIT_KINDS[number];
 
-// The server narrows this to a literal union via its own PAGE_IDS allowlist. On the
-// client the ids come from the PAGES content array below, so it stays a string; an id the
-// server does not know gets a 400 from POST /api/visits.
+// Stays a string on the client; the server narrows it via PAGE_IDS and 400s the rest.
 export type PageId = string;
 
 export const COLORS: Record<ColorId, string> = {
@@ -63,10 +58,8 @@ export const ANIMAL_LABELS: Record<AnimalId, string> = {
   'dala-horse': 'Dala horse',
 };
 
-// One tappable vocabulary entry. `audio` is a path under /media/, derived from `sv` by
-// scripts/content.ts — the clip is guaranteed to exist because generate-content fails the
-// build when one is missing. `group` labels the row it renders under, when the content
-// file supplies one.
+// `audio` is derived from `sv` and guaranteed to exist: generate-content fails without it.
+// `group` labels the row this renders under.
 export type Word = {
   sv: string;
   en: string;
@@ -74,14 +67,13 @@ export type Word = {
   group?: string;
 };
 
-// A sound effect: a label and a file under /media/sfx/. The filename is authored in the
-// content file, not derived — a meow has no spelling to derive it from.
+// Filename is authored, not derived — a meow has no spelling.
 export type Sound = {
   label: string;
   audio: string;
 };
 
-// How the page renders: a fact list, or the sentence builder. Absent means 'topic'.
+// Absent means 'topic'.
 export type PageKind = 'topic' | 'sentence';
 
 export type Page = {
@@ -93,8 +85,7 @@ export type Page = {
   facts: string[];
   words?: Word[];
   sounds?: Sound[];
-  // Ids of related pages — authored in the content file plus the reverse of every link
-  // pointing at this page. `connect` is the one id here that is not a page.
+  // Authored links plus backlinks. `connect` is the one id here that is not a page.
   links?: string[];
 };
 

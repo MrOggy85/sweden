@@ -1,13 +1,9 @@
-// Strips `free` boxes from an .m4a.
+// Strips afconvert's ~3 KB of `free` padding — a third of a one-word clip, and no encoder
+// setting affects it.
 //
-// afconvert reserves ~3 KB of padding in every file it writes. That is a third of a
-// one-word clip at 64 kbps and over half of one at 16 kbps, and no encoder setting affects
-// it — it is reserved space, not audio.
-//
-// Removing a `free` box that sits before `mdat` moves the audio earlier in the file, so
-// every absolute chunk offset in `stco` has to be corrected by the number of removed bytes
-// that preceded it. Getting that wrong produces a file that still parses but plays
-// silence or noise, so `assertChunkOffsets` re-checks the result against `mdat`.
+// Removing a box before `mdat` moves the audio earlier, so every absolute `stco` chunk
+// offset shifts too. Get that wrong and the file still parses but plays noise, hence
+// `assertChunkOffsets`.
 
 type Box = { type: string; start: number; size: number };
 
@@ -39,11 +35,7 @@ function findBoxes(buf: Uint8Array, start: number, end: number, type: string): B
   return found;
 }
 
-/**
- * Returns the input unchanged when there is nothing to strip, or when the file uses 64-bit
- * chunk offsets (`co64`) — that only shows up on files far larger than a spoken word, and
- * silently mis-patching one is worse than leaving 3 KB on the table.
- */
+/** Unchanged when there is nothing to strip, or on `co64` — not worth mis-patching for 3 KB. */
 export function stripFreeBoxes(input: Uint8Array): Uint8Array {
   const top = readBoxes(input, 0, input.length);
   const free = top.filter((b) => b.type === 'free');

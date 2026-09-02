@@ -49,7 +49,7 @@
   }
 }
 
-/* The word being spoken bounces, so a child can see which sound is which. */
+/* The spoken word bounces, so a child can see which sound is which. */
 .speaking {
   background: #005293;
   color: #fff;

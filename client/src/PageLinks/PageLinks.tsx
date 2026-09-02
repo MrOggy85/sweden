@@ -8,20 +8,18 @@ type Props = {
   ids: string[];
 };
 
-// Enough that there is always somewhere to go, few enough that the foot of a page does not
-// become a second home grid.
+// Enough to always offer somewhere to go, not so many it becomes a second grid.
 const MAX_LINKS = 6;
 
-/** A link target resolved to something renderable: a page, or the game. */
+/** A page, or the game. */
 function destination(id: string): { path: string; emoji: string; title: string } | null {
   if (id === GAME.id) return { path: GAME.path, emoji: GAME.emoji, title: GAME.title };
   const page = pageById(id);
   return page ? { path: `/${page.id}`, emoji: page.emoji, title: page.title } : null;
 }
 
-// Where to go next, as pictures. Navigation goes through the router, so each link is a real
-// URL that survives a refresh — and because App records a visit on arrival rather than on
-// tap, wandering sideways earns stars exactly like opening a card from the grid.
+// Real URLs, so a link survives a refresh. App records the visit on arrival, so wandering
+// sideways earns stars like the grid does.
 export function PageLinks({ ids }: Props) {
   const targets = ids.slice(0, MAX_LINKS).map(destination).filter((t) => t !== null);
   if (targets.length === 0) return null;

@@ -13,10 +13,9 @@ type Props = {
 };
 
 export function PageView({ page, count, onBack }: Props) {
-  // One element reused for every word: tapping a second word cuts the first one off, which
-  // is what a child poking at all three in a row expects.
+  // One element for every word, so a second tap cuts the first off.
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  // Which button is sounding, so its speaker glyph can pulse. Cleared on `ended`.
+  // Drives the speaker pulse.
   const [playing, setPlaying] = useState<string | null>(null);
 
   function play(src: string) {
@@ -26,7 +25,7 @@ export function PageView({ page, count, onBack }: Props) {
     audio.currentTime = 0;
     audio.onended = () => setPlaying(null);
     setPlaying(src);
-    // A clip that will not play is not worth interrupting a child over.
+    // A dropped clip is not worth interrupting a child over.
     void audio.play().catch(() => setPlaying(null));
   }
 
@@ -34,10 +33,7 @@ export function PageView({ page, count, onBack }: Props) {
     <article className={`${styles.page} ${motion.slideUp}`}>
       <button type='button' className={styles.back} onClick={onBack}>&larr; All topics</button>
 
-      {
-        /* The picture leads. It floats when you have been here before, and stamps itself
-          down the first time — the count is the only way to know which. */
-      }
+      {/* Floats on a return visit, stamps down on the first — count is the only tell. */}
       <span
         className={`${styles.hero} ${count === 1 ? motion.stamp : motion.float}`}
         aria-hidden='true'

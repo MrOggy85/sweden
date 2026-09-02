@@ -14,7 +14,7 @@
   stroke-linecap: round;
 }
 
-/* Manes, whiskers and wing lines: stroke only, no fill. Same idiom as Avatar.module.css. */
+/* Manes, whiskers, wing lines: stroke only, no fill. */
 .icon .line {
   fill: none;
   stroke-width: 2px;
@@ -24,14 +24,12 @@
   stroke: none;
 }
 
-/* Seeds, speckles, nostrils, potato eyes: small marks that would be swallowed by a 1.5px
-   outline at 44px. */
+/* Marks a 1.5px outline would swallow at 44px. */
 .icon .dot {
   stroke: none;
 }
 
-/* Internal detail that must read as texture rather than structure — corn kernels, a
-   highlight on fruit. Thinner than .line so it never competes with the silhouette. */
+/* Texture, not structure — must not compete with the silhouette. */
 .icon .fine {
   fill: none;
   stroke-width: 1px;

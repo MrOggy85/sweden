@@ -11,8 +11,7 @@ type Props = {
   onOpenGame: () => void;
 };
 
-// Cards land one after another rather than all at once. Capped so the last card in a long
-// grid is not still arriving after half a second.
+// Capped, or a long grid is still arriving half a second in.
 const STAGGER_MS = 40;
 const STAGGER_CAP_MS = 400;
 
@@ -42,8 +41,7 @@ export function PageGrid({ progress, onOpen, onOpenGame }: Props) {
             className={`${styles.card} ${count > 0 ? styles.seen : ''} ${motion.popIn}`}
             style={delay(index + 1)}
             onClick={() => onOpen(page.id)}
-            // The blurb and the visit count are gone from the face of the card, so they
-            // live here instead — a screen reader and a curious parent still get them.
+            // The blurb and count are off the card's face, so they live here instead.
             aria-label={`${page.title}. ${page.blurb}${count > 0 ? ` Visited ${count} times.` : ''}`}
           >
             <span className={styles.emoji} aria-hidden='true'>{page.emoji}</span>

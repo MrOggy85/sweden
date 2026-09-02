@@ -6,11 +6,10 @@ type Props = {
   words: Word[];
 };
 
-// Long enough for anything a child builds, short enough that the box never pushes Speak
-// off the screen.
+// Long enough for anything a child builds; more pushes Speak off screen.
 const MAX_WORDS = 12;
 
-// A beat between words. Back-to-back clips run together into one mumble.
+// Back-to-back clips run together into one mumble.
 const GAP_MS = 120;
 
 // ?v= puts the clip on the immutable cache branch in api/server.ts.
@@ -18,7 +17,7 @@ const clipUrl = (word: Word) => `${word.audio}?v=${BUILD_HASH}`;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** Resolves when the clip finishes — or immediately if it refuses to play at all. */
+/** Resolves when the clip finishes, or immediately if it refuses to play. */
 function playToEnd(audio: HTMLAudioElement): Promise<void> {
   return new Promise((resolve) => {
     const done = () => {
@@ -28,12 +27,12 @@ function playToEnd(audio: HTMLAudioElement): Promise<void> {
     };
     audio.addEventListener('ended', done);
     audio.addEventListener('error', done);
-    // One bad clip should not strand the rest of the sentence.
+    // One bad clip must not strand the rest of the sentence.
     void audio.play().catch(done);
   });
 }
 
-/** Words in file order, bucketed by their group label, groups in first-seen order. */
+/** Words in file order, bucketed by group; groups in first-seen order. */
 function byGroup(words: Word[]): { label: string; words: Word[] }[] {
   const groups: { label: string; words: Word[] }[] = [];
   for (const word of words) {
@@ -50,17 +49,17 @@ export function SentenceBuilder({ words }: Props) {
   const [speaking, setSpeaking] = useState<number | null>(null);
 
   // One element for every clip: on iOS only the element unlocked by the tap may play
-  // afterwards, so a fresh Audio per word would go silent after the first.
+  // afterwards.
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  // Bumped whenever playback should stop — a second Speak, a tap on a word, or unmount.
+  // Bumped whenever playback should stop: a second Speak, a word tap, unmount.
   const runRef = useRef(0);
 
-  // Warm the HTTP cache once so swapping src mid-sentence never waits on the network.
+  // Warm the HTTP cache so swapping src mid-sentence never waits on the network.
   useEffect(() => {
     for (const word of words) void fetch(clipUrl(word)).catch(() => {});
   }, [words]);
 
-  // Backing out of the page must stop the sentence, not let it play over the grid.
+  // Backing out must stop the sentence, not play it over the grid.
   useEffect(() => () => {
     runRef.current++;
     audioRef.current?.pause();

@@ -1,9 +1,5 @@
-// Just enough AIFF to cut the front off what `say` produces.
-//
-// Some Swedish words only get the right stress with a carrier word in front of them:
-// "banan" alone is read as "the track", "en banan" as the fruit. A pause between the two
-// puts the stress back where it was, so the carrier has to be spoken contiguously and then
-// removed from the audio. That happens here, on 16-bit PCM, before afconvert ever sees it.
+// Just enough AIFF to cut a carrier word off what `say` writes, on 16-bit PCM before
+// afconvert sees it. Why a carrier at all: content/audio/pronounce.md.
 
 type Chunk = { id: string; start: number; size: number };
 
@@ -96,16 +92,12 @@ export function writeAiff(aiff: Aiff): Uint8Array {
 }
 
 const FRAME_MS = 5;
-// A stop consonant like the b in "banan" begins with a closure. Cutting at the burst clips
-// the consonant, so the cut keeps this much of the quiet before it.
+// Keep the stop closure before the b: cutting at the burst clips the consonant.
 const PREROLL_MS = 35;
-// How far either side of the carrier's own length to look for the boundary. Spoken in
-// context a word is shorter than spoken alone, so the window reaches further back than
-// forward.
+// Asymmetric: in context a word is shorter than spoken alone.
 const SEARCH_BACK_MS = 140;
 const SEARCH_FORWARD_MS = 90;
-// Refuse a cut that leaves almost nothing, or removes almost nothing — either means the
-// boundary was not found where it was expected.
+// Sanity bounds — either extreme means the boundary was not where expected.
 const MIN_KEPT_MS = 120;
 const MIN_CUT_MS = 60;
 
@@ -133,16 +125,11 @@ export function speechDurationMs(aiff: Aiff): number {
 }
 
 /**
- * Cuts a carrier word off the front, given roughly how long that carrier takes to say.
+ * Cuts a carrier word off the front, given how long that carrier takes to say alone.
  *
- * Two words run together do not leave a silence to search for — Alva says "en banan" with
- * the n flowing straight into the b. What there *is* is a dip: the quietest moment in the
- * window around the expected boundary, which for a word starting with a stop is its
- * closure. So this takes the carrier's own measured duration as a prior and looks for the
- * energy minimum nearby, rather than for silence that is not there.
- *
- * Returns null when the result would be implausible, so a bad cut fails the build instead
- * of shipping a clip with half a word in it.
+ * Searches for the energy minimum near that point, not for silence: two words run together
+ * leave none, only a dip at the next word's stop closure. Null when the result would be
+ * implausible, so a bad cut fails rather than shipping half a word.
  */
 export function trimCarrier(aiff: Aiff, carrierMs: number): { trimmed: Aiff; cutMs: number } | null {
   const { loudness, frameSize } = loudnessFrames(aiff);

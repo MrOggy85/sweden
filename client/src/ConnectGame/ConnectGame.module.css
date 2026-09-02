@@ -66,8 +66,7 @@
   pointer-events: none;
 }
 
-/* The line draws itself from the word to the picture. --len is the line's own length,
-   passed in from the component, because a keyframe cannot measure geometry. */
+/* --len comes from the component: a keyframe cannot measure geometry. */
 .solvedLine {
   stroke: #2a9d8f;
   stroke-width: 3;
@@ -197,8 +196,7 @@
   font-size: 3rem;
 }
 
-/* Confetti: a handful of squares falling behind the phrase. Sixteen spans and two
-   keyframes rather than a canvas library — this runs on an iPad. */
+/* Sixteen spans and two keyframes, not a canvas library — this runs on an iPad. */
 .confetti {
   position: absolute;
   inset: 0;

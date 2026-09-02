@@ -1,25 +1,18 @@
-// Parses content/*.md (one Markdown file per topic, YAML-ish frontmatter + a bullet list
-// of facts, optionally a `## Words` section) into the Page shape both generators emit.
+// Parses content/*.md into the Page shape. Shared by generate-content and generate-audio,
+// so clip filenames come from one slug() and cannot drift. Format: CLAUDE.md.
 //
-// Shared by scripts/generate-content.ts and scripts/generate-audio.ts so the audio
-// filenames the app asks for and the ones the TTS script writes come from one slug
-// function and cannot drift.
-//
-// No YAML library and no schema validator: the frontmatter here is flat scalar
-// `key: value` pairs, so a full parser buys nothing, and the checks below fail loudly
-// enough (file name + missing field) that a validator would mostly repeat the message.
+// No YAML library: the frontmatter is flat `key: value`, and the checks below name the file
+// and field anyway.
 
 export type Word = {
   sv: string;
   en: string;
   audio: string;
-  // Optional third field on a word row, used to group the buttons. Groups render in the
-  // order they first appear in the file, so the content file controls the layout.
+  // Optional third field; groups render in the order they first appear in the file.
   group?: string;
 };
 
-// A sound effect: a label and a file under client/static/media/sfx/. Unlike a word clip,
-// the filename is authored rather than derived — a meow has no spelling to derive it from.
+// Filename is authored, not derived — a meow has no spelling.
 export type Sound = {
   label: string;
   audio: string;
@@ -39,36 +32,31 @@ export type Page = {
   facts: string[];
   words: Word[];
   sounds: Sound[];
-  // Ids of other pages, authored in `## Links` plus the reverse of every link pointing
-  // here. Never labels: the card a link renders comes from the target page itself.
+  // Authored in `## Links`, plus the reverse of every link pointing here. Ids, never
+  // labels: the card comes from the target page.
   links: string[];
 };
 
-// Page ids become URLs (`/flag`), so anything the client routes itself is off limits — a
-// content/dev.md would be unreachable behind the diagnostics area.
+// Page ids become URLs, so anything the client routes itself is off limits.
 const RESERVED_IDS = ['dev', 'api', 'media', 'connect'];
 
-// Routes that are not content pages but may still be linked to. Only the game: it is
-// somewhere a child would want to go from `language` or `sentence`. It gets no automatic
-// backlink, having no content file of its own to render one on.
+// Linkable but not content pages. No backlink: there is no file to render one on.
 const LINKABLE_ROUTES = ['connect'];
 
 export const CONTENT_DIR = new URL('../content/', import.meta.url);
 export const MEDIA_DIR = new URL('../client/static/media/', import.meta.url);
 export const SFX_DIR = new URL('../client/static/media/sfx/', import.meta.url);
 
-// Where the browser asks for a clip. client/static/media/ is copied to api/client/media/
-// by the build, and api/server.ts serves anything ending in .m4a from there.
+// Where the browser asks for a clip; the build copies static/ into api/client/.
 const AUDIO_URL_PREFIX = '/media/';
 const SFX_URL_PREFIX = '/media/sfx/';
 
-// What `make convert-sfx` accepts as input and turns into .m4a. Anything with one of these
-// extensions left in sfx/ is an unconverted download: generate-content refuses it, because
-// the build copies static/ wholesale and it would otherwise ship alongside its own output.
+// `make convert-sfx` inputs. One left in sfx/ is an unconverted download, and would ship
+// beside its own output — generate-content refuses it.
 export const SFX_SOURCE_EXTENSIONS = ['.mp3', '.wav', '.aif', '.aiff', '.caf', '.m4v', '.mp4', '.ogg'];
 
-// The audio filename is derived from the Swedish word, never authored, so content files
-// stay free of file paths and a clip cannot be pointed at the wrong word.
+// Derived, never authored: content carries no paths, and a clip cannot point at the wrong
+// word.
 export function slug(sv: string): string {
   return sv
     .toLowerCase()
@@ -131,10 +119,8 @@ function parseLink(item: string, filename: string): string {
 
 type Body = { facts: string[]; words: Word[]; sounds: Sound[]; links: string[] };
 
-// Bullets before the first `##` heading are facts; bullets under `## Words` are
-// vocabulary, under `## Sounds` are effects, and under `## Links` are page ids. Bullets
-// under any other heading are ignored, so prose sections can be added to a topic without
-// turning into facts.
+// Bullets before the first `##` are facts; the rest go by heading. Bullets under any other
+// heading are ignored, so prose sections do not become facts.
 function parseBody(body: string, filename: string): Body {
   const facts: string[] = [];
   const words: Word[] = [];
@@ -205,8 +191,7 @@ async function loadPage(entryName: string): Promise<Page> {
   return { id, order, kind, title, emoji, blurb, facts, words, sounds, links };
 }
 
-// Link targets can only be checked once every page is known, so this runs after the whole
-// set is loaded. A bad id here would otherwise render a card that navigates nowhere.
+// Needs every page loaded first. A bad id would render a card that navigates nowhere.
 function assertLinksResolve(pages: Page[]): void {
   const ids = new Set(pages.map((p) => p.id));
 
@@ -224,9 +209,8 @@ function assertLinksResolve(pages: Page[]): void {
 }
 
 /**
- * Adds the reverse of every authored link, so a connection only has to be written once and
- * cannot be half-present. Authored links keep their file order and stay first; backlinks
- * follow in page order, which keeps the generated module stable between runs.
+ * Reverses every authored link, so a connection is written once and cannot be half-present.
+ * Authored first in file order, backlinks after in page order — stable between runs.
  */
 function addBacklinks(pages: Page[]): void {
   const byId = new Map(pages.map((p) => [p.id, p]));

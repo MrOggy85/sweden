@@ -13,9 +13,8 @@ const TOOLS = [
   { path: '/icons', title: 'Game icons', blurb: 'Every connect-the-words picture, large and small' },
 ];
 
-// Diagnostics, reachable only by tapping the build footer five times. Deliberately
-// unstyled-for-children: this is for whoever is debugging on the actual iPad, where there
-// is no console and no remote inspector to hand.
+// Diagnostics, reachable by tapping the build footer five times. For debugging on the
+// iPad, where there is no console.
 export function DevPage({ path }: Props) {
   const tool = TOOLS.find((t) => t.path === path);
 

@@ -1,10 +1,6 @@
-/* Shared entrance animations. Keyframes and the classes that use them live in the same
-   module on purpose: CSS Modules scopes keyframe names per file, so a class in one module
-   cannot reliably reference a @keyframes declared in another. Anything bespoke to one
-   component (a chip popping, a line drawing itself) stays in that component's own module.
-
-   Timings are "playful": 150-250ms with a small overshoot. Long enough to notice, short
-   enough that a child tapping fast is never waiting on us. */
+/* Shared entrance animations, 150-250ms with a small overshoot. Keyframes live beside the
+   classes that use them because CSS Modules scopes keyframe names per file; anything
+   bespoke to one component stays in that component's module. */
 
 .popIn {
   animation: popIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
@@ -48,7 +44,7 @@
   }
 }
 
-/* Just enough drift to look alive; any more and it competes with the buttons. */
+/* Enough drift to look alive; more competes with the buttons. */
 @keyframes float {
   0%,
   100% {
@@ -84,9 +80,8 @@
   }
 }
 
-/* One switch for the whole app. A child with vestibular sensitivity, or a parent who has
-   turned motion off system-wide, gets a completely still app — and every animation above
-   is an entrance, so ending instantly at the final frame leaves nothing hidden. */
+/* One switch for the whole app. Safe because every animation above is an entrance, so
+   ending instantly at the final frame hides nothing. */
 @media (prefers-reduced-motion: reduce) {
   :global(*),
   :global(*::before),

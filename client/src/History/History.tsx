@@ -7,11 +7,10 @@ type Props = {
   visits: Visit[];
 };
 
-// How many stickers fit on one shelf before it starts to look like a list again.
+// Beyond this it reads as a list again.
 const MAX_STICKERS = 8;
 
-// A shelf of the places you have been, newest first. Deliberately no titles and no "5 min
-// ago": the emoji is the memory, and a timestamp is for someone who can read one.
+// No titles, no timestamps: the emoji is the memory, and a timestamp needs reading.
 export function History({ visits }: Props) {
   const seen = new Set<string>();
   const stickers: { pageId: string; emoji: string }[] = [];
