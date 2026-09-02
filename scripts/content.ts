@@ -18,6 +18,13 @@ export type Word = {
   group?: string;
 };
 
+// A sound effect: a label and a file under client/static/media/sfx/. Unlike a word clip,
+// the filename is authored rather than derived — a meow has no spelling to derive it from.
+export type Sound = {
+  label: string;
+  audio: string;
+};
+
 // How the client renders the page: a fact list, or the tap-a-word sentence builder.
 export const PAGE_KINDS = ['topic', 'sentence'] as const;
 export type PageKind = typeof PAGE_KINDS[number];
@@ -31,6 +38,7 @@ export type Page = {
   blurb: string;
   facts: string[];
   words: Word[];
+  sounds: Sound[];
 };
 
 // Page ids become URLs (`/flag`), so anything the client routes itself is off limits — a
@@ -39,10 +47,17 @@ const RESERVED_IDS = ['dev', 'api', 'media'];
 
 export const CONTENT_DIR = new URL('../content/', import.meta.url);
 export const MEDIA_DIR = new URL('../client/static/media/', import.meta.url);
+export const SFX_DIR = new URL('../client/static/media/sfx/', import.meta.url);
 
 // Where the browser asks for a clip. client/static/media/ is copied to api/client/media/
 // by the build, and api/server.ts serves anything ending in .m4a from there.
 const AUDIO_URL_PREFIX = '/media/';
+const SFX_URL_PREFIX = '/media/sfx/';
+
+// What `make convert-sfx` accepts as input and turns into .m4a. Anything with one of these
+// extensions left in sfx/ is an unconverted download: generate-content refuses it, because
+// the build copies static/ wholesale and it would otherwise ship alongside its own output.
+export const SFX_SOURCE_EXTENSIONS = ['.mp3', '.wav', '.aif', '.aiff', '.caf', '.m4v', '.mp4', '.ogg'];
 
 // The audio filename is derived from the Swedish word, never authored, so content files
 // stay free of file paths and a clip cannot be pointed at the wrong word.
@@ -58,6 +73,10 @@ export function slug(sv: string): string {
 
 export function audioFileUrl(word: Word): URL {
   return new URL(`${slug(word.sv)}.m4a`, MEDIA_DIR);
+}
+
+export function soundFileUrl(sound: Sound): URL {
+  return new URL(sound.audio.slice(SFX_URL_PREFIX.length), SFX_DIR);
 }
 
 function parseFrontmatter(raw: string, filename: string): Record<string, string> {
@@ -84,18 +103,31 @@ function parseWord(item: string, filename: string): Word {
   return word;
 }
 
+function parseSound(item: string, filename: string): Sound {
+  const [label, file, ...rest] = item.split('|').map((part) => part.trim());
+  if (!label || !file || rest.length > 0) {
+    throw new Error(`${filename}: sound "${item}" must be written as "label | filename-without-extension"`);
+  }
+  if (file.includes('/') || file.includes('.')) {
+    throw new Error(`${filename}: sound file "${file}" must be a bare name — the folder and .m4a are implied`);
+  }
+  return { label, audio: `${SFX_URL_PREFIX}${file}.m4a` };
+}
+
 // Bullets before the first `##` heading are facts; bullets under `## Words` are
-// vocabulary. Bullets under any other heading are ignored, so prose sections can be added
-// to a topic without turning into facts.
-function parseBody(body: string, filename: string): { facts: string[]; words: Word[] } {
+// vocabulary and under `## Sounds` are effects. Bullets under any other heading are
+// ignored, so prose sections can be added to a topic without turning into facts.
+function parseBody(body: string, filename: string): { facts: string[]; words: Word[]; sounds: Sound[] } {
   const facts: string[] = [];
   const words: Word[] = [];
-  let section: 'facts' | 'words' | 'other' = 'facts';
+  const sounds: Sound[] = [];
+  let section: 'facts' | 'words' | 'sounds' | 'other' = 'facts';
 
   for (const line of body.split('\n')) {
     const heading = line.match(/^##\s+(.*?)\s*$/);
     if (heading) {
-      section = heading[1].toLowerCase() === 'words' ? 'words' : 'other';
+      const name = heading[1].toLowerCase();
+      section = name === 'words' ? 'words' : name === 'sounds' ? 'sounds' : 'other';
       continue;
     }
 
@@ -105,9 +137,10 @@ function parseBody(body: string, filename: string): { facts: string[]; words: Wo
 
     if (section === 'facts') facts.push(item);
     else if (section === 'words') words.push(parseWord(item, filename));
+    else if (section === 'sounds') sounds.push(parseSound(item, filename));
   }
 
-  return { facts, words };
+  return { facts, words, sounds };
 }
 
 function requireField(fields: Record<string, string>, name: string, filename: string): string {
@@ -146,10 +179,10 @@ async function loadPage(entryName: string): Promise<Page> {
     throw new Error(`${entryName}: kind "${kind}" must be one of ${PAGE_KINDS.join(', ')}`);
   }
 
-  const { facts, words } = parseBody(body, entryName);
+  const { facts, words, sounds } = parseBody(body, entryName);
   if (facts.length === 0) throw new Error(`${entryName}: no facts found — expected a Markdown bullet list ("- ...")`);
 
-  return { id, order, kind, title, emoji, blurb, facts, words };
+  return { id, order, kind, title, emoji, blurb, facts, words, sounds };
 }
 
 export async function loadPages(): Promise<Page[]> {

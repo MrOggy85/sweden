@@ -1,4 +1,4 @@
-.PHONY: install dev build check fmt deploy generate-content generate-audio audio-variants
+.PHONY: install dev build check fmt deploy generate-content generate-audio audio-variants convert-sfx
 
 # Install the client's npm dependencies (react, esbuild). The api has none.
 install:
@@ -25,6 +25,13 @@ generate-audio:
 audio-variants:
 	deno run --allow-read=/tmp,/private/tmp --allow-write=/tmp,/private/tmp --allow-run=say,afconvert,afplay scripts/compare-audio.ts $(WORD) $(ARGS)
 
+# Normalise downloaded sound effects in client/static/media/sfx/ into .m4a. macOS only.
+# 64 kbps by default — effects need more than the 24 kbps the speech clips use.
+#   make convert-sfx ARGS=--force
+#   make convert-sfx ARGS="--bitrate=96000 --mono"
+convert-sfx:
+	deno run --allow-read=client/static/media/sfx --allow-write=client/static/media/sfx --allow-run=afconvert scripts/convert-sfx.ts $(ARGS)
+
 # Start everything: the Deno server on :8777, which spawns the esbuild watcher.
 dev: generate-content
 	deno task --cwd api dev
@@ -35,7 +42,7 @@ build: generate-content
 
 check: generate-content
 	deno task --cwd api check
-	deno check scripts/generate-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/mp4.ts
+	deno check scripts/generate-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/convert-sfx.ts scripts/mp4.ts
 	npm --prefix client run check
 
 fmt:

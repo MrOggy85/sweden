@@ -74,6 +74,13 @@ export type Word = {
   group?: string;
 };
 
+// A sound effect: a label and a file under /media/sfx/. The filename is authored in the
+// content file, not derived — a meow has no spelling to derive it from.
+export type Sound = {
+  label: string;
+  audio: string;
+};
+
 // How the page renders: a fact list, or the sentence builder. Absent means 'topic'.
 export type PageKind = 'topic' | 'sentence';
 
@@ -85,6 +92,7 @@ export type Page = {
   blurb: string;
   facts: string[];
   words?: Word[];
+  sounds?: Sound[];
 };
 
 export const PAGE_IDS = PAGES.map((p) => p.id);

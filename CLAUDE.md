@@ -130,6 +130,36 @@ Two traps if you do use it: `getVoices()` returns `[]` on the first synchronous 
 for `voiceschanged`), and iOS needs a user gesture to start speech. `/dev/voices` reports
 what a given device actually has.
 
+## Adding a sound effect
+
+Drop the download in `client/static/media/sfx/`, then on macOS:
+
+```sh
+make convert-sfx            # any format -> .m4a, 64 kbps, source deleted
+```
+
+64 kbps, not the 24 kbps the speech clips use: a word survives 24, an animal call does not.
+`ARGS=--bitrate=96000`, `ARGS=--mono`, `ARGS=--force` to redo, `ARGS=--keep` to hold on to
+the source.
+
+**The source is deleted after conversion, and that is enforced twice.** `convert-sfx`
+removes it once the output is confirmed to be a real MP4 of plausible size, and
+`generate-content` refuses to run while any file with a source extension is left in `sfx/`
+— the build copies `static/` wholesale, so a forgotten download ships next to the file it
+produced. Non-audio files (a `CREDITS.md`) are ignored by both.
+
+Reference it from a content file with a `## Sounds` section — label, then the bare
+filename; the folder and `.m4a` are implied, and writing either is an error:
+
+```md
+## Sounds
+
+- Mjau | cat-meow1
+```
+
+Unlike a word clip, this filename is authored rather than derived, so `generate-content`
+checks the file exists and names it when it does not.
+
 ## Page kinds
 
 `kind` in the frontmatter picks the renderer, defaulting to `topic`:

@@ -26,28 +26,48 @@ function createContext() {
   });
 }
 
+const STATIC_POLL_MS = 2000;
+
+/** Every file under static/, as path:size:mtime — cheap enough at a few dozen files. */
+async function staticSignature(dir = 'static'): Promise<string> {
+  const parts: string[] = [];
+  for await (const entry of Deno.readDir(dir)) {
+    const path = `${dir}/${entry.name}`;
+    if (entry.isDirectory) parts.push(await staticSignature(path));
+    else if (entry.isFile) {
+      const info = await Deno.stat(path);
+      parts.push(`${path}:${info.size}:${info.mtime?.getTime() ?? 0}`);
+    }
+  }
+  return parts.sort().join('|');
+}
+
+// Polled, not Deno.watchFs: clips are generated on the host (`make generate-audio`,
+// `make convert-sfx`) and this may run in a container, where inotify events do not cross
+// the bind mount. A watch would look like it worked and silently miss every real change —
+// the symptom being a word or effect that plays nothing.
+async function pollStatic() {
+  let previous = await staticSignature();
+  while (true) {
+    await new Promise((resolve) => setTimeout(resolve, STATIC_POLL_MS));
+    const current = await staticSignature();
+    if (current === previous) continue;
+    previous = current;
+    await copyStatic();
+    console.log('[build-watch] static changed, copied');
+  }
+}
+
 async function main() {
   let ctx = await createContext();
   ctx.watch();
+  void pollStatic();
 
   let debounceTimer: number | undefined;
-  let staticTimer: number | undefined;
 
-  console.log('[build-watch] watching ./src and ./static');
-  const watcher = Deno.watchFs(['./src', './static'], { recursive: true });
+  console.log('[build-watch] watching ./src, polling ./static');
+  const watcher = Deno.watchFs('./src', { recursive: true });
   for await (const event of watcher) {
-    // A new clip from `make generate-audio` lands in static/media/ while this is running.
-    // Without re-copying, the server keeps serving whatever was there at startup, and the
-    // only symptom is a word that plays nothing.
-    if (event.paths.some((p) => p.includes('/static/'))) {
-      clearTimeout(staticTimer);
-      staticTimer = setTimeout(async () => {
-        await copyStatic();
-        console.log('[build-watch] static copied:', event.paths.length, 'path(s) changed');
-      }, 100);
-      continue;
-    }
-
     // esbuild's own watch does not reliably pick up CSS-module changes, so the whole
     // context is torn down and recreated on any .css write.
     if (event.paths.some((p) => p.endsWith('.css'))) {

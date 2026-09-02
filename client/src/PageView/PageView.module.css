@@ -56,6 +56,35 @@
   line-height: 1.45;
 }
 
+.sounds {
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* Bigger and louder than a word button: this is the thing on the page a child came for. */
+.sound {
+  min-height: 56px;
+  padding: 0.8rem 1.3rem;
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: #005293;
+  color: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.sound:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1c1c1c22;
+}
+
 .wordsHeading {
   margin: 0.8rem 0 0;
   font-size: 1rem;

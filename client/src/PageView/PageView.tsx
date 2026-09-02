@@ -36,6 +36,23 @@ export function PageView({ page, count, onBack }: Props) {
         {page.facts.map((fact) => <li key={fact} className={styles.fact}>{fact}</li>)}
       </ul>
 
+      {page.sounds && page.sounds.length > 0 && (
+        <ul className={styles.sounds}>
+          {page.sounds.map((sound) => (
+            <li key={sound.audio}>
+              <button
+                type='button'
+                className={styles.sound}
+                onClick={() => play(sound.audio)}
+                aria-label={`Play ${sound.label}`}
+              >
+                <span aria-hidden='true'>🔊</span> {sound.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
       {page.kind === 'sentence'
         ? <SentenceBuilder words={page.words ?? []} />
         : page.words && page.words.length > 0 && (
