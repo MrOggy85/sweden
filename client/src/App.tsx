@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ConnectGame } from './ConnectGame/ConnectGame';
+import { CookingGame } from './CookingGame/CookingGame';
 import { DevPage } from './Dev/DevPage';
 import { Header } from './Header/Header';
 import { History } from './History/History';
@@ -8,15 +9,15 @@ import { PageGrid } from './PageGrid/PageGrid';
 import { PageView } from './PageView/PageView';
 import { ProfileSetup } from './ProfileSetup/ProfileSetup';
 import { pageById, PAGES } from './data/pages';
-import { GAME } from './data/game';
+import { gameByPath } from './data/games';
 import type { PageProgress, User, Visit } from './data/types';
 import { getPages, getVisits, recordVisit } from './data/api';
 import { navigate, navigateReplace, registerNavigate } from './core/navigate';
 import { useMe } from './data/useMe';
 import styles from './App.module.css';
 
-// The whole route table: `/` is the grid, `GAME.path` is the matching game, `/<pageId>` is
-// a topic, `/dev...` is the diagnostics area. Page ids come from content/*.md, so no list
+// The whole route table: `/` is the grid, one path per game in data/games.ts, `/<pageId>`
+// is a topic, `/dev...` is the diagnostics area. Page ids come from content/*.md, so no list
 // needs maintaining here — an id that does not resolve is treated as a typo and rewritten
 // to `/`.
 function pageIdFromPath(path: string): string | null {
@@ -66,10 +67,10 @@ function App() {
   }, []);
 
   const devPath = devSubPath(path);
-  const isGame = devPath === null && path === GAME.path;
-  // Neither /dev nor /connect is a page id, so they must not reach the lookup below —
-  // otherwise the unknown-page rewrite would bounce them straight back to the grid.
-  const openPageId = devPath === null && !isGame ? pageIdFromPath(path) : null;
+  const game = devPath === null ? gameByPath(path) : undefined;
+  // Neither /dev nor a game path is a page id, so they must not reach the lookup below:
+  // the unknown-page rewrite would bounce them straight back to the grid.
+  const openPageId = devPath === null && !game ? pageIdFromPath(path) : null;
   const currentPage = openPageId ? pageById(openPageId) : undefined;
 
   // A URL naming a page that does not exist should not survive the next refresh.
@@ -155,18 +156,20 @@ function App() {
       <main className={styles.main}>
         {currentPage
           ? <PageView page={currentPage} count={openCount} onBack={() => navigate('/')} />
-          : isGame
+          : game?.id === 'connect'
           ? <ConnectGame onBack={() => navigate('/')} />
+          : game?.id === 'cooking'
+          ? <CookingGame onBack={() => navigate('/')} />
           : (
             <PageGrid
               progress={progress}
               onOpen={(id) => navigate(`/${id}`)}
-              onOpenGame={() => navigate(GAME.path)}
+              onOpenGame={(gamePath) => navigate(gamePath)}
             />
           )}
       </main>
 
-      {!currentPage && !isGame && <History visits={visits} />}
+      {!currentPage && !game && <History visits={visits} />}
 
       <footer className={styles.footer}>
         <button type='button' className={styles.buildTap} onClick={onFooterTap}>build {BUILD_HASH}</button>

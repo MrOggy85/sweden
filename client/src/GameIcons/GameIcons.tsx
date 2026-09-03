@@ -319,6 +319,111 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
       <circle cx='34' cy='33' r='2.2' fill='#bfe3f5' />
     </>
   ),
+
+  // Kitchen. Drawn face-on rather than in perspective: a child reads a circle-on-a-body as
+  // a pot, and a tilted ellipse as a bowl of something unclear.
+  gryta: (
+    <>
+      <path d='M6 18 L10 18 L10 24 L6 24 Z M38 18 L42 18 L42 24 L38 24 Z' fill='#8a8a8a' />
+      <path d='M9 18 L39 18 L36 40 Q35 43 32 43 L16 43 Q13 43 12 40 Z' fill='#5a6470' />
+      <rect x='7' y='13' width='34' height='5' rx='2.5' fill='#7a8590' />
+      <rect x='20' y='8' width='8' height='5' rx='2.5' fill='#5a6470' />
+      <path className={styles.fine} d='M15 24 Q24 27 33 24' stroke='#8b96a3' />
+    </>
+  ),
+  tallrik: (
+    <>
+      <ellipse cx='24' cy='26' rx='19' ry='14' fill='#ffffff' />
+      <ellipse cx='24' cy='25' rx='12' ry='8.5' fill='#f2ece2' />
+      <path className={styles.fine} d='M12 20 Q18 15 27 14' stroke='#d8d0c4' />
+    </>
+  ),
+  gaffel: (
+    <>
+      <path d='M14 6 L16 6 L16 17 L14 17 Z M20 6 L22 6 L22 17 L20 17 Z M26 6 L28 6 L28 17 L26 17 Z' fill='#c9cfd6' />
+      <path d='M13 16 L29 16 Q29 23 24 24 L24 42 Q24 44 21 44 Q18 44 18 42 L18 24 Q13 23 13 16 Z' fill='#c9cfd6' />
+    </>
+  ),
+  sked: (
+    <>
+      <ellipse cx='21' cy='13' rx='9' ry='11' fill='#c9cfd6' />
+      <ellipse className={styles.dot} cx='21' cy='13' rx='5.5' ry='7' fill='#e4e9ee' />
+      <path d='M18 23 L24 23 L26 42 Q26 44 22 44 Q18 44 18.5 42 Z' fill='#c9cfd6' />
+    </>
+  ),
+  kniv: (
+    <>
+      <path d='M16 5 Q30 8 30 22 L30 26 L18 26 L18 6 Z' fill='#dfe4ea' />
+      <path className={styles.fine} d='M22 9 Q26 14 26 24' stroke='#b6bec7' />
+      <path d='M17 26 L31 26 L29 43 Q29 45 24 45 Q19 45 19 43 Z' fill='#6b4a2a' />
+    </>
+  ),
+
+  // Dishes. One recognisable feature each, since a plate of food at 44px is otherwise a
+  // brown circle: spaghetti has strands, pizza a slice cut, sushi its black band.
+  spagetti: (
+    <>
+      <ellipse cx='24' cy='28' rx='19' ry='14' fill='#ffffff' />
+      <ellipse cx='24' cy='27' rx='14' ry='10' fill='#fecc00' />
+      <path
+        className={styles.fine}
+        d='M12 26 Q19 21 27 25 M13 30 Q21 25 33 28 M15 33 Q23 29 35 31 M17 22 Q25 19 33 23'
+        stroke='#d9a800'
+      />
+      <circle cx='21' cy='24' r='3.5' fill='#d1495b' />
+      <circle cx='29' cy='30' r='3' fill='#d1495b' />
+    </>
+  ),
+  falukorv: (
+    <>
+      <rect x='5' y='19' width='38' height='13' rx='6.5' fill='#c0504a' />
+      <path className={styles.fine} d='M14 22.5 L14 28.5 M22 22 L22 29 M30 22.5 L30 28.5' stroke='#9c3b36' />
+      <path d='M5 25.5 L2 22 L2 29 Z' fill='#9c3b36' />
+    </>
+  ),
+  blodpudding: (
+    <>
+      <ellipse cx='24' cy='30' rx='18' ry='12' fill='#ffffff' />
+      <path d='M10 30 L24 21 L38 30 L24 37 Z' fill='#4a2c33' />
+      <path d='M10 30 L24 21 L24 26 L14 33 Z' fill='#5e3a42' />
+      <circle cx='30' cy='24' r='3' fill='#d1495b' />
+      <circle cx='35' cy='27' r='2.4' fill='#d1495b' />
+      <circle cx='32' cy='30' r='2.2' fill='#d1495b' />
+    </>
+  ),
+  pizza: (
+    <>
+      <path d='M24 6 L44 40 Q24 46 4 40 Z' fill='#e8a33d' />
+      <path d='M24 12 L39 38 Q24 42 9 38 Z' fill='#f2c14e' />
+      <circle cx='24' cy='24' r='3.4' fill='#d1495b' />
+      <circle cx='16' cy='32' r='3.2' fill='#d1495b' />
+      <circle cx='32' cy='33' r='3' fill='#d1495b' />
+      <circle className={styles.dot} cx='27' cy='32' r='1.6' fill='#2a9d8f' />
+      <circle className={styles.dot} cx='20' cy='23' r='1.5' fill='#2a9d8f' />
+    </>
+  ),
+  sushi: (
+    <>
+      <rect x='9' y='16' width='30' height='22' rx='4' fill='#ffffff' />
+      <rect x='18' y='16' width='12' height='22' fill='#1c3b2f' />
+      <ellipse cx='24' cy='16' rx='15' ry='5' fill='#f7f3ec' />
+      <ellipse cx='24' cy='16' rx='6' ry='3.4' fill='#e8763d' />
+    </>
+  ),
+  kanelbullar: (
+    <>
+      <ellipse cx='24' cy='27' rx='16' ry='14' fill='#d9a05b' />
+      <path
+        className={styles.line}
+        d='M24 27 Q24 19 31 19 Q39 19 38 28 Q37 39 24 39 Q11 39 11 27 Q11 15 24 15'
+        stroke='#8a5a2b'
+      />
+      <circle className={styles.dot} cx='19' cy='22' r='1.3' fill='#fff8ec' />
+      <circle className={styles.dot} cx='29' cy='23' r='1.3' fill='#fff8ec' />
+      <circle className={styles.dot} cx='24' cy='33' r='1.3' fill='#fff8ec' />
+      <circle className={styles.dot} cx='16' cy='30' r='1.2' fill='#fff8ec' />
+    </>
+  ),
 };
 
 /** Every drawn icon, for /dev/icons. */

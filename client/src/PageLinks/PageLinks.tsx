@@ -1,5 +1,5 @@
 import { pageById } from '../data/pages';
-import { GAME } from '../data/game';
+import { gameById } from '../data/games';
 import { navigate } from '../core/navigate';
 import motion from '../core/motion.module.css';
 import styles from './PageLinks.module.css';
@@ -13,7 +13,8 @@ const MAX_LINKS = 6;
 
 /** A page, or the game. */
 function destination(id: string): { path: string; emoji: string; title: string } | null {
-  if (id === GAME.id) return { path: GAME.path, emoji: GAME.emoji, title: GAME.title };
+  const game = gameById(id);
+  if (game) return { path: game.path, emoji: game.emoji, title: game.title };
   const page = pageById(id);
   return page ? { path: `/${page.id}`, emoji: page.emoji, title: page.title } : null;
 }

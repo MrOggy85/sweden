@@ -12,6 +12,9 @@ export type GamePair = {
 
 export const GAMES_DIR = new URL('../content/games/', import.meta.url);
 
+// The one file in content/games/ that is not a pair list.
+const PHRASES_FILE = 'phrases.md';
+
 // Same as scripts/content.ts's constant.
 const AUDIO_URL_PREFIX = '/media/';
 
@@ -37,9 +40,10 @@ function parsePair(item: string, filename: string): GamePair {
   return { sv, en, icon, audio: `${AUDIO_URL_PREFIX}${slug(sv)}.m4a` };
 }
 
-export async function loadGamePairs(): Promise<GamePair[]> {
-  const filename = 'games/connect-pairs.md';
-  const raw = await Deno.readTextFile(new URL('connect-pairs.md', GAMES_DIR));
+/** One list of `swedish | english | icon` bullets: the connect pairs, the shelf, the dishes. */
+export async function loadGamePairs(file: string): Promise<GamePair[]> {
+  const filename = `games/${file}`;
+  const raw = await Deno.readTextFile(new URL(file, GAMES_DIR));
   const pairs = bullets(raw).map((item) => parsePair(item, filename));
   if (pairs.length === 0) throw new Error(`${filename}: no pairs found`);
 
@@ -52,9 +56,23 @@ export async function loadGamePairs(): Promise<GamePair[]> {
   return pairs;
 }
 
+/**
+ * Every pair list in content/games/, keyed by filename. Scanned rather than listed, so
+ * adding a game's word list cannot leave one script generating its clips and another
+ * checking for them.
+ */
+export async function loadAllGamePairs(): Promise<Record<string, GamePair[]>> {
+  const lists: Record<string, GamePair[]> = {};
+  for await (const entry of Deno.readDir(GAMES_DIR)) {
+    if (!entry.isFile || !entry.name.endsWith('.md') || entry.name === PHRASES_FILE) continue;
+    lists[entry.name] = await loadGamePairs(entry.name);
+  }
+  return lists;
+}
+
 export async function loadGamePhrases(): Promise<string[]> {
-  const filename = 'games/phrases.md';
-  const raw = await Deno.readTextFile(new URL('phrases.md', GAMES_DIR));
+  const filename = `games/${PHRASES_FILE}`;
+  const raw = await Deno.readTextFile(new URL(PHRASES_FILE, GAMES_DIR));
   const phrases = bullets(raw);
   if (phrases.length === 0) throw new Error(`${filename}: no phrases found`);
   return phrases;

@@ -55,10 +55,10 @@ export type Page = {
 };
 
 // Page ids become URLs, so anything the client routes itself is off limits.
-const RESERVED_IDS = ['dev', 'api', 'media', 'connect'];
+const RESERVED_IDS = ['dev', 'api', 'media', 'connect', 'cooking'];
 
 // Linkable but not content pages. No backlink: there is no file to render one on.
-const LINKABLE_ROUTES = ['connect'];
+const LINKABLE_ROUTES = ['connect', 'cooking'];
 
 export const CONTENT_DIR = new URL('../content/', import.meta.url);
 export const MEDIA_DIR = new URL('../client/static/media/', import.meta.url);

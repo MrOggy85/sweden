@@ -1,8 +1,8 @@
 // Generated from content/games/*.md. Client-only: no score, no persistence, so nothing
 // api-side to keep in sync.
 
-import { GAME_PAIRS, GAME_PHRASES } from './gameContent.generated';
-export { GAME_PAIRS, GAME_PHRASES };
+import { COOKING_ITEMS, DISHES, GAME_PAIRS, GAME_PHRASES, KITCHEN } from './gameContent.generated';
+export { COOKING_ITEMS, DISHES, GAME_PAIRS, GAME_PHRASES, KITCHEN };
 
 // `icon` keys into GameIcons.tsx; `audio` is derived from `sv` like a topic word.
 export type GamePair = {

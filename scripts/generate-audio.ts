@@ -1,9 +1,9 @@
-// `## Words` in content/*.md and content/games/connect-pairs.md -> media/<slug>.m4a, via
+// `## Words` in content/*.md and every pair list in content/games/ -> media/<slug>.m4a, via
 // macOS `say` + `afconvert`. Run by hand; the clips are committed assets. See CLAUDE.md,
 // "Adding a spoken word" — including installing the Swedish voice.
 
 import { audioFileUrl, loadPages, MEDIA_DIR, slug, type Word } from './content.ts';
-import { gamePairAudioUrl, loadGamePairs } from './gameContent.ts';
+import { gamePairAudioUrl, loadAllGamePairs } from './gameContent.ts';
 import { requireMacos, run } from './macos.ts';
 import { stripFreeBoxes } from './mp4.ts';
 import { assertOverridesUsed, loadPronunciations } from './pronounce.ts';
@@ -75,11 +75,11 @@ async function generate(word: Pick<Word, 'sv'>, out: URL): Promise<void> {
 await Deno.mkdir(MEDIA_DIR, { recursive: true });
 
 const pages = await loadPages();
-const gamePairs = await loadGamePairs();
+const gameLists = await loadAllGamePairs();
 const overrides = await loadPronunciations();
 assertOverridesUsed(overrides, [
   ...pages.flatMap((page) => page.words.map((word) => word.sv)),
-  ...gamePairs.map((pair) => pair.sv),
+  ...Object.values(gameLists).flat().map((pair) => pair.sv),
 ]);
 
 let written = 0;
@@ -106,8 +106,8 @@ for (const page of pages) {
   for (const word of page.words) await maybeGenerate(word, audioFileUrl(word), page.id);
 }
 
-for (const pair of gamePairs) {
-  await maybeGenerate(pair, gamePairAudioUrl(pair), 'games/connect-pairs');
+for (const [file, pairs] of Object.entries(gameLists)) {
+  for (const pair of pairs) await maybeGenerate(pair, gamePairAudioUrl(pair), `games/${file}`);
 }
 
 if (ONLY_SLUG !== null && written === 0) {

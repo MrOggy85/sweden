@@ -2,6 +2,7 @@
   "fmt": {
     "lineWidth": 120,
     "semiColons": true,
-    "singleQuote": true
+    "singleQuote": true,
+    "exclude": ["static/media/img/CREDITS.md"]
   }
 }
