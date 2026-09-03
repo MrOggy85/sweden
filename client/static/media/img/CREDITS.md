@@ -11,3 +11,4 @@ public domain and CC0 do not, and are recorded so an image can be re-sourced lat
 | `katt.jpg` | **missing** | - | own photo |
 | `luciatag.jpg` | [link](https://commons.wikimedia.org/wiki/File:Lucia_2017_D81_4616_(39002373982).jpg) | Bengt Nyman, Vaxholm | CC BY 2.0 |
 | `midsommarstang.jpg` | [link](https://commons.wikimedia.org/wiki/File:Midsommarst%C3%A5ng_Drags%C3%B6.jpg) | JuliaAbrahamsson | CC BY-SA 4.0 |
+| `stockholm.jpg` | [link](https://culturetrekking.com/images/img_NJ8iq1DB6tsS96NB1RvB7w/adobestock_386572510.jpeg?fit=outside&w=1600&h=1066) | - | unknown (off the web) |

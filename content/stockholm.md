@@ -16,6 +16,10 @@ blurb: The capital, built on 14 islands.
 - bro | bridge
 - ö | island
 
+## Images
+
+- Sunset over Gamla Stan, the old town | stockholm.jpg
+
 ## Links
 
 - fika
