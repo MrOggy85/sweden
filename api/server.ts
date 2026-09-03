@@ -8,6 +8,7 @@ import { postSession } from './routes/session.ts';
 import { getVisits, postVisits } from './routes/visits.ts';
 import { getPages } from './routes/pages.ts';
 import { getHealth } from './routes/health.ts';
+import { postDevImage, postDevImageDrop, postDevReview } from './routes/dev.ts';
 
 // Anything not listed here falls through to the SPA and is answered with index.html and a
 // 200 — a missing audio extension looks like a working request that plays nothing.
@@ -18,6 +19,8 @@ const RESOURCE_FILE_ENDING = [
   '.json',
   '.png',
   '.jpg',
+  '.jpeg',
+  '.webp',
   '.svg',
   '.map',
   '.webmanifest',
@@ -29,6 +32,9 @@ const RESOURCE_FILE_ENDING = [
 // the root of the uploaded tree, which is not necessarily api/ — resolving relative to
 // server.ts finds api/client/ identically from any cwd.
 const root = Deno.env.get('CLIENT_ROOT') ?? fromFileUrl(new URL('./client', import.meta.url));
+
+// The /api/dev routes write to the working tree, so they exist only locally.
+const DEV = Deno.env.get('DEV') === '1';
 
 const STATIC_IMMUTABLE = 'public, max-age=31536000, immutable';
 const STATIC_REVALIDATE = 'public, max-age=86400, must-revalidate';
@@ -76,6 +82,12 @@ export function init(host: string, port: string) {
             resp = await getVisits(url, idn);
           } else if (url.pathname === '/api/pages' && req.method === 'GET') {
             resp = await getPages(idn);
+          } else if (DEV && url.pathname === '/api/dev/review' && req.method === 'POST') {
+            resp = await postDevReview(req);
+          } else if (DEV && url.pathname === '/api/dev/image' && req.method === 'POST') {
+            resp = await postDevImage(req);
+          } else if (DEV && url.pathname === '/api/dev/image/drop' && req.method === 'POST') {
+            resp = await postDevImageDrop(req);
           } else {
             resp = new Response('404 Not Found', { status: 404 });
           }

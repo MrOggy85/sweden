@@ -14,6 +14,10 @@ blurb: What a Swedish dog says.
 
 - hund | dog
 
+## Images
+
+- Two shiba inu dogs standing in the snow | hund.jpg
+
 ## Sounds
 
 - Voff | dog-bark1

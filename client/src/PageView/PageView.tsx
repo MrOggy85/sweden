@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import type { Page } from '../data/pages';
+import { PageImages } from '../PageImages/PageImages';
 import { PageLinks } from '../PageLinks/PageLinks';
+import { PageVideo } from '../PageVideo/PageVideo';
 import { SentenceBuilder } from '../SentenceBuilder/SentenceBuilder';
 import { Stars } from '../Stars/Stars';
 import motion from '../core/motion.module.css';
@@ -43,6 +45,10 @@ export function PageView({ page, count, onBack }: Props) {
 
       <h2 className={styles.title}>{page.title}</h2>
       <Stars count={count} />
+
+      {/* Above the facts: the thing to look at should come before the thing to read. */}
+      <PageVideo videos={page.videos ?? []} />
+      <PageImages images={page.images ?? []} />
 
       <ul className={styles.facts}>
         {page.facts.map((fact) => <li key={fact} className={styles.fact}>{fact}</li>)}

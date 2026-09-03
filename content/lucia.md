@@ -16,6 +16,10 @@ blurb: Candles in the darkest week.
 - sång | song
 - bulle | bun
 
+## Images
+
+- A Lucia procession, candles and red sashes | luciatag.jpg
+
 ## Links
 
 - christmas

@@ -18,6 +18,21 @@ export type Sound = {
   audio: string;
 };
 
+// A photo under media/img/, with the caption shown under it. Filename authored, like a
+// sound effect: a photograph has no text to derive one from.
+export type Image = {
+  caption: string;
+  src: string;
+};
+
+// Only YouTube for now, and only the id: the client builds the embed URL, so the privacy
+// and player options are decided in one place rather than per content file.
+export type Video = {
+  provider: 'youtube';
+  id: string;
+  label: string;
+};
+
 // How the client renders the page: a fact list, or the tap-a-word sentence builder.
 export const PAGE_KINDS = ['topic', 'sentence'] as const;
 export type PageKind = typeof PAGE_KINDS[number];
@@ -32,6 +47,8 @@ export type Page = {
   facts: string[];
   words: Word[];
   sounds: Sound[];
+  images: Image[];
+  videos: Video[];
   // Authored in `## Links`, plus the reverse of every link pointing here. Ids, never
   // labels: the card comes from the target page.
   links: string[];
@@ -46,10 +63,12 @@ const LINKABLE_ROUTES = ['connect'];
 export const CONTENT_DIR = new URL('../content/', import.meta.url);
 export const MEDIA_DIR = new URL('../client/static/media/', import.meta.url);
 export const SFX_DIR = new URL('../client/static/media/sfx/', import.meta.url);
+export const IMG_DIR = new URL('../client/static/media/img/', import.meta.url);
 
 // Where the browser asks for a clip; the build copies static/ into api/client/.
 const AUDIO_URL_PREFIX = '/media/';
 const SFX_URL_PREFIX = '/media/sfx/';
+const IMG_URL_PREFIX = '/media/img/';
 
 // `make convert-sfx` inputs. One left in sfx/ is an unconverted download, and would ship
 // beside its own output — generate-content refuses it.
@@ -73,6 +92,10 @@ export function audioFileUrl(word: Word): URL {
 
 export function soundFileUrl(sound: Sound): URL {
   return new URL(sound.audio.slice(SFX_URL_PREFIX.length), SFX_DIR);
+}
+
+export function imageFileUrl(image: Image): URL {
+  return new URL(image.src.slice(IMG_URL_PREFIX.length), IMG_DIR);
 }
 
 function parseFrontmatter(raw: string, filename: string): Record<string, string> {
@@ -110,6 +133,27 @@ function parseSound(item: string, filename: string): Sound {
   return { label, audio: `${SFX_URL_PREFIX}${file}.m4a` };
 }
 
+function parseImage(item: string, filename: string): Image {
+  const [caption, file, ...rest] = item.split('|').map((part) => part.trim());
+  if (!caption || !file || rest.length > 0) {
+    throw new Error(`${filename}: image "${item}" must be written as "caption | filename.jpg"`);
+  }
+  if (file.includes('/')) throw new Error(`${filename}: image "${file}" must be a bare name — media/img/ is implied`);
+  return { caption, src: `${IMG_URL_PREFIX}${file}` };
+}
+
+function parseVideo(item: string, filename: string): Video {
+  const [provider, id, label, ...rest] = item.split('|').map((part) => part.trim());
+  if (provider !== 'youtube' || !id || !label || rest.length > 0) {
+    throw new Error(`${filename}: video "${item}" must be written as "youtube | id | label"`);
+  }
+  // A YouTube id is exactly 11 of these characters; anything else is a pasted URL.
+  if (!/^[A-Za-z0-9_-]{11}$/.test(id)) {
+    throw new Error(`${filename}: video id "${id}" is not a YouTube id — use the id, not the whole URL`);
+  }
+  return { provider, id, label };
+}
+
 function parseLink(item: string, filename: string): string {
   if (!/^[a-z0-9-]+$/.test(item)) {
     throw new Error(`${filename}: link "${item}" must be a bare page id — the card comes from the target page`);
@@ -117,7 +161,14 @@ function parseLink(item: string, filename: string): string {
   return item;
 }
 
-type Body = { facts: string[]; words: Word[]; sounds: Sound[]; links: string[] };
+type Body = {
+  facts: string[];
+  words: Word[];
+  sounds: Sound[];
+  images: Image[];
+  videos: Video[];
+  links: string[];
+};
 
 // Bullets before the first `##` are facts; the rest go by heading. Bullets under any other
 // heading are ignored, so prose sections do not become facts.
@@ -125,14 +176,18 @@ function parseBody(body: string, filename: string): Body {
   const facts: string[] = [];
   const words: Word[] = [];
   const sounds: Sound[] = [];
+  const images: Image[] = [];
+  const videos: Video[] = [];
   const links: string[] = [];
-  let section: 'facts' | 'words' | 'sounds' | 'links' | 'other' = 'facts';
+  let section: 'facts' | 'words' | 'sounds' | 'images' | 'video' | 'links' | 'other' = 'facts';
 
   for (const line of body.split('\n')) {
     const heading = line.match(/^##\s+(.*?)\s*$/);
     if (heading) {
       const name = heading[1].toLowerCase();
-      section = name === 'words' || name === 'sounds' || name === 'links' ? name : 'other';
+      section = name === 'words' || name === 'sounds' || name === 'images' || name === 'video' || name === 'links'
+        ? name
+        : 'other';
       continue;
     }
 
@@ -143,10 +198,12 @@ function parseBody(body: string, filename: string): Body {
     if (section === 'facts') facts.push(item);
     else if (section === 'words') words.push(parseWord(item, filename));
     else if (section === 'sounds') sounds.push(parseSound(item, filename));
+    else if (section === 'images') images.push(parseImage(item, filename));
+    else if (section === 'video') videos.push(parseVideo(item, filename));
     else if (section === 'links') links.push(parseLink(item, filename));
   }
 
-  return { facts, words, sounds, links };
+  return { facts, words, sounds, images, videos, links };
 }
 
 function requireField(fields: Record<string, string>, name: string, filename: string): string {
@@ -185,10 +242,10 @@ async function loadPage(entryName: string): Promise<Page> {
     throw new Error(`${entryName}: kind "${kind}" must be one of ${PAGE_KINDS.join(', ')}`);
   }
 
-  const { facts, words, sounds, links } = parseBody(body, entryName);
+  const { facts, words, sounds, images, videos, links } = parseBody(body, entryName);
   if (facts.length === 0) throw new Error(`${entryName}: no facts found — expected a Markdown bullet list ("- ...")`);
 
-  return { id, order, kind, title, emoji, blurb, facts, words, sounds, links };
+  return { id, order, kind, title, emoji, blurb, facts, words, sounds, images, videos, links };
 }
 
 // Needs every page loaded first. A bad id would render a card that navigates nowhere.

@@ -1,0 +1,22 @@
+{
+  "hund.jpg": {
+    "source": "https://cdn.wamiz.fr/cdn-cgi/image/format=auto,quality=80,width=1200,height=900,fit=cover/article/main-picture/5c9ce9b88d0e8921521632.jpg",
+    "author": "",
+    "licence": "unknown (off the web)"
+  },
+  "katt.jpg": {
+    "source": "",
+    "author": "",
+    "licence": "own photo"
+  },
+  "luciatag.jpg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Lucia_2017_D81_4616_(39002373982).jpg",
+    "author": "Bengt Nyman, Vaxholm",
+    "licence": "CC BY 2.0"
+  },
+  "midsommarstang.jpg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Midsommarst%C3%A5ng_Drags%C3%B6.jpg",
+    "author": "JuliaAbrahamsson",
+    "licence": "CC BY-SA 4.0"
+  }
+}

@@ -20,3 +20,11 @@ blurb: The longest day of the year.
 
 - animals
 - winter
+
+## Images
+
+- A midsommarstång, dressed in leaves and flowers | midsommarstang.jpg
+
+## Video
+
+- youtube | 7z6FJEf_kKI | Dancing around the midsummer pole

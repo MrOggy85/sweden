@@ -1,0 +1,105 @@
+.upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 12px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 1rem;
+  color: #005293;
+}
+
+.drop {
+  display: grid;
+  place-items: center;
+  min-height: 96px;
+  padding: 1rem;
+  text-align: center;
+  background: #fff3d6;
+  border: 1.5px dashed #1c1c1c;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.dragging {
+  background: #ffe9ab;
+  border-style: solid;
+}
+
+/* The whole area is the control; the input itself is only a file picker. */
+.file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.dropText {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.input {
+  font: inherit;
+  min-height: 44px;
+  padding: 0.4rem 0.6rem;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 10px;
+}
+
+.more {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #005293;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0.2rem 0;
+  cursor: pointer;
+}
+
+.send {
+  min-height: 48px;
+  font: inherit;
+  font-weight: 700;
+  background: #fecc00;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.send:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.ok,
+.error {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.ok {
+  color: #2a7d5f;
+}
+
+.error {
+  color: #d1495b;
+}

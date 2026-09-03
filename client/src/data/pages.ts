@@ -73,6 +73,19 @@ export type Sound = {
   audio: string;
 };
 
+// Filename authored, like a sound effect: a photograph has no text to derive one from.
+export type Image = {
+  caption: string;
+  src: string;
+};
+
+// The client builds the embed URL, so player and privacy options live in one place.
+export type Video = {
+  provider: 'youtube';
+  id: string;
+  label: string;
+};
+
 // Absent means 'topic'.
 export type PageKind = 'topic' | 'sentence';
 
@@ -85,6 +98,8 @@ export type Page = {
   facts: string[];
   words?: Word[];
   sounds?: Sound[];
+  images?: Image[];
+  videos?: Video[];
   // Authored links plus backlinks. `connect` is the one id here that is not a page.
   links?: string[];
 };

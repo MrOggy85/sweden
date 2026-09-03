@@ -147,6 +147,21 @@ keeping repositories well under 1 GB, and Deno Deploy caps aggregate deployment 
 roughly the same order of magnitude. Git LFS is not the intended migration target — a CDN
 gets media-serving benefits LFS does not.
 
+## Video
+
+A `## Video` section embeds YouTube, and it is the app's only third-party resource. The
+embed is click-to-play: the facade is ours, and the iframe mounts on tap, so nothing reaches
+Google and no cookie is set unless a child asks for the video. It is `youtube-nocookie.com`,
+with `rel=0`, `fs=0`, `modestbranding=1` and `playsinline=1`, and the URL is built in
+`PageVideo.tsx` so those choices live in one place rather than per content file.
+
+**Accepted, with the cost stated:** `rel=0` no longer removes end-screen suggestions, it
+only restricts them to the same channel, and the player still offers "Watch on YouTube". An
+embedded player is therefore a door out of the app, and no parameter closes it. iOS Guided
+Access is the containment if a child is using the app alone. The alternative — download the
+video and self-host it — is only legal where the licence allows, and puts megabytes
+somewhere; see the media note below.
+
 ## Abuse surface
 
 Every write endpoint is unauthenticated: anyone can mint a device, create profiles, and

@@ -14,6 +14,10 @@ blurb: What a Swedish cat says.
 
 - katt | cat
 
+## Images
+
+- A cat with its ears up and its whiskers out | katt.jpg
+
 ## Sounds
 
 - Mjau | cat-meow1

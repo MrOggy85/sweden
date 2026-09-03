@@ -1,5 +1,6 @@
 import { navigate } from '../core/navigate';
 import { Icons } from './Icons';
+import { ImageReview } from './ImageReview';
 import { Voices } from './Voices';
 import styles from './DevPage.module.css';
 
@@ -11,6 +12,7 @@ type Props = {
 const TOOLS = [
   { path: '/voices', title: 'Speech voices', blurb: 'What speechSynthesis offers on this device' },
   { path: '/icons', title: 'Game icons', blurb: 'Every connect-the-words picture, large and small' },
+  { path: '/images', title: 'Review photos', blurb: 'Keep or drop each photo, then paste the result back' },
 ];
 
 // Diagnostics, reachable by tapping the build footer five times. For debugging on the
@@ -31,7 +33,13 @@ export function DevPage({ path }: Props) {
         <h1 className={styles.title}>{tool ? tool.title : 'Dev'}</h1>
       </header>
 
-      {tool?.path === '/voices' ? <Voices /> : tool?.path === '/icons' ? <Icons /> : <Index unknown={path !== '/'} />}
+      {tool?.path === '/voices'
+        ? <Voices />
+        : tool?.path === '/icons'
+        ? <Icons />
+        : tool?.path === '/images'
+        ? <ImageReview />
+        : <Index unknown={path !== '/'} />}
     </div>
   );
 }

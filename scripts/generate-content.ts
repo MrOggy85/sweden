@@ -2,7 +2,16 @@
 // client/src/data/pages.generated.ts (PAGES). One source for both, so they cannot drift.
 // Run by `make generate-content`, and by dev/build/check.
 
-import { audioFileUrl, loadPages, type Page, SFX_DIR, SFX_SOURCE_EXTENSIONS, slug, soundFileUrl } from './content.ts';
+import {
+  audioFileUrl,
+  imageFileUrl,
+  loadPages,
+  type Page,
+  SFX_DIR,
+  SFX_SOURCE_EXTENSIONS,
+  slug,
+  soundFileUrl,
+} from './content.ts';
 
 const API_OUT = new URL('../api/db/content.generated.ts', import.meta.url);
 const CLIENT_OUT = new URL('../client/src/data/pages.generated.ts', import.meta.url);
@@ -74,6 +83,27 @@ async function assertSoundsExist(pages: Page[]): Promise<void> {
   }
 }
 
+// Same reasoning as the sound effects: an authored filename, so a typo is the likely
+// failure, and a broken image only shows up on the page.
+async function assertImagesExist(pages: Page[]): Promise<void> {
+  const missing: string[] = [];
+
+  for (const page of pages) {
+    for (const image of page.images) {
+      const url = imageFileUrl(image);
+      try {
+        await Deno.stat(url);
+      } catch {
+        missing.push(`  ${page.id}: "${image.caption}" -> ${url.pathname}`);
+      }
+    }
+  }
+
+  if (missing.length > 0) {
+    throw new Error(`missing images:\n${missing.join('\n')}\nDrop the file in client/static/media/img/.`);
+  }
+}
+
 // An unconverted download would ship beside its own output. convert-sfx deletes its
 // sources; this catches ones dragged in by hand.
 async function assertSourcesConverted(): Promise<void> {
@@ -110,7 +140,7 @@ function renderApiModule(pages: Page[]): string {
 function renderClientModule(pages: Page[]): string {
   const literal = JSON.stringify(
     // Omitted when empty: a missing `kind` means topic, and the module stays readable.
-    pages.map(({ id, kind, title, emoji, blurb, facts, words, sounds, links }) => ({
+    pages.map(({ id, kind, title, emoji, blurb, facts, words, sounds, images, videos, links }) => ({
       id,
       ...(kind === 'topic' ? {} : { kind }),
       title,
@@ -119,6 +149,8 @@ function renderClientModule(pages: Page[]): string {
       facts,
       ...(words.length > 0 ? { words } : {}),
       ...(sounds.length > 0 ? { sounds } : {}),
+      ...(images.length > 0 ? { images } : {}),
+      ...(videos.length > 0 ? { videos } : {}),
       ...(links.length > 0 ? { links } : {}),
     })),
     null,
@@ -131,6 +163,7 @@ const pages = await loadPages();
 assertNoSlugCollisions(pages);
 await assertClipsExist(pages);
 await assertSoundsExist(pages);
+await assertImagesExist(pages);
 await assertSourcesConverted();
 await Deno.writeTextFile(API_OUT, renderApiModule(pages));
 await Deno.writeTextFile(CLIENT_OUT, renderClientModule(pages));

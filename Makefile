@@ -1,4 +1,4 @@
-.PHONY: install dev build check fmt deploy generate-content generate-audio audio-variants convert-sfx
+.PHONY: install dev build check fmt deploy generate-content generate-audio audio-variants convert-sfx credits
 
 # Install the client's npm dependencies (react, esbuild). The api has none.
 install:
@@ -20,6 +20,10 @@ generate-content:
 #   make generate-audio ARGS=--only=banan   # redo one clip, implies --force
 generate-audio:
 	deno run --allow-read=content,client/static --allow-write=client/static --allow-run=say,afconvert scripts/generate-audio.ts $(ARGS)
+
+# Rewrite the image credits table from sources.json, and list images with no source.
+credits:
+	deno run --allow-read=client/static/media/img --allow-write=client/static/media/img scripts/credits.ts
 
 # Encode one word at a range of AAC settings and print what each costs, to pick the
 # smallest that still sounds right. Writes only to /tmp; nothing here reaches the app.
@@ -45,7 +49,7 @@ build: generate-content
 
 check: generate-content
 	deno task --cwd api check
-	deno check scripts/generate-content.ts scripts/generate-game-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/convert-sfx.ts scripts/mp4.ts scripts/pronounce.ts scripts/aiff.ts
+	deno check scripts/generate-content.ts scripts/generate-game-content.ts scripts/generate-audio.ts scripts/compare-audio.ts scripts/convert-sfx.ts scripts/mp4.ts scripts/pronounce.ts scripts/aiff.ts scripts/credits.ts
 	npm --prefix client run check
 
 fmt:
