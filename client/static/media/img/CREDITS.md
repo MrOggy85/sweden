@@ -7,8 +7,13 @@ public domain and CC0 do not, and are recorded so an image can be re-sourced lat
 
 | file | source | author | licence |
 | --- | --- | --- | --- |
+| `animals.jpg` | [link](https://commons.wikimedia.org/wiki/File:Moose-Antlers-hp1898.jpg) | Alexander Minaev | Attribution |
+| `fika.jpg` | [link](https://commons.wikimedia.org/wiki/File:Cinnamon_roll_in_Stockholm.jpg) | Kritzolina | CC BY-SA 4.0 |
+| `flag.jpg` | [link](https://commons.wikimedia.org/wiki/File:Flag_of_Sweden_2.jpg) | Tarjei Mo | CC BY-SA 4.0 |
+| `food.jpg` | [link](https://commons.wikimedia.org/wiki/File:Swedish_meatballs_in_Gamla_stan,_Stockholm.jpg) | JIP | CC BY-SA 4.0 |
 | `hund.jpg` | [link](https://cdn.wamiz.fr/cdn-cgi/image/format=auto,quality=80,width=1200,height=900,fit=cover/article/main-picture/5c9ce9b88d0e8921521632.jpg) | - | unknown (off the web) |
 | `katt.jpg` | **missing** | - | own photo |
 | `luciatag.jpg` | [link](https://commons.wikimedia.org/wiki/File:Lucia_2017_D81_4616_(39002373982).jpg) | Bengt Nyman, Vaxholm | CC BY 2.0 |
 | `midsommarstang.jpg` | [link](https://commons.wikimedia.org/wiki/File:Midsommarst%C3%A5ng_Drags%C3%B6.jpg) | JuliaAbrahamsson | CC BY-SA 4.0 |
 | `stockholm.jpg` | [link](https://culturetrekking.com/images/img_NJ8iq1DB6tsS96NB1RvB7w/adobestock_386572510.jpeg?fit=outside&w=1600&h=1066) | - | unknown (off the web) |
+| `winter.jpg` | [link](https://commons.wikimedia.org/wiki/File:Aurora_Borealis_Kiruna.jpg) | Martin Eklund | CC0 |

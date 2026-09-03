@@ -16,6 +16,10 @@ blurb: Blue with a yellow cross.
 - blå | blue
 - gul | yellow
 
+## Images
+
+- The flag, blue with a yellow cross | flag.jpg
+
 ## Links
 
 - map

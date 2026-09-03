@@ -16,6 +16,10 @@ blurb: A coffee break, but important.
 - kaffe | coffee
 - kaka | cake
 
+## Images
+
+- A kanelbulle, with pearl sugar on top | fika.jpg
+
 ## Links
 
 - midsummer

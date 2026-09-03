@@ -1,4 +1,24 @@
 {
+  "animals.jpg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Moose-Antlers-hp1898.jpg",
+    "author": "Alexander Minaev",
+    "licence": "Attribution"
+  },
+  "fika.jpg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Cinnamon_roll_in_Stockholm.jpg",
+    "author": "Kritzolina",
+    "licence": "CC BY-SA 4.0"
+  },
+  "flag.jpg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Sweden_2.jpg",
+    "author": "Tarjei Mo",
+    "licence": "CC BY-SA 4.0"
+  },
+  "food.jpg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Swedish_meatballs_in_Gamla_stan,_Stockholm.jpg",
+    "author": "JIP",
+    "licence": "CC BY-SA 4.0"
+  },
   "hund.jpg": {
     "source": "https://cdn.wamiz.fr/cdn-cgi/image/format=auto,quality=80,width=1200,height=900,fit=cover/article/main-picture/5c9ce9b88d0e8921521632.jpg",
     "author": "",
@@ -23,5 +43,10 @@
     "source": "https://culturetrekking.com/images/img_NJ8iq1DB6tsS96NB1RvB7w/adobestock_386572510.jpeg?fit=outside&w=1600&h=1066",
     "author": "",
     "licence": "unknown (off the web)"
+  },
+  "winter.jpg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Aurora_Borealis_Kiruna.jpg",
+    "author": "Martin Eklund",
+    "licence": "CC0"
   }
 }

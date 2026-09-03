@@ -16,6 +16,10 @@ blurb: Dark, snowy, and full of candles.
 - kallt | cold
 - mörkt | dark
 
+## Images
+
+- Northern lights over the snow at Kiruna | winter.jpg
+
 ## Links
 
 - animals

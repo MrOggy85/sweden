@@ -16,6 +16,10 @@ blurb: Moose, lynx, and a lot of forest.
 - skog | forest
 - ren | reindeer
 
+## Images
+
+- An älg with velvet antlers, eating leaves | animals.jpg
+
 ## Links
 
 - katt

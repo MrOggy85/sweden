@@ -16,6 +16,10 @@ blurb: What is on the plate.
 - pannkaka | pancake
 - korv | sausage
 
+## Images
+
+- Köttbullar with mash and lingonberries | food.jpg
+
 ## Links
 
 - fika
