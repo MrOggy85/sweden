@@ -71,6 +71,7 @@ export type Word = {
 export type Sound = {
   label: string;
   audio: string;
+  emoji?: string;
 };
 
 // Filename authored, like a sound effect: a photograph has no text to derive one from.

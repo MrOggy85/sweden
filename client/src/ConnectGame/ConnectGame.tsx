@@ -3,6 +3,7 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { GameIcon } from '../GameIcons/GameIcons';
 import { pickRound, randomPhrase, shuffled } from '../data/gameContent';
 import type { GamePair } from '../data/gameContent';
+import { playSfx } from '../core/sfx';
 import styles from './ConnectGame.module.css';
 
 type Side = 'word' | 'image';
@@ -111,6 +112,7 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
     if (!celebrating && round.length > 0 && connected.size === round.length) {
       setPhrase(randomPhrase());
       setCelebrating(true);
+      playSfx('fanfare');
     }
   }, [connected, round, celebrating]);
 
@@ -186,6 +188,8 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
 
     if (dropSv === drag.sv) {
       setConnected((prev) => new Set(prev).add(drag.sv));
+      // The last pair fires the fanfare below instead, so the two do not overlap.
+      if (connected.size + 1 < round.length) playSfx('correct');
     } else {
       flashWrong(cardKey(drag.side, drag.sv), cardKey(dropSide, dropSv));
     }

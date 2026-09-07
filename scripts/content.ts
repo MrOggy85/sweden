@@ -16,6 +16,8 @@ export type Word = {
 export type Sound = {
   label: string;
   audio: string;
+  // Replaces the 🔊 on the button, so a board of them is told apart at a glance.
+  emoji?: string;
 };
 
 // A photo under media/img/, with the caption shown under it. Filename authored, like a
@@ -122,15 +124,20 @@ function parseWord(item: string, filename: string): Word {
   return word;
 }
 
-function parseSound(item: string, filename: string): Sound {
-  const [label, file, ...rest] = item.split('|').map((part) => part.trim());
+export function parseSound(item: string, filename: string): Sound {
+  const [label, file, emoji, ...rest] = item.split('|').map((part) => part.trim());
   if (!label || !file || rest.length > 0) {
-    throw new Error(`${filename}: sound "${item}" must be written as "label | filename-without-extension"`);
+    throw new Error(
+      `${filename}: sound "${item}" must be written as "label | filename-without-extension" ` +
+        'or "label | filename-without-extension | emoji"',
+    );
   }
   if (file.includes('/') || file.includes('.')) {
     throw new Error(`${filename}: sound file "${file}" must be a bare name — the folder and .m4a are implied`);
   }
-  return { label, audio: `${SFX_URL_PREFIX}${file}.m4a` };
+  const sound: Sound = { label, audio: `${SFX_URL_PREFIX}${file}.m4a` };
+  if (emoji) sound.emoji = emoji;
+  return sound;
 }
 
 function parseImage(item: string, filename: string): Image {

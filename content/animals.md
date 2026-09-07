@@ -20,6 +20,12 @@ blurb: Moose, lynx, and a lot of forest.
 
 - An älg with velvet antlers, eating leaves | animals.jpg
 
+## Sounds
+
+- Kuckeliku | rooster
+- Bää | goat
+- Gnägg | horse
+
 ## Links
 
 - katt

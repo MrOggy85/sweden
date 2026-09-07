@@ -16,6 +16,10 @@ blurb: Christmas, on the 24th.
 - tomte | gnome
 - julgran | Christmas tree
 
+## Sounds
+
+- Klockan | bell_ring
+
 ## Links
 
 - winter

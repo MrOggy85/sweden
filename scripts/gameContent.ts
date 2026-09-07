@@ -1,7 +1,7 @@
 // Parses content/games/*.md. Separate from the topic loader: a game pair has no
 // frontmatter and no facts, and the library is sampled rather than shown in full.
 
-import { MEDIA_DIR, slug } from './content.ts';
+import { MEDIA_DIR, parseSound, slug, type Sound } from './content.ts';
 
 export type GamePair = {
   sv: string;
@@ -12,8 +12,13 @@ export type GamePair = {
 
 export const GAMES_DIR = new URL('../content/games/', import.meta.url);
 
-// The one file in content/games/ that is not a pair list.
+// The two files in content/games/ that are not pair lists.
 const PHRASES_FILE = 'phrases.md';
+const UI_SOUNDS_FILE = 'ui-sounds.md';
+
+// What the client asks playSfx() for. Fixed here so a typo in content fails the build
+// rather than silently never playing.
+export const UI_SOUND_ROLES = ['tap', 'correct', 'fanfare'];
 
 // Same as scripts/content.ts's constant.
 const AUDIO_URL_PREFIX = '/media/';
@@ -64,10 +69,32 @@ export async function loadGamePairs(file: string): Promise<GamePair[]> {
 export async function loadAllGamePairs(): Promise<Record<string, GamePair[]>> {
   const lists: Record<string, GamePair[]> = {};
   for await (const entry of Deno.readDir(GAMES_DIR)) {
-    if (!entry.isFile || !entry.name.endsWith('.md') || entry.name === PHRASES_FILE) continue;
+    if (!entry.isFile || !entry.name.endsWith('.md')) continue;
+    if (entry.name === PHRASES_FILE || entry.name === UI_SOUNDS_FILE) continue;
     lists[entry.name] = await loadGamePairs(entry.name);
   }
   return lists;
+}
+
+/** Role -> its effects, in file order. More than one is a variant set. */
+export async function loadUiSounds(): Promise<Record<string, Sound[]>> {
+  const filename = `games/${UI_SOUNDS_FILE}`;
+  const raw = await Deno.readTextFile(new URL(UI_SOUNDS_FILE, GAMES_DIR));
+  const roles: Record<string, Sound[]> = {};
+
+  for (const item of bullets(raw)) {
+    const sound = parseSound(item, filename);
+    if (!UI_SOUND_ROLES.includes(sound.label)) {
+      throw new Error(`${filename}: unknown role "${sound.label}" — expected one of ${UI_SOUND_ROLES.join(', ')}`);
+    }
+    (roles[sound.label] ??= []).push(sound);
+  }
+
+  for (const role of UI_SOUND_ROLES) {
+    if (!roles[role]) throw new Error(`${filename}: role "${role}" has no sound`);
+  }
+
+  return roles;
 }
 
 export async function loadGamePhrases(): Promise<string[]> {

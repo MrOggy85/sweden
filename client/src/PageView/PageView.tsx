@@ -64,7 +64,9 @@ export function PageView({ page, count, onBack }: Props) {
                 onClick={() => play(sound.audio)}
                 aria-label={`Play ${sound.label}`}
               >
-                <span className={playing === sound.audio ? motion.pulse : undefined} aria-hidden='true'>🔊</span>{' '}
+                <span className={playing === sound.audio ? motion.pulse : undefined} aria-hidden='true'>
+                  {sound.emoji ?? '🔊'}
+                </span>{' '}
                 {sound.label}
               </button>
             </li>

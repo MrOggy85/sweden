@@ -182,10 +182,31 @@ filename; the folder and `.m4a` are implied, and writing either is an error:
 ## Sounds
 
 - Mjau | cat-meow1
+- Kuckeliku | rooster | 🐓
 ```
 
 Unlike a word clip, this filename is authored rather than derived, so `generate-content`
 checks the file exists and names it when it does not.
+
+An optional third field is an emoji, replacing the 🔊 on the button. Worth it where several
+buttons sit together — `content/sounds.md` is a board of 26 of them and is nothing but a
+`## Sounds` list.
+
+## UI sound feedback
+
+Separate from the above: `content/games/ui-sounds.md` maps three fixed roles (`tap`,
+`correct`, `fanfare`) onto sfx filenames, and `client/src/core/sfx.ts` plays them at 0.4
+volume through **one shared element** — the iOS unlock rule again, and quiet because they
+sit under Alva's voice rather than over it. A role listed twice gives variants, picked at
+random per play.
+
+The roles live in `UI_SOUND_ROLES` (`scripts/gameContent.ts`); a bullet naming anything else
+fails the build, as does a missing file. Call sites today: `PageGrid` (tap, which is also
+what unlocks the element) and `ConnectGame` (correct, fanfare).
+
+Do not add an effect under a button that already plays a word. That is the thing
+`PROJECT.md`'s Sound section warns about, and it is why tapping a word or a game card plays
+only the clip.
 
 ## Linking pages
 

@@ -2,6 +2,7 @@ import { PAGES } from '../data/pages';
 import { GAMES } from '../data/games';
 import type { PageProgress } from '../data/types';
 import { Stars } from '../Stars/Stars';
+import { playSfx } from '../core/sfx';
 import motion from '../core/motion.module.css';
 import styles from './PageGrid.module.css';
 
@@ -28,7 +29,11 @@ export function PageGrid({ progress, onOpen, onOpenGame }: Props) {
           type='button'
           className={`${styles.card} ${styles.game} ${motion.popIn}`}
           style={delay(index)}
-          onClick={() => onOpenGame(game.path)}
+          // Also the tap that unlocks the sfx element on iOS: the grid is the way in.
+          onClick={() => {
+            playSfx('tap');
+            onOpenGame(game.path);
+          }}
         >
           <span className={styles.gameEmoji} aria-hidden='true'>{game.emoji}</span>
           <span className={styles.title}>{game.title}</span>
@@ -43,7 +48,10 @@ export function PageGrid({ progress, onOpen, onOpenGame }: Props) {
             type='button'
             className={`${styles.card} ${count > 0 ? styles.seen : ''} ${motion.popIn}`}
             style={delay(index + GAMES.length)}
-            onClick={() => onOpen(page.id)}
+            onClick={() => {
+              playSfx('tap');
+              onOpen(page.id);
+            }}
             // The blurb and count are off the card's face, so they live here instead.
             aria-label={`${page.title}. ${page.blurb}${count > 0 ? ` Visited ${count} times.` : ''}`}
           >

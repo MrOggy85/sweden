@@ -20,6 +20,10 @@ blurb: Dark, snowy, and full of candles.
 
 - Northern lights over the snow at Kiruna | winter.jpg
 
+## Sounds
+
+- Brasan | fireplace
+
 ## Links
 
 - animals
