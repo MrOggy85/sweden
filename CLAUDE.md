@@ -242,6 +242,20 @@ An unknown `kind` is a generate-content error. Adding one means a new value in `
 (`scripts/content.ts`), a branch in `PageView.tsx`, and the matching union in
 `client/src/data/pages.ts` — that union is hand-duplicated, like `ANIMAL_IDS`.
 
+## The season wheel
+
+The four season pages are ordinary `topic` pages, but `PageView` swaps their hero emoji for
+`SeasonWheel`: an SVG donut of four quadrants, clockwise from 12 o'clock in year order,
+with the page you are on at full colour and the other three as links. It is not a `kind`,
+because nothing else about the page changes.
+
+Its list of pages is `SEASON_IDS` in `client/src/data/pages.ts` — client-only, since the
+server has no notion of a season. Rename one of those content files without editing the
+list and the wheel disappears rather than drawing a quadrant with nothing in it.
+
+Season-to-season `## Links` were removed when the wheel arrived; it is the same navigation,
+better drawn. Links from a season to anything else stay.
+
 ## The dev area
 
 `/dev` is a permanent diagnostics area, opened by **tapping the `build …` footer five

@@ -19,4 +19,3 @@ blurb: Light almost all night.
 ## Links
 
 - midsummer
-- autumn

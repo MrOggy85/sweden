@@ -107,6 +107,11 @@ export type Page = {
 
 export const PAGE_IDS = PAGES.map((p) => p.id);
 
+// In year order, which is the order SeasonWheel draws them clockwise. Client-only, unlike
+// ANIMAL_IDS: the server has no notion of a season, and these four pages are otherwise
+// ordinary topics.
+export const SEASON_IDS = ['spring', 'summer', 'autumn', 'winter'];
+
 export function pageById(id: string): Page | undefined {
   return PAGES.find((p) => p.id === id);
 }

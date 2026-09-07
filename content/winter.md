@@ -1,7 +1,7 @@
 ---
 id: winter
 order: 80
-title: Winter
+title: Vinter
 emoji: ❄️
 blurb: Dark, snowy, and full of candles.
 ---

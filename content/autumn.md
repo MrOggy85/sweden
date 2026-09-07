@@ -18,5 +18,4 @@ blurb: Yellow leaves and mushrooms.
 
 ## Links
 
-- winter
 - berries

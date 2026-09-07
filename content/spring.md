@@ -15,8 +15,3 @@ blurb: When the snow gives up.
 - vår | spring
 - regn | rain
 - fågel | bird
-
-## Links
-
-- winter
-- summer
