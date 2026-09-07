@@ -3,6 +3,7 @@ id: lucia
 order: 94
 title: Lucia
 emoji: 🕯️
+when: 13 december
 blurb: Candles in the darkest week.
 ---
 
@@ -22,5 +23,4 @@ blurb: Candles in the darkest week.
 
 ## Links
 
-- christmas
 - fika

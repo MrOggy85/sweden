@@ -3,6 +3,7 @@ id: midsummer
 order: 50
 title: Midsummer
 emoji: 🌸
+when: juni
 blurb: The longest day of the year.
 ---
 

@@ -3,6 +3,7 @@ id: easter
 order: 92
 title: Påsk
 emoji: 🐣
+when: mars eller april
 blurb: Eggs, sweets and small witches.
 ---
 
@@ -19,4 +20,3 @@ blurb: Eggs, sweets and small witches.
 ## Links
 
 - spring
-- christmas

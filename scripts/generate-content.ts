@@ -140,12 +140,13 @@ function renderApiModule(pages: Page[]): string {
 function renderClientModule(pages: Page[]): string {
   const literal = JSON.stringify(
     // Omitted when empty: a missing `kind` means topic, and the module stays readable.
-    pages.map(({ id, kind, title, emoji, blurb, facts, words, sounds, images, videos, links }) => ({
+    pages.map(({ id, kind, title, emoji, blurb, when, facts, words, sounds, images, videos, links }) => ({
       id,
       ...(kind === 'topic' ? {} : { kind }),
       title,
       emoji,
       blurb,
+      ...(when ? { when } : {}),
       facts,
       ...(words.length > 0 ? { words } : {}),
       ...(sounds.length > 0 ? { sounds } : {}),

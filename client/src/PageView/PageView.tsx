@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
-import { type Page, SEASON_IDS } from '../data/pages';
+import { EVENT_IDS, type Page, SEASON_IDS } from '../data/pages';
 import { PageImages } from '../PageImages/PageImages';
 import { PageLinks } from '../PageLinks/PageLinks';
 import { PageVideo } from '../PageVideo/PageVideo';
 import { SeasonWheel } from '../SeasonWheel/SeasonWheel';
 import { SentenceBuilder } from '../SentenceBuilder/SentenceBuilder';
+import { YearTimeline } from '../YearTimeline/YearTimeline';
 import { Stars } from '../Stars/Stars';
 import motion from '../core/motion.module.css';
 import styles from './PageView.module.css';
@@ -32,20 +33,24 @@ export function PageView({ page, count, onBack }: Props) {
     void audio.play().catch(() => setPlaying(null));
   }
 
+  // A season or a högtid gets a diagram where the emoji would be: it shows the same
+  // picture, plus where in the year the page sits. Everything else floats on a return
+  // visit and stamps down on the first — count is the only tell.
+  const hero = SEASON_IDS.includes(page.id)
+    ? <SeasonWheel currentId={page.id} />
+    : EVENT_IDS.includes(page.id)
+    ? <YearTimeline currentId={page.id} />
+    : (
+      <span className={`${styles.hero} ${count === 1 ? motion.stamp : motion.float}`} aria-hidden='true'>
+        {page.emoji}
+      </span>
+    );
+
   return (
     <article className={`${styles.page} ${motion.slideUp}`}>
       <button type='button' className={styles.back} onClick={onBack}>&larr; All topics</button>
 
-      {/* A season's hero is the wheel: it says the same emoji, plus where in the year it is. */}
-      {SEASON_IDS.includes(page.id) ? <SeasonWheel currentId={page.id} /> : (
-        /* Floats on a return visit, stamps down on the first — count is the only tell. */
-        <span
-          className={`${styles.hero} ${count === 1 ? motion.stamp : motion.float}`}
-          aria-hidden='true'
-        >
-          {page.emoji}
-        </span>
-      )}
+      {hero}
 
       <h2 className={styles.title}>{page.title}</h2>
       <Stars count={count} />

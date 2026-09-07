@@ -75,6 +75,8 @@ make deploy            # build, then deployctl to Deno Deploy
 1. Create `content/<id>.md`: frontmatter with `id`, `order` (an integer — controls grid
    position, leave gaps between topics so you can insert later), `title`, `emoji`, `blurb`,
    then a Markdown bullet list of facts in the body. `id` must match the filename stem.
+   `when:` is optional and only the högtider carry it — see "The season wheel and the year
+   timeline".
 2. Run `make generate-content` — or just `make dev` / `make build` / `make check`, which
    depend on it. This writes `api/db/content.generated.ts` and
    `client/src/data/pages.generated.ts` (both gitignored).
@@ -242,19 +244,30 @@ An unknown `kind` is a generate-content error. Adding one means a new value in `
 (`scripts/content.ts`), a branch in `PageView.tsx`, and the matching union in
 `client/src/data/pages.ts` — that union is hand-duplicated, like `ANIMAL_IDS`.
 
-## The season wheel
+## The season wheel and the year timeline
 
-The four season pages are ordinary `topic` pages, but `PageView` swaps their hero emoji for
-`SeasonWheel`: an SVG donut of four quadrants, clockwise from 12 o'clock in year order,
-with the page you are on at full colour and the other three as links. It is not a `kind`,
-because nothing else about the page changes.
+Two sets of pages get a diagram where their hero emoji would be, picked in `PageView`:
 
-Its list of pages is `SEASON_IDS` in `client/src/data/pages.ts` — client-only, since the
-server has no notion of a season. Rename one of those content files without editing the
-list and the wheel disappears rather than drawing a quadrant with nothing in it.
+- **`SeasonWheel`** — spring, summer, autumn, winter. An SVG donut of four quadrants,
+  clockwise from 12 o'clock in year order.
+- **`YearTimeline`** — the högtider. A horizontal rail of markers in calendar order, each
+  captioned with its `when:` from frontmatter ("13 december"). It scrolls sideways when it
+  must, and brings the marker you are on into view on mount.
 
-Season-to-season `## Links` were removed when the wheel arrived; it is the same navigation,
-better drawn. Links from a season to anything else stay.
+In both, the page you are on is full colour and is not a link; the rest are `<a href>` that
+`navigate()` rather than reload. Neither is a page `kind`, because nothing else about the
+page changes.
+
+The two lists are `SEASON_IDS` and `EVENT_IDS` in `client/src/data/pages.ts` — client-only,
+since the server has no notion of either. Rename one of those content files without editing
+the list and the diagram disappears rather than drawing a marker with nothing in it.
+
+Links between two pages **in the same diagram** were removed when it arrived: same
+navigation, better drawn. Links out to anything else stay, and a page in one diagram may
+link to a page in the other.
+
+Adding a högtid means a content file with a `when:`, an entry in `EVENT_IDS` at the right
+point in the year, and a colour in `YearTimeline.tsx`'s `COLORS`.
 
 ## The dev area
 

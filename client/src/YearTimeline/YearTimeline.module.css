@@ -1,0 +1,109 @@
+.timeline {
+  width: 100%;
+  /* A flex item, and the rail inside it is wider than a phone. */
+  min-width: 0;
+}
+
+/* No gap: each marker draws its own slice of the line, and they join into one. */
+.rail {
+  display: flex;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.item {
+  flex: 1 0 auto;
+  min-width: 92px;
+  scroll-snap-align: center;
+}
+
+.face {
+  /* Read back by .track::before, so the line closes the gap this padding opens. */
+  --pad: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.2rem var(--pad) 0.4rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Fixed height, so a bigger emoji on the marker you are on does not bend the line. */
+.emoji {
+  display: grid;
+  place-items: center;
+  height: 2.6rem;
+  font-size: 1.5rem;
+}
+
+.current .emoji {
+  font-size: 2.3rem;
+}
+
+.track {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 24px;
+}
+
+.track::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--pad));
+  right: calc(-1 * var(--pad));
+  height: 3px;
+  background: #e2e2e2;
+}
+
+.dot {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 50%;
+  opacity: 0.65;
+  transition: transform 120ms ease-out, opacity 120ms ease-out;
+}
+
+.face:hover .dot,
+.face:focus-visible .dot {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* The one you are on: full colour, bigger, and it is not a link. */
+.current .dot {
+  width: 22px;
+  height: 22px;
+  border-width: 2.5px;
+  opacity: 1;
+  box-shadow: 0 2px 0 #1c1c1c22;
+}
+
+.name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.current .name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #005293;
+}
+
+.when {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #888;
+  text-align: center;
+}

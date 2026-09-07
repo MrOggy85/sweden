@@ -46,6 +46,9 @@ export type Page = {
   title: string;
   emoji: string;
   blurb: string;
+  // Where in the year this falls, as it would be said. Only the högtider have one;
+  // YearTimeline captions its markers with it.
+  when?: string;
   facts: string[];
   words: Word[];
   sounds: Sound[];
@@ -252,7 +255,21 @@ async function loadPage(entryName: string): Promise<Page> {
   const { facts, words, sounds, images, videos, links } = parseBody(body, entryName);
   if (facts.length === 0) throw new Error(`${entryName}: no facts found — expected a Markdown bullet list ("- ...")`);
 
-  return { id, order, kind, title, emoji, blurb, facts, words, sounds, images, videos, links };
+  return {
+    id,
+    order,
+    kind,
+    title,
+    emoji,
+    blurb,
+    ...(fields.when ? { when: fields.when } : {}),
+    facts,
+    words,
+    sounds,
+    images,
+    videos,
+    links,
+  };
 }
 
 // Needs every page loaded first. A bad id would render a card that navigates nowhere.

@@ -96,6 +96,8 @@ export type Page = {
   title: string;
   emoji: string;
   blurb: string;
+  // Only the högtider: where in the year they fall, for YearTimeline's captions.
+  when?: string;
   facts: string[];
   words?: Word[];
   sounds?: Sound[];
@@ -111,6 +113,10 @@ export const PAGE_IDS = PAGES.map((p) => p.id);
 // ANIMAL_IDS: the server has no notion of a season, and these four pages are otherwise
 // ordinary topics.
 export const SEASON_IDS = ['spring', 'summer', 'autumn', 'winter'];
+
+// The högtider, in calendar order — the order YearTimeline lays them out left to right.
+// Same client-only reasoning as SEASON_IDS. Each of these pages carries a `when:`.
+export const EVENT_IDS = ['easter', 'midsummer', 'kraftskiva', 'halloween', 'lucia', 'christmas'];
 
 export function pageById(id: string): Page | undefined {
   return PAGES.find((p) => p.id === id);

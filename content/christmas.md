@@ -3,6 +3,7 @@ id: christmas
 order: 90
 title: Jul
 emoji: 🎄
+when: 24 december
 blurb: Christmas, on the 24th.
 ---
 
@@ -23,4 +24,3 @@ blurb: Christmas, on the 24th.
 ## Links
 
 - winter
-- lucia
