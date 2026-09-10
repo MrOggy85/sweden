@@ -646,6 +646,100 @@ const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
       <circle cx='34' cy='33' r='2.2' fill='#bfe3f5' />
     </>
   ),
+  // The road vehicles share the car's wheel line so they read as one family. What separates
+  // them is above it: the bus is the single wedge the car had to avoid being, the fire
+  // engine carries a ladder, the tractor's back wheel is half the drawing.
+  bus: (
+    <>
+      <path d='M5 34 L5 16 Q5 13 8 13 L40 13 Q43 13 43 16 L43 34 Z' fill='#fecc00' />
+      <rect x='8.5' y='17' width='7' height='7' rx='1.5' fill='#bfe3f5' />
+      <rect x='17.5' y='17' width='7' height='7' rx='1.5' fill='#bfe3f5' />
+      <rect x='26.5' y='17' width='7' height='7' rx='1.5' fill='#bfe3f5' />
+      <rect x='35' y='17' width='5.5' height='7' rx='1.5' fill='#bfe3f5' />
+      <circle cx='14' cy='34' r='5.5' fill='#1c1c1c' />
+      <circle cx='34' cy='34' r='5.5' fill='#1c1c1c' />
+      <circle cx='14' cy='34' r='2.2' fill='#bfe3f5' />
+      <circle cx='34' cy='34' r='2.2' fill='#bfe3f5' />
+    </>
+  ),
+  train: (
+    <>
+      <rect x='8' y='10' width='7' height='9' rx='1' fill='#5a6470' />
+      <path d='M5 34 L5 21 Q5 18 8 18 L26 18 L26 11 Q26 8 29 8 L39 8 Q42 8 42 11 L42 34 Z' fill='#c8102e' />
+      <rect x='29' y='12' width='10' height='8' rx='1.5' fill='#bfe3f5' />
+      <path className={styles.fine} d='M5 27 L26 27' stroke='#8f0b20' />
+      <circle cx='11' cy='36' r='4.5' fill='#1c1c1c' />
+      <circle cx='22' cy='36' r='4.5' fill='#1c1c1c' />
+      <circle cx='35' cy='36' r='6' fill='#1c1c1c' />
+      <circle cx='11' cy='36' r='1.8' fill='#bfe3f5' />
+      <circle cx='22' cy='36' r='1.8' fill='#bfe3f5' />
+      <circle cx='35' cy='36' r='2.4' fill='#bfe3f5' />
+    </>
+  ),
+  // A sail, not a hull with a cabin: the hull alone is a shape, the sail is the word.
+  boat: (
+    <>
+      <path className={styles.line} d='M24 32 L24 5' stroke='#6b4a1f' />
+      <path d='M26 8 L38 27 L26 27 Z' fill='#f2f6fa' />
+      <path d='M22 11 L11 27 L22 27 Z' fill='#d81e05' />
+      <path d='M6 29 L42 29 L36 39 Q35 41 32 41 L16 41 Q13 41 12 39 Z' fill='#8a5a2b' />
+    </>
+  ),
+  bicycle: (
+    <>
+      <circle cx='13' cy='31' r='9' fill='#ffffff' />
+      <circle cx='35' cy='31' r='9' fill='#ffffff' />
+      <path
+        className={styles.fine}
+        d='M13 22 L13 40 M4 31 L22 31 M6.6 24.6 L19.4 37.4 M19.4 24.6 L6.6 37.4 M35 22 L35 40 M26 31 L44 31 M28.6 24.6 L41.4 37.4 M41.4 24.6 L28.6 37.4'
+        stroke='#9aa0a6'
+      />
+      <path
+        className={styles.line}
+        d='M13 31 L20 17 L30 17 L35 31 M20 17 L24 31 L35 31 M24 31 L13 31'
+        stroke='#0057b8'
+      />
+      <path className={styles.line} d='M30 17 L32 13 M28.5 13 L35 13' stroke='#1c1c1c' />
+      <path d='M16.5 14 L24 14 L22 17.5 L18 17.5 Z' fill='#1c1c1c' />
+      <circle cx='24' cy='31' r='3' fill='#5a6470' />
+    </>
+  ),
+  // Seen from above. In profile it is a fish with straight fins.
+  plane: (
+    <>
+      <path
+        d='M24 5 C26.5 5 28 10 28 18 L43 27 L43 31 L28 27 L28 34 L33 39 L33 42 L24 39.5 L15 42 L15 39 L20 34 L20 27 L5 31 L5 27 L20 18 C20 10 21.5 5 24 5 Z'
+        fill='#0057b8'
+      />
+      <circle className={styles.dot} cx='24' cy='13' r='2.4' fill='#bfe3f5' />
+    </>
+  ),
+  tractor: (
+    <>
+      <path d='M6 32 L6 22 Q6 20 8 20 L21 20 L21 11 Q21 9 24 9 L34 9 Q37 9 37 12 L37 32 Z' fill='#3f8f4a' />
+      <rect x='24' y='12' width='10' height='8' rx='1.5' fill='#bfe3f5' />
+      <circle cx='12' cy='32' r='6.5' fill='#1c1c1c' />
+      <circle cx='32' cy='31' r='11' fill='#1c1c1c' />
+      <circle cx='12' cy='32' r='2.6' fill='#d9d9d9' />
+      <circle cx='32' cy='31' r='4.5' fill='#d9d9d9' />
+    </>
+  ),
+  firetruck: (
+    <>
+      <rect x='9' y='12.5' width='7' height='3.5' rx='1.5' fill='#0057b8' />
+      <path
+        className={styles.line}
+        d='M25 17 L42 17 M25 21 L42 21 M28 17 L28 21 M32 17 L32 21 M36 17 L36 21 M40 17 L40 21'
+        stroke='#9aa0a6'
+      />
+      <path d='M4 34 L4 19 Q4 16 7 16 L18 16 Q21 16 22 19.5 L23.5 24 L41 24 Q44 24 44 27 L44 34 Z' fill='#c8102e' />
+      <rect x='7.5' y='19.5' width='9.5' height='6.5' rx='1.5' fill='#bfe3f5' />
+      <circle cx='13' cy='34' r='5.5' fill='#1c1c1c' />
+      <circle cx='34' cy='34' r='5.5' fill='#1c1c1c' />
+      <circle cx='13' cy='34' r='2.2' fill='#bfe3f5' />
+      <circle cx='34' cy='34' r='2.2' fill='#bfe3f5' />
+    </>
+  ),
 
   // Nature and weather. The two clouds are the trap here: moln and regn draw the same
   // silhouette, so the rain cloud is grey and sized down to make room for the drops, and
