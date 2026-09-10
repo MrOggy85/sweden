@@ -3,38 +3,19 @@
 // Run by `make generate-content`, and by dev/build/check.
 
 import {
+  assertNoSlugCollisions,
   audioFileUrl,
   imageFileUrl,
   loadPages,
   type Page,
+  pageClipClaims,
   SFX_DIR,
   SFX_SOURCE_EXTENSIONS,
-  slug,
   soundFileUrl,
 } from './content.ts';
 
 const API_OUT = new URL('../api/db/content.generated.ts', import.meta.url);
 const CLIENT_OUT = new URL('../client/src/data/pages.generated.ts', import.meta.url);
-
-// slug() folds å/ä/ö, so "har" and "här" both want har.m4a. The same word twice is fine
-// and shares a clip; two different words would silently swap one for the other.
-function assertNoSlugCollisions(pages: Page[]): void {
-  const owners = new Map<string, { sv: string; page: string }>();
-
-  for (const page of pages) {
-    for (const word of page.words) {
-      const key = slug(word.sv);
-      const owner = owners.get(key);
-      if (!owner) owners.set(key, { sv: word.sv, page: page.id });
-      else if (owner.sv !== word.sv) {
-        throw new Error(
-          `both "${owner.sv}" (${owner.page}) and "${word.sv}" (${page.id}) derive /media/${key}.m4a — ` +
-            'rename one, or give it a distinct spelling',
-        );
-      }
-    }
-  }
-}
 
 // A missing clip is a button that does nothing, and only shows up with the volume up. This
 // runs first in `deno task build`, so it is a failed deploy instead.
@@ -161,7 +142,7 @@ function renderClientModule(pages: Page[]): string {
 }
 
 const pages = await loadPages();
-assertNoSlugCollisions(pages);
+assertNoSlugCollisions(pageClipClaims(pages));
 await assertClipsExist(pages);
 await assertSoundsExist(pages);
 await assertImagesExist(pages);

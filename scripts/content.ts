@@ -95,6 +95,33 @@ export function audioFileUrl(word: Word): URL {
   return new URL(`${slug(word.sv)}.m4a`, MEDIA_DIR);
 }
 
+/** A word and where it was authored, for collision reporting. */
+export type ClipClaim = { sv: string; source: string };
+
+// slug() folds å/ä/ö, so "har" and "här" both want har.m4a. The same word twice is fine
+// and shares a clip; two different words would silently swap one for the other. Takes flat
+// claims rather than Page[] so game pairs can be checked in the same namespace they share.
+export function assertNoSlugCollisions(claims: ClipClaim[]): void {
+  const owners = new Map<string, ClipClaim>();
+
+  for (const claim of claims) {
+    const key = slug(claim.sv);
+    const owner = owners.get(key);
+    if (!owner) owners.set(key, claim);
+    else if (owner.sv !== claim.sv) {
+      throw new Error(
+        `both "${owner.sv}" (${owner.source}) and "${claim.sv}" (${claim.source}) derive /media/${key}.m4a — ` +
+          'rename one, or give it a distinct spelling',
+      );
+    }
+  }
+}
+
+/** Every topic word as a claim on its clip filename. */
+export function pageClipClaims(pages: Page[]): ClipClaim[] {
+  return pages.flatMap((page) => page.words.map((word) => ({ sv: word.sv, source: page.id })));
+}
+
 export function soundFileUrl(sound: Sound): URL {
   return new URL(sound.audio.slice(SFX_URL_PREFIX.length), SFX_DIR);
 }

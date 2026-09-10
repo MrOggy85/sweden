@@ -1,4 +1,5 @@
-import { GAME_COLOR_IDS, GameIcon, OBJECT_ICON_IDS } from '../GameIcons/GameIcons';
+import { GameIcon } from '../GameIcons/GameIcons';
+import { GAME_COLOR_IDS, OBJECT_ICON_IDS } from '../GameIcons/iconIds';
 import styles from './Icons.module.css';
 
 // Both sizes side by side: a shape that only works large gives itself away in the small

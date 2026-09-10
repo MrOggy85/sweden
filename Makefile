@@ -10,7 +10,7 @@ install:
 # below depend on this so you never have to run it by hand.
 generate-content:
 	deno run --allow-read=content,client/static/media --allow-write=api/db,client/src/data scripts/generate-content.ts
-	deno run --allow-read=content/games,client/static/media --allow-write=client/src/data scripts/generate-game-content.ts
+	deno run --allow-read=content,client/static/media,client/src/GameIcons --allow-write=client/src/data scripts/generate-game-content.ts
 
 # Regenerate the pronunciation clips for every `## Words` entry. macOS only (`say` +
 # `afconvert`), run by hand: the clips are committed, so build/dev/check do not depend on

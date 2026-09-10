@@ -1,15 +1,18 @@
 import type { ReactNode } from 'react';
+import { COLOR_ICON_PREFIX, type GameColorId, type ObjectIconId } from './iconIds';
 import styles from './GameIcons.module.css';
 
 // Inline SVG for the connect game, in Avatar.tsx's outline style. Fixed colours, not
 // currentColor: a child recognises these by colour. Drawing rules: ./CLAUDE.md.
-const COLOR_ICON_PREFIX = 'color-';
+//
+// The two Record types are keyed by the unions from ./iconIds.ts, so a drawing without an id
+// there — or an id with no drawing — is a type error rather than a blank card in the game.
 
 // Not `COLORS` from data/pages.ts — those are avatar colours, stored in profiles and not
 // retunable. These differ in lightness as well as hue, which is what carries the difference
 // when hue perception does not. Green is Okabe-Ito's bluish green because it sits next to
 // red. See ./CLAUDE.md.
-const GAME_COLORS: Record<string, string> = {
+const GAME_COLORS: Record<GameColorId, string> = {
   yellow: '#ffd400',
   pink: '#f07cb0',
   orange: '#f07c0a',
@@ -19,10 +22,7 @@ const GAME_COLORS: Record<string, string> = {
   purple: '#6a2ba8',
 };
 
-/** Colour swatch ids, for /dev/icons. */
-export const GAME_COLOR_IDS = Object.keys(GAME_COLORS);
-
-const OBJECT_ICONS: Record<string, ReactNode> = {
+const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
   // White eyes with pupils: a black dot vanishes on a black patch.
   cow: (
     <>
@@ -426,9 +426,6 @@ const OBJECT_ICONS: Record<string, ReactNode> = {
   ),
 };
 
-/** Every drawn icon, for /dev/icons. */
-export const OBJECT_ICON_IDS = Object.keys(OBJECT_ICONS);
-
 type Props = {
   icon: string;
   size?: number;
@@ -436,7 +433,7 @@ type Props = {
 
 export function GameIcon({ icon, size = 56 }: Props) {
   if (icon.startsWith(COLOR_ICON_PREFIX)) {
-    const fill = GAME_COLORS[icon.slice(COLOR_ICON_PREFIX.length)];
+    const fill = GAME_COLORS[icon.slice(COLOR_ICON_PREFIX.length) as GameColorId];
     if (!fill) return null;
     return (
       <svg className={styles.icon} width={size} height={size} viewBox='0 0 48 48' aria-hidden='true'>
@@ -449,7 +446,7 @@ export function GameIcon({ icon, size = 56 }: Props) {
     );
   }
 
-  const shape = OBJECT_ICONS[icon];
+  const shape = OBJECT_ICONS[icon as ObjectIconId];
   if (!shape) return null;
 
   return (
