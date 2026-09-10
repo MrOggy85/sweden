@@ -320,6 +320,110 @@ const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
     </>
   ),
 
+  // Nature and weather. The two clouds are the trap here: moln and regn draw the same
+  // silhouette, so the rain cloud is grey and sized down to make room for the drops, and
+  // the drops are the loudest thing in it.
+  sun: (
+    <>
+      <circle cx='24' cy='24' r='10' fill='#fecc00' />
+      <path
+        className={styles.line}
+        d='M24 12 L24 6 M24 36 L24 42 M12 24 L6 24 M36 24 L42 24 M15.5 15.5 L11.3 11.3 M32.5 32.5 L36.7 36.7 M15.5 32.5 L11.3 36.7 M32.5 15.5 L36.7 11.3'
+        stroke='#f0a500'
+      />
+    </>
+  ),
+  // Craters, because a pale crescent on its own is the banana silhouette.
+  moon: (
+    <>
+      <path
+        d='M31 5 C20 8 12 15 12 24.5 C12 34 20 42 30 42 C33.5 42 36.5 41.2 39 39.8 C28 37.5 21 31 21 23.5 C21 15.5 25 9 31 5 Z'
+        fill='#e8e4d0'
+      />
+      <circle className={styles.dot} cx='17' cy='22' r='2.2' fill='#c2bda4' />
+      <circle className={styles.dot} cx='16' cy='30' r='1.2' fill='#c2bda4' />
+      <circle className={styles.dot} cx='20.5' cy='33' r='1.5' fill='#c2bda4' />
+    </>
+  ),
+  // Five solid points against the sun's disc-and-rays, so the two never trade places.
+  star: (
+    <path
+      d='M24 6 L28.2 18.2 L41.1 18.4 L30.9 26.2 L34.6 38.6 L24 31.2 L13.4 38.6 L17.2 26.2 L6.9 18.4 L19.8 18.2 Z'
+      fill='#fecc00'
+    />
+  ),
+  cloud: (
+    <>
+      <path
+        d='M14 36 C9.6 36 6 32.4 6 28 C6 23.6 9.6 20 14 20 C14.7 13.7 20 8.8 26.5 8.8 C33.2 8.8 38.7 14 39.2 20.6 C41 22 42 24.3 42 26.8 C42 31.9 37.9 36 32.8 36 Z'
+        fill='#f2f6fa'
+      />
+      <path className={styles.fine} d='M13 31.5 Q18 28 25 28.6' stroke='#c3ccd6' />
+    </>
+  ),
+  rain: (
+    <>
+      <path
+        d='M15 28 C10.6 28 7 24.7 7 20.6 C7 16.6 10.4 13.2 14.4 13.2 C15 8.4 19.1 4.6 24 4.6 C28.9 4.6 33 8.4 33.6 13.2 C37.6 13.2 41 16.6 41 20.6 C41 24.7 37.4 28 33 28 Z'
+        fill='#b9c4d0'
+      />
+      <path d='M15 31 C12 35 11.5 38.2 15 39.2 C18.5 38.2 18 35 15 31 Z' fill='#4a9fe0' />
+      <path d='M24 33 C21 37 20.5 40.2 24 41.2 C27.5 40.2 27 37 24 33 Z' fill='#4a9fe0' />
+      <path d='M33 31 C30 35 29.5 38.2 33 39.2 C36.5 38.2 36 35 33 31 Z' fill='#4a9fe0' />
+    </>
+  ),
+  // Six arms and blue line work: the star is five solid yellow points, and stays one.
+  snow: (
+    <path
+      className={styles.line}
+      d='M24 7 L24 41 M38.7 15.5 L9.3 32.5 M9.3 15.5 L38.7 32.5 M24 12 L20 7.5 M24 12 L28 7.5 M24 36 L20 40.5 M24 36 L28 40.5 M34.4 18 L40.3 19.2 M34.4 18 L36.3 12.3 M13.6 30 L7.7 28.8 M13.6 30 L11.7 35.7 M13.6 18 L7.7 19.2 M13.6 18 L11.7 12.3 M34.4 30 L40.3 28.8 M34.4 30 L36.3 35.7'
+      stroke='#3f8fc4'
+    />
+  ),
+  // Trunk first so the crown overlaps its top. A scalloped crown, not a green ball, or it
+  // is the same drawing as a single leaf scaled up.
+  tree: (
+    <>
+      <path d='M21 43 L21 27 L27 27 L27 43 Z' fill='#8a5a2b' />
+      <path
+        d='M24 5 C30 5 34 8 35.5 12 C39.5 13 42 17 42 21.5 C42 27.5 36.5 32 29 32 L19 32 C11.5 32 6 27.5 6 21.5 C6 17 8.5 13 12.5 12 C14 8 18 5 24 5 Z'
+        fill='#3f8f4a'
+      />
+    </>
+  ),
+  // The midrib and its herringbone veins are what say "one leaf" rather than "small bush".
+  leaf: (
+    <>
+      <path className={styles.line} d='M12 39 L7 43' stroke='#6b4a1f' />
+      <path d='M38 9 C38 25 27 37 12 39 C12 23 23 11 38 9 Z' fill='#4a9e3f' />
+      <path className={styles.line} d='M12 39 L38 9' stroke='#2a6b33' />
+      <path
+        className={styles.fine}
+        d='M18.5 31.5 L22 34.5 M25 24 L28.5 27 M31.5 16.5 L35 19.5 M18.5 31.5 L15 28.5 M25 24 L21.5 21 M31.5 16.5 L28 13.5'
+        stroke='#2a6b33'
+      />
+    </>
+  ),
+  flower: (
+    <>
+      <path className={styles.line} d='M24 28 L24 43' stroke='#3f8f4a' />
+      <path d='M24 36 C19 33 15 34 13.5 37 C17 40 22 39.5 24 36 Z' fill='#3f8f4a' />
+      <circle cx='24' cy='11.5' r='6.5' fill='#f07cb0' />
+      <circle cx='32.1' cy='17.4' r='6.5' fill='#f07cb0' />
+      <circle cx='29' cy='26.9' r='6.5' fill='#f07cb0' />
+      <circle cx='19' cy='26.9' r='6.5' fill='#f07cb0' />
+      <circle cx='15.9' cy='17.4' r='6.5' fill='#f07cb0' />
+      <circle cx='24' cy='20' r='5' fill='#fecc00' />
+    </>
+  ),
+  // Flat facets and no eyes: the potato is the smooth blob with dots in it.
+  stone: (
+    <>
+      <path d='M8 36 L13 22 L24 15 L36 19 L41 31 L37 39 L14 39 Z' fill='#9aa2a8' />
+      <path className={styles.fine} d='M13 22 L22 28 L41 31 M22 28 L20 39' stroke='#6f767c' />
+    </>
+  ),
+
   // Kitchen. Drawn face-on rather than in perspective: a child reads a circle-on-a-body as
   // a pot, and a tilted ellipse as a bowl of something unclear.
   gryta: (
