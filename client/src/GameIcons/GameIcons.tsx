@@ -20,6 +20,12 @@ const GAME_COLORS: Record<GameColorId, string> = {
   red: '#d81e05',
   blue: '#0057b8',
   purple: '#6a2ba8',
+  // The achromatic four. Hue tells you nothing here, so they are spaced down the lightness
+  // axis instead — the same lever the red/green note leans on, used on purpose.
+  white: '#ffffff',
+  grey: '#8c9196',
+  brown: '#7a4a1e',
+  black: '#1c1c1c',
 };
 
 const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
@@ -257,6 +263,88 @@ const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
       <path className={styles.line} d='M18 22 L18 19.5 M14.5 23 L13 21.5 M21.5 23 L23 21.5' stroke='#2a3468' />
     </>
   ),
+  // Swedish key, like gryta and falukorv: "orange" would sit one character from the colour
+  // swatch in content and read as a typo either way round.
+  apelsin: (
+    <>
+      <path className={styles.line} d='M24 15 L24 11' stroke='#6b4a1f' />
+      <path d='M26 14 Q33 9 37 13 Q31 18 26 14 Z' fill='#2a9d8f' />
+      <circle cx='24' cy='28' r='13' fill='#f07c0a' />
+      <path className={styles.fine} d='M15 24 Q18.5 19.5 24 18.5' stroke='#f8ab5e' />
+      <circle className={styles.dot} cx='18' cy='31' r='1.1' fill='#c25f06' />
+      <circle className={styles.dot} cx='24' cy='34' r='1.1' fill='#c25f06' />
+      <circle className={styles.dot} cx='29' cy='29' r='1.1' fill='#c25f06' />
+      <circle className={styles.dot} cx='21' cy='25' r='1.1' fill='#c25f06' />
+    </>
+  ),
+  // Drupelets, not seeds: that is the whole difference from the strawberry beside it.
+  raspberry: (
+    <>
+      <path d='M24 9 L18 12 L30 12 Z' fill='#2a9d8f' />
+      <path
+        d='M13 22 C13 15 18 11.5 24 11.5 C30 11.5 35 15 35 22 C35 32 30 41 24 41 C18 41 13 32 13 22 Z'
+        fill='#b02a44'
+      />
+      <circle className={styles.dot} cx='19' cy='18' r='3.3' fill='#cf4a63' />
+      <circle className={styles.dot} cx='26' cy='17' r='3.3' fill='#cf4a63' />
+      <circle className={styles.dot} cx='31' cy='22' r='3.3' fill='#cf4a63' />
+      <circle className={styles.dot} cx='17' cy='25' r='3.3' fill='#cf4a63' />
+      <circle className={styles.dot} cx='24' cy='24' r='3.3' fill='#cf4a63' />
+      <circle className={styles.dot} cx='19.5' cy='32' r='3.3' fill='#cf4a63' />
+      <circle className={styles.dot} cx='27' cy='31' r='3.3' fill='#cf4a63' />
+      <circle className={styles.dot} cx='23.5' cy='37.5' r='3' fill='#cf4a63' />
+    </>
+  ),
+  cherry: (
+    <>
+      <path className={styles.line} d='M18 28 C17 20 20 13 26 9 M33 26 C33.5 18 30 12 26 9' stroke='#4a7a2a' />
+      <path d='M26 9 Q33 4 38 8 Q32 13 26 9 Z' fill='#2a9d8f' />
+      <circle cx='18' cy='34' r='7' fill='#c8102e' />
+      <circle cx='33' cy='32' r='7' fill='#c8102e' />
+      <circle className={styles.dot} cx='15.5' cy='31.5' r='1.6' fill='#e8546b' />
+      <circle className={styles.dot} cx='30.5' cy='29.5' r='1.6' fill='#e8546b' />
+    </>
+  ),
+  // Six berries in a triangle with a leaf. The blueberries are three loose spheres and no
+  // leaf, which is the only thing keeping the two apart at 44px.
+  grapes: (
+    <>
+      <path className={styles.line} d='M24 14 L24 8' stroke='#6b4a1f' />
+      <path d='M24 10 Q31 5 36 9 Q30 14 24 10 Z' fill='#4a9e3f' />
+      <circle cx='15.5' cy='19' r='5.2' fill='#6a3d9a' />
+      <circle cx='24' cy='19' r='5.2' fill='#6a3d9a' />
+      <circle cx='32.5' cy='19' r='5.2' fill='#6a3d9a' />
+      <circle cx='19.75' cy='26.5' r='5.2' fill='#7d4cb0' />
+      <circle cx='28.25' cy='26.5' r='5.2' fill='#7d4cb0' />
+      <circle cx='24' cy='34' r='5.2' fill='#8b5cc0' />
+    </>
+  ),
+  // Whole, never a slice: a wedge is the shape the banana already had to be rescued from.
+  melon: (
+    <>
+      <path className={styles.line} d='M24 9 L24 5' stroke='#4a7a2a' />
+      <circle cx='24' cy='25' r='16' fill='#5aa83a' />
+      <path
+        className={styles.line}
+        d='M13.5 13 C10.5 18 10 32 13 37.5 M24 9 C22 17 22 33 24 41 M34.5 13 C37.5 18 38 32 35 37.5'
+        stroke='#26602a'
+      />
+    </>
+  ),
+  // A sprig, not a heap: small berries under two leaves is how lingon differ from every
+  // other red fruit in the set.
+  lingon: (
+    <>
+      <path className={styles.line} d='M24 38 L24 12' stroke='#4a7a2a' />
+      <ellipse cx='16' cy='16' rx='6.5' ry='4' transform='rotate(-25 16 16)' fill='#2f6b3a' />
+      <ellipse cx='32' cy='16' rx='6.5' ry='4' transform='rotate(25 32 16)' fill='#2f6b3a' />
+      <circle cx='17' cy='32' r='5.5' fill='#d81e05' />
+      <circle cx='31' cy='32' r='5.5' fill='#d81e05' />
+      <circle cx='24' cy='38' r='5.5' fill='#d81e05' />
+      <circle className={styles.dot} cx='15' cy='30' r='1.3' fill='#f0645a' />
+      <circle className={styles.dot} cx='29' cy='30' r='1.3' fill='#f0645a' />
+    </>
+  ),
   carrot: (
     <>
       <path className={styles.line} d='M24 17 L17 7 M24 17 L24 5 M24 17 L31 7' stroke='#2a9d8f' />
@@ -301,6 +389,74 @@ const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
         className={styles.fine}
         d='M16 20 Q24 22 32 20 M15 26 Q24 28 33 26 M16 32 Q24 34 32 32 M20 13 L20 39 M28 13 L28 39'
         stroke='#d9a800'
+      />
+    </>
+  ),
+  // Purple, and tapering to a root: beige it would be the potato with shoots on.
+  onion: (
+    <>
+      <path className={styles.line} d='M22 13 C20 8 17 6 15 5 M24 13 L24 5 M26 13 C28 8 31 6 33 5' stroke='#3f8f4a' />
+      <path d='M24 43 C14 40 10 34 10 26 C10 18 16 12 24 12 C32 12 38 18 38 26 C38 34 34 40 24 43 Z' fill='#c9a3d4' />
+      <path className={styles.fine} d='M17 16 C14 22 14 34 19 41 M31 16 C34 22 34 34 29 41' stroke='#9b74ab' />
+    </>
+  ),
+  pea: (
+    <>
+      <path className={styles.line} d='M7 25 L4 21' stroke='#2a6b33' />
+      <path d='M7 25 C12 17 36 17 41 25 C36 33 12 33 7 25 Z' fill='#3f8f4a' />
+      <circle cx='15' cy='25' r='5' fill='#8fd06a' />
+      <circle cx='24' cy='25.5' r='5.4' fill='#8fd06a' />
+      <circle cx='33' cy='25' r='5' fill='#8fd06a' />
+    </>
+  ),
+  // Square shoulders and a dipped, lobed base — a round red thing with a green top is the
+  // tomato, which is already in the set.
+  paprika: (
+    <>
+      <path className={styles.line} d='M24 13 L24 6' stroke='#2a7d5f' />
+      <path d='M18 11 Q24 8 30 11 Q31 13.5 29 14.5 L19 14.5 Q17 13.5 18 11 Z' fill='#2a9d8f' />
+      <path
+        d='M12 24 C12 17 17 13.5 24 13.5 C31 13.5 36 17 36 24 L36 29 C36 36 33 41 29.5 41 C27.5 41 27 38.5 24 38.5 C21 38.5 20.5 41 18.5 41 C15 41 12 36 12 29 Z'
+        fill='#d81e05'
+      />
+      <path className={styles.fine} d='M17 22 Q19 18 23 17' stroke='#ef6a76' />
+    </>
+  ),
+  mushroom: (
+    <>
+      <path d='M19 26 L29 26 L28 39 Q28 42 24 42 Q20 42 20 39 Z' fill='#f0e6d2' />
+      <path d='M7 26 C7 16 14 9 24 9 C34 9 41 16 41 26 Z' fill='#d81e05' />
+      <circle className={styles.dot} cx='16' cy='19' r='2.6' fill='#fff8ec' />
+      <circle className={styles.dot} cx='25' cy='15' r='3' fill='#fff8ec' />
+      <circle className={styles.dot} cx='33' cy='20' r='2.4' fill='#fff8ec' />
+      <circle className={styles.dot} cx='21' cy='23' r='1.8' fill='#fff8ec' />
+    </>
+  ),
+  // Veins radiating from the base say "one head of leaves". Without them it is the tree
+  // crown with the trunk cropped off.
+  lettuce: (
+    <>
+      <path
+        d='M24 42 C12 42 6 34 8 24 C6 18 11 13 17 14 C18 9 24 7 28 10 C34 8 40 13 39 19 C43 24 41 34 33 39 Z'
+        fill='#5aa83a'
+      />
+      <path
+        className={styles.line}
+        d='M24 42 C22 33 20 25 15 19 M24 42 C26 32 30 24 36 18 M24 42 L24 20'
+        stroke='#3d8a26'
+      />
+    </>
+  ),
+  // Squat and ribbed under a stub stem; the melon is a true sphere with a thread of a stem.
+  // Same drawing otherwise, and they would swap.
+  pumpkin: (
+    <>
+      <path d='M21 12 Q24 6 27 12 L27 15 L21 15 Z' fill='#4a7a2a' />
+      <ellipse cx='24' cy='28' rx='18' ry='14' fill='#f07c0a' />
+      <path
+        className={styles.line}
+        d='M24 14 L24 42 M15 15.5 C12 21 12 35 15 40.5 M33 15.5 C36 21 36 35 33 40.5'
+        stroke='#c25f06'
       />
     </>
   ),
