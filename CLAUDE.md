@@ -139,6 +139,12 @@ onto a/a/o, so `har` and `här` collide; the same word on two pages is fine and 
 clip. Rename one of the pair — there is no per-page namespace, on purpose, so a word is
 recorded once however many topics use it.
 
+The check spans topic pages *and* every game list, and lives in
+`generate-game-content.ts` because that is the script that loads both. It used to see only
+topic pages, which meant a game pair `hår` silently played `har.m4a` — the "har" from
+`content/sentence.md`, under a card reading hår. Words currently ruled out by this: `hår`
+(har), `säng` (sång), `år` (är).
+
 ## Runtime speech (`speechSynthesis`)
 
 Available and known to work — the browser's own TTS, present in every browser on macOS and
@@ -294,9 +300,15 @@ frontmatter) and games have no visits/score, so nothing here touches the server 
 ```
 
 1. Add a bullet to `content/games/connect-pairs.md`, written as
-   `swedish | english | icon`. `icon` must match a key in
-   `client/src/GameIcons/GameIcons.tsx` — either an object icon (add one if the pair needs
-   a new picture) or `color-<name>` for a key in that file's `GAME_COLORS`.
+   `swedish | english | icon`. `icon` must match an id in
+   `client/src/GameIcons/iconIds.ts` — either an object icon (add one if the pair needs a
+   new picture, drawn in `GameIcons.tsx`) or `color-<name>` for a colour id. An id that
+   does not exist fails `make generate-content`; before that check existed it rendered a
+   blank card, since `GameIcon` returns `null` for a key it does not know.
+
+   `iconIds.ts` is a plain module with no imports so `scripts/` can read it — `GameIcons.tsx`
+   pulls in React and a CSS module and is not importable from Deno. It is not a hand-kept
+   copy: the records there are keyed by its unions, so drift is a `tsc` error.
 
    `GAME_COLORS` is deliberately separate from `COLORS` in `client/src/data/pages.ts`.
    Those are avatar colours: server-validated and stored in every profile, so they cannot
