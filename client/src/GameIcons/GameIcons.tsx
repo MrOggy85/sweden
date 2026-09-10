@@ -949,6 +949,183 @@ const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
       <circle className={styles.dot} cx='16' cy='30' r='1.2' fill='#fff8ec' />
     </>
   ),
+
+  // The body. A hand and a foot stand alone, but a nose or an ear floating in the frame is
+  // a shape nobody can name — so the four face parts are drawn on the same pale face with
+  // the other features ghosted, and only the named one in colour. Eyes and ears are drawn
+  // as the pair even though öga and öra are singular: one of two, greyed, reads as damage.
+  hand: (
+    <>
+      <rect x='16' y='6' width='5.5' height='20' rx='2.75' fill='#f2c9a0' />
+      <rect x='22.2' y='4' width='5.5' height='22' rx='2.75' fill='#f2c9a0' />
+      <rect x='28.4' y='6.5' width='5.5' height='20' rx='2.75' fill='#f2c9a0' />
+      <rect x='34' y='11' width='5.2' height='16' rx='2.6' fill='#f2c9a0' />
+      <rect x='9' y='19' width='5.2' height='13' rx='2.6' transform='rotate(-30 11.6 25.5)' fill='#f2c9a0' />
+      <path d='M14 24 L38 24 L38 33 C38 39 33 43 27 43 L23 43 C17 43 14 39 14 33 Z' fill='#f2c9a0' />
+    </>
+  ),
+  foot: (
+    <>
+      <circle cx='15' cy='13' r='3.6' fill='#f2c9a0' />
+      <circle cx='22' cy='10' r='3.2' fill='#f2c9a0' />
+      <circle cx='28.5' cy='10.5' r='2.9' fill='#f2c9a0' />
+      <circle cx='34' cy='13' r='2.6' fill='#f2c9a0' />
+      <circle cx='38.5' cy='16.5' r='2.3' fill='#f2c9a0' />
+      <path
+        d='M14 18 C14 13.5 38 13.5 38 19.5 C38 25 32 27.5 30.5 32 C29 37 29.5 43 23 43 C16.5 43 14 37.5 15 32 C16 26.5 14 22 14 18 Z'
+        fill='#f2c9a0'
+      />
+    </>
+  ),
+  eye: (
+    <>
+      <ellipse cx='9.5' cy='24' rx='3.5' ry='5' fill='#ecd6b4' />
+      <ellipse cx='38.5' cy='24' rx='3.5' ry='5' fill='#ecd6b4' />
+      <circle cx='24' cy='24' r='15' fill='#f7e2c0' />
+      <path className={styles.fine} d='M24 22 L24 27 Q26 28.5 27.5 27 M18 32 Q24 35.5 30 32' stroke='#dcc39c' />
+      <ellipse cx='18.5' cy='21' rx='5' ry='3.8' fill='#ffffff' />
+      <ellipse cx='29.5' cy='21' rx='5' ry='3.8' fill='#ffffff' />
+      <circle cx='18.5' cy='21' r='2.5' fill='#3fa7d6' />
+      <circle cx='29.5' cy='21' r='2.5' fill='#3fa7d6' />
+      <circle className={styles.eye} cx='18.5' cy='21' r='1.3' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='29.5' cy='21' r='1.3' fill='#1c1c1c' />
+      <path className={styles.line} d='M13.8 15 Q18.5 12.6 23.2 15 M24.8 15 Q29.5 12.6 34.2 15' stroke='#6b4a1f' />
+    </>
+  ),
+  nose: (
+    <>
+      <ellipse cx='9.5' cy='24' rx='3.5' ry='5' fill='#ecd6b4' />
+      <ellipse cx='38.5' cy='24' rx='3.5' ry='5' fill='#ecd6b4' />
+      <circle cx='24' cy='24' r='15' fill='#f7e2c0' />
+      <ellipse className={styles.dot} cx='18.5' cy='19' rx='2.6' ry='1.9' fill='#e4cba6' />
+      <ellipse className={styles.dot} cx='29.5' cy='19' rx='2.6' ry='1.9' fill='#e4cba6' />
+      <path className={styles.fine} d='M18 34 Q24 37 30 34' stroke='#dcc39c' />
+      <path
+        d='M24 14 C21 20 19 26 19.5 29 C20 32.2 22 33.4 24 33.4 C26 33.4 28 32.2 28.5 29 C29 26 27 20 24 14 Z'
+        fill='#eec6a0'
+      />
+      <ellipse className={styles.dot} cx='21.6' cy='30' rx='1.7' ry='1.2' fill='#8a5a2b' />
+      <ellipse className={styles.dot} cx='26.4' cy='30' rx='1.7' ry='1.2' fill='#8a5a2b' />
+    </>
+  ),
+  mouth: (
+    <>
+      <ellipse cx='9.5' cy='24' rx='3.5' ry='5' fill='#ecd6b4' />
+      <ellipse cx='38.5' cy='24' rx='3.5' ry='5' fill='#ecd6b4' />
+      <circle cx='24' cy='24' r='15' fill='#f7e2c0' />
+      <ellipse className={styles.dot} cx='18.5' cy='18' rx='2.6' ry='1.9' fill='#e4cba6' />
+      <ellipse className={styles.dot} cx='29.5' cy='18' rx='2.6' ry='1.9' fill='#e4cba6' />
+      <path className={styles.fine} d='M24 21 L24 25 Q25.6 26.2 26.8 25' stroke='#dcc39c' />
+      <path d='M13 30 Q24 25.5 35 30 Q30 39.5 24 39.5 Q18 39.5 13 30 Z' fill='#c8102e' />
+      <path d='M16.5 30.4 Q24 28.2 31.5 30.4 L30.6 33.2 L17.4 33.2 Z' fill='#ffffff' />
+      <path className={styles.fine} d='M20 29.4 L20 33.2 M24 28.9 L24 33.2 M28 29.4 L28 33.2' stroke='#c9c9c9' />
+    </>
+  ),
+  ear: (
+    <>
+      <ellipse cx='10' cy='24' rx='4.5' ry='6.5' fill='#eec6a0' />
+      <ellipse cx='38' cy='24' rx='4.5' ry='6.5' fill='#eec6a0' />
+      <circle cx='24' cy='24' r='15' fill='#f7e2c0' />
+      <ellipse className={styles.dot} cx='18.5' cy='19' rx='2.6' ry='1.9' fill='#e4cba6' />
+      <ellipse className={styles.dot} cx='29.5' cy='19' rx='2.6' ry='1.9' fill='#e4cba6' />
+      <path className={styles.fine} d='M24 22 L24 26 Q25.6 27.2 26.8 26 M18 32 Q24 35.5 30 32' stroke='#dcc39c' />
+      <path className={styles.line} d='M11 20.5 C7.8 21.8 7.8 26.2 11 27.5' stroke='#b98a5c' />
+      <path className={styles.line} d='M37 20.5 C40.2 21.8 40.2 26.2 37 27.5' stroke='#b98a5c' />
+    </>
+  ),
+  tooth: (
+    <>
+      <path
+        d='M14 12 C18 8 30 8 34 12 C37 15 37 22 35 29 C33.5 35 33 41 30 41 C27 41 26.5 33 24 33 C21.5 33 21 41 18 41 C15 41 14.5 35 13 29 C11 22 11 15 14 12 Z'
+        fill='#ffffff'
+      />
+      <path className={styles.fine} d='M18 16 Q24 13.6 30 16' stroke='#c9c9c9' />
+    </>
+  ),
+
+  // Clothes. jacket and jumper are the same outline, so one has a zip, a collar and
+  // pockets and the other a round neck and a ribbed hem, in different colours. mitten and
+  // sock likewise: the thumb against the heel.
+  hat: (
+    <>
+      <path d='M14 27 C13 18 17 11 24 11 C31 11 35 18 34 27 Z' fill='#8a5a2b' />
+      <ellipse cx='24' cy='29' rx='19' ry='5.5' fill='#a9763f' />
+      <path d='M13.6 23 Q24 20.5 34.4 23 L34.6 26.5 Q24 24 13.4 26.5 Z' fill='#5c3a17' />
+    </>
+  ),
+  beanie: (
+    <>
+      <circle cx='24' cy='8' r='4' fill='#e8546b' />
+      <path d='M9 32 C9 20 15 11 24 11 C33 11 39 20 39 32 Z' fill='#c8102e' />
+      <path
+        className={styles.fine}
+        d='M16 15 C15 21 14.5 27 14.5 32 M24 11.5 L24 32 M32 15 C33 21 33.5 27 33.5 32'
+        stroke='#8f0b20'
+      />
+      <path d='M7 31 L41 31 Q43 31 43 34 L43 37 Q43 40 40 40 L8 40 Q5 40 5 37 L5 34 Q5 31 7 31 Z' fill='#e8546b' />
+      <path
+        className={styles.fine}
+        d='M12 32 L12 39 M18 32 L18 39 M24 32 L24 39 M30 32 L30 39 M36 32 L36 39'
+        stroke='#c04055'
+      />
+    </>
+  ),
+  jacket: (
+    <>
+      <path d='M17 12 L10 16 L5 22 L10 27 L13 24 L13 41 L35 41 L35 24 L38 27 L43 22 L38 16 L31 12 Z' fill='#0057b8' />
+      <path className={styles.line} d='M24 15 L24 41' stroke='#d9d9d9' />
+      <path d='M17 12 L24 18.5 L31 12 L27.5 11 L24 14.5 L20.5 11 Z' fill='#003a69' />
+      <rect x='15' y='30' width='6' height='4' rx='1' fill='#003a69' />
+      <rect x='27' y='30' width='6' height='4' rx='1' fill='#003a69' />
+    </>
+  ),
+  jumper: (
+    <>
+      <path
+        d='M18 12 L10 16 L5 23 L11 28 L14 25 L14 41 L34 41 L34 25 L37 28 L43 23 L38 16 L30 12 C29 16.5 19 16.5 18 12 Z'
+        fill='#3f8f4a'
+      />
+      <path className={styles.fine} d='M16 22 L32 22 M16 25 L32 25' stroke='#2a6b33' />
+      <path d='M14 36.5 L34 36.5 L34 41 L14 41 Z' fill='#2a6b33' />
+      <path className={styles.fine} d='M18 37 L18 41 M23 37 L23 41 M28 37 L28 41' stroke='#1f5226' />
+    </>
+  ),
+  shoes: (
+    <>
+      <path d='M14 15 C18 15 20 19 21 23 L32 28 C35 29.5 35 34 31 34 L18 34 C14.5 34 13 31 13 27 Z' fill='#8f0b20' />
+      <path d='M11 23 C15 23 17 27 18 31 L29 36 C32 37.5 32 42 28 42 L15 42 C11.5 42 10 39 10 35 Z' fill='#c8102e' />
+      <path className={styles.fine} d='M15.5 31 L21 33.5 M16 27.5 L21.5 30' stroke='#ffffff' />
+    </>
+  ),
+  trousers: (
+    <>
+      <path d='M13 12 L35 12 L33 42 L25.5 42 L24 24 L22.5 42 L15 42 Z' fill='#2b5583' />
+      <path d='M12.5 9 L35.5 9 L35.5 15 L12.5 15 Z' fill='#1e3a5f' />
+      <path className={styles.fine} d='M18 20 L18 26 M30 20 L30 26' stroke='#1e3a5f' />
+    </>
+  ),
+  mitten: (
+    <>
+      <path d='M14 20 C9 20 6 24 7 28 C8 31 12 32 14 30 Z' fill='#c8102e' />
+      <path d='M14 14 C14 8 34 8 34 16 L34 33 L14 33 Z' fill='#c8102e' />
+      <path
+        d='M12 32 L36 32 Q38 32 38 35 L38 39 Q38 42 35 42 L13 42 Q10 42 10 39 L10 35 Q10 32 12 32 Z'
+        fill='#e8546b'
+      />
+      <path className={styles.fine} d='M15 33 L15 41 M21 33 L21 41 M27 33 L27 41 M33 33 L33 41' stroke='#c04055' />
+    </>
+  ),
+  sock: (
+    <>
+      <path
+        d='M16 12 L30 12 L30 27 C30 30 32 32 36 33 C40 34 41 40.5 36.5 40.5 L23 40.5 C18.5 40.5 16 37 16 32 Z'
+        fill='#0057b8'
+      />
+      <path d='M30 33 C34 34 36 36.5 36.8 39.5 L28.5 39.5 C28.5 36.5 29 34 30 33 Z' fill='#003a69' />
+      <path d='M15 9 L31 9 L31 15 L15 15 Z' fill='#e8546b' />
+      <path className={styles.fine} d='M15 12 L31 12' stroke='#c04055' />
+    </>
+  ),
 };
 
 type Props = {

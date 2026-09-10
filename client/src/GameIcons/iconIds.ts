@@ -80,6 +80,21 @@ export const OBJECT_ICON_IDS = [
   'pizza',
   'sushi',
   'kanelbullar',
+  'hand',
+  'foot',
+  'eye',
+  'nose',
+  'mouth',
+  'ear',
+  'tooth',
+  'hat',
+  'beanie',
+  'jacket',
+  'jumper',
+  'shoes',
+  'trousers',
+  'mitten',
+  'sock',
 ] as const;
 
 export type ObjectIconId = typeof OBJECT_ICON_IDS[number];
