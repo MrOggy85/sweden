@@ -195,6 +195,177 @@ const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
       <circle className={styles.eye} cx='33' cy='21' r='1.8' fill='#1c1c1c' />
     </>
   ),
+  // Branched twigs where the moose has filled palmate slabs, and a pale face under them.
+  // Those two are the same silhouette otherwise.
+  reindeer: (
+    <>
+      <path
+        className={styles.line}
+        d='M20 18 C17 12 13 8 9 6 M20 18 C18 13 15 11 12 12 M20 18 C19.5 12 20 8 21 5 M28 18 C31 12 35 8 39 6 M28 18 C30 13 33 11 36 12 M28 18 C28.5 12 28 8 27 5'
+        stroke='#8a5a2b'
+      />
+      <ellipse cx='14' cy='21' rx='4.5' ry='3.2' fill='#7a5330' />
+      <ellipse cx='34' cy='21' rx='4.5' ry='3.2' fill='#7a5330' />
+      <ellipse cx='24' cy='27' rx='10' ry='12' fill='#9b7148' />
+      <ellipse cx='24' cy='35' rx='6' ry='5' fill='#e8dcc8' />
+      <ellipse cx='24' cy='33' rx='2.4' ry='1.8' fill='#1c1c1c' />
+      <path
+        className={styles.line}
+        d='M24 35 L24 37 M24 37 Q21.5 38.4 20.6 36.6 M24 37 Q26.5 38.4 27.4 36.6'
+        stroke='#1c1c1c'
+      />
+      <circle cx='19.5' cy='25' r='2.6' fill='#ffffff' />
+      <circle cx='28.5' cy='25' r='2.6' fill='#ffffff' />
+      <circle className={styles.eye} cx='19.5' cy='25' r='1.4' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='28.5' cy='25' r='1.4' fill='#1c1c1c' />
+    </>
+  ),
+  // Round ears and a snout that comes to a point. The cat note says a centre-radiating
+  // whisker fan is the most rodent-like thing you can draw — here that is the point.
+  mouse: (
+    <>
+      <path className={styles.line} d='M34 34 C41 36 43 30 39 27' stroke='#8a8f95' />
+      <circle cx='12' cy='18' r='8' fill='#9aa0a6' />
+      <circle cx='36' cy='18' r='8' fill='#9aa0a6' />
+      <circle cx='12' cy='18' r='4.5' fill='#f3b6c1' />
+      <circle cx='36' cy='18' r='4.5' fill='#f3b6c1' />
+      <path d='M24 41 C16 39 13 33 13 26 C13 19 18 15 24 15 C30 15 35 19 35 26 C35 33 32 39 24 41 Z' fill='#a8aeb4' />
+      <path className={styles.line} d='M21 36 L11 34 M21 37.5 L12 39 M27 36 L37 34 M27 37.5 L36 39' stroke='#1c1c1c' />
+      <circle cx='24' cy='38.5' r='2.2' fill='#e07a9c' />
+      <circle cx='19.5' cy='26' r='2.6' fill='#ffffff' />
+      <circle cx='28.5' cy='26' r='2.6' fill='#ffffff' />
+      <circle className={styles.eye} cx='19.5' cy='26' r='1.4' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='28.5' cy='26' r='1.4' fill='#1c1c1c' />
+    </>
+  ),
+  // Long ears and two front teeth. Without the teeth it is the mouse with the ears stretched.
+  rabbit: (
+    <>
+      <ellipse cx='17' cy='15' rx='4.5' ry='10.5' transform='rotate(-8 17 15)' fill='#d8d2c8' />
+      <ellipse cx='31' cy='15' rx='4.5' ry='10.5' transform='rotate(8 31 15)' fill='#d8d2c8' />
+      <ellipse cx='17' cy='15' rx='2.2' ry='7' transform='rotate(-8 17 15)' fill='#f3b6c1' />
+      <ellipse cx='31' cy='15' rx='2.2' ry='7' transform='rotate(8 31 15)' fill='#f3b6c1' />
+      <ellipse cx='24' cy='31' rx='12' ry='11' fill='#e8e2d8' />
+      <path className={styles.line} d='M13 32 L5 30 M13 35 L5 36 M35 32 L43 30 M35 35 L43 36' stroke='#1c1c1c' />
+      <circle cx='19' cy='27' r='2.8' fill='#ffffff' />
+      <circle cx='29' cy='27' r='2.8' fill='#ffffff' />
+      <circle className={styles.eye} cx='19' cy='27' r='1.5' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='29' cy='27' r='1.5' fill='#1c1c1c' />
+      <path d='M24 34.5 L21.8 32 L26.2 32 Z' fill='#e07a9c' />
+      <path className={styles.line} d='M24 34.5 L24 36' stroke='#1c1c1c' />
+      <path d='M21.6 36 L23.5 36 L23.5 40.5 L21.6 40.5 Z M24.5 36 L26.4 36 L26.4 40.5 L24.5 40.5 Z' fill='#ffffff' />
+    </>
+  ),
+  // A dark face in the wool. White all over it would be the cloud with legs left off.
+  sheep: (
+    <>
+      <ellipse cx='13' cy='26' rx='5.5' ry='3.4' transform='rotate(20 13 26)' fill='#4a4a4a' />
+      <ellipse cx='35' cy='26' rx='5.5' ry='3.4' transform='rotate(-20 35 26)' fill='#4a4a4a' />
+      <circle cx='14' cy='18' r='7' fill='#f5f2ec' />
+      <circle cx='34' cy='18' r='7' fill='#f5f2ec' />
+      <circle cx='24' cy='14' r='8' fill='#f5f2ec' />
+      <circle cx='24' cy='22' r='8.5' fill='#f5f2ec' />
+      <ellipse cx='24' cy='31' rx='9' ry='9.5' fill='#4a4a4a' />
+      <circle cx='20.5' cy='29' r='2.6' fill='#ffffff' />
+      <circle cx='27.5' cy='29' r='2.6' fill='#ffffff' />
+      <circle className={styles.eye} cx='20.5' cy='29' r='1.4' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='27.5' cy='29' r='1.4' fill='#1c1c1c' />
+      <ellipse cx='24' cy='36' rx='4.5' ry='3' fill='#6a6a6a' />
+      <ellipse className={styles.dot} cx='22.4' cy='35.5' rx='0.9' ry='1.2' fill='#2a2a2a' />
+      <ellipse className={styles.dot} cx='25.6' cy='35.5' rx='0.9' ry='1.2' fill='#2a2a2a' />
+    </>
+  ),
+  // Profile like the bird, but yellow with a broad flat bill — the bird's is a point, and
+  // that is the only place the two differ in outline.
+  duck: (
+    <>
+      <path d='M9 29 L4 25 L5 33 Z' fill='#e8a800' />
+      <ellipse cx='19' cy='31' rx='12' ry='8.5' fill='#fecc00' />
+      <path d='M27 25 C27 19 28 15 31 15 L33 22 L31 27 Z' fill='#fecc00' />
+      <circle cx='30' cy='17' r='7' fill='#fecc00' />
+      <path d='M36 14.5 L43 16 Q44 18 43 19.6 L36 20.5 Z' fill='#f2820a' />
+      <path d='M13 28 Q21 25 26 31 Q18 35 13 28 Z' fill='#e8a800' />
+      <path className={styles.line} d='M17 39 L17 41 M24 39 L24 41' stroke='#f2820a' />
+      <path d='M12 41 L22 41 L17 43.5 Z M19 41 L29 41 L24 43.5 Z' fill='#f2820a' />
+      <circle cx='32' cy='15.5' r='2.6' fill='#ffffff' />
+      <circle className={styles.eye} cx='32' cy='15.5' r='1.4' fill='#1c1c1c' />
+    </>
+  ),
+  // Eyes on domes above the skull, not in it. That plus the mouth across the whole face is
+  // the frog; sunk into the head it is any green animal.
+  frog: (
+    <>
+      <circle cx='15' cy='14' r='7' fill='#5aa83a' />
+      <circle cx='33' cy='14' r='7' fill='#5aa83a' />
+      <path d='M24 40 C12 40 6 33 6 26 C6 20 13 17 24 17 C35 17 42 20 42 26 C42 33 36 40 24 40 Z' fill='#6fbf4a' />
+      <circle cx='15' cy='13' r='4' fill='#ffffff' />
+      <circle cx='33' cy='13' r='4' fill='#ffffff' />
+      <circle className={styles.eye} cx='15' cy='13' r='2.2' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='33' cy='13' r='2.2' fill='#1c1c1c' />
+      <path className={styles.line} d='M12 28 Q24 38 36 28' stroke='#2f6b1f' />
+      <circle className={styles.dot} cx='20' cy='23' r='1.2' fill='#3d8a26' />
+      <circle className={styles.dot} cx='28' cy='23' r='1.2' fill='#3d8a26' />
+    </>
+  ),
+  // The tail is bigger than the animal, which is the only reason this is not the fox: both
+  // are orange and pointed at the front.
+  squirrel: (
+    <>
+      <path d='M29 38 C40 37 42 22 34 14 C38 24 34 31 27 32 Z' fill='#c96a3a' />
+      <path d='M15 42 C9 42 8 34 11 28 C13 22 17 19 22 20 C27 21 29 26 28 32 C27 38 23 42 18 42 Z' fill='#d9803f' />
+      <path d='M13 10 L11.5 4.5 L18 8.5 Z' fill='#d9803f' />
+      <circle cx='18' cy='16' r='8.5' fill='#d9803f' />
+      <ellipse cx='12.5' cy='19' rx='4.5' ry='3.5' fill='#f2d8bc' />
+      <circle cx='9' cy='18' r='1.8' fill='#1c1c1c' />
+      <circle cx='18.5' cy='13.5' r='2.6' fill='#ffffff' />
+      <circle className={styles.eye} cx='18.5' cy='13.5' r='1.4' fill='#1c1c1c' />
+    </>
+  ),
+  // Two enormous ringed eyes and a beak between them. Anything smaller and it is a bird.
+  owl: (
+    <>
+      <path d='M13 13 L11 4.5 L19.5 10 Z M35 13 L37 4.5 L28.5 10 Z' fill='#8a5a2b' />
+      <ellipse cx='24' cy='27' rx='15' ry='16' fill='#a9763f' />
+      <circle cx='17.5' cy='23' r='7' fill='#f2e6d0' />
+      <circle cx='30.5' cy='23' r='7' fill='#f2e6d0' />
+      <circle className={styles.eye} cx='17.5' cy='23' r='3.6' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='30.5' cy='23' r='3.6' fill='#1c1c1c' />
+      <circle className={styles.dot} cx='19' cy='21.5' r='1.2' fill='#ffffff' />
+      <circle className={styles.dot} cx='32' cy='21.5' r='1.2' fill='#ffffff' />
+      <path d='M24 26 L21.5 30.5 L26.5 30.5 Z' fill='#f2a53c' />
+      <path className={styles.fine} d='M15 34 Q24 37 33 34 M17 38 Q24 40.5 31 38' stroke='#7a5330' />
+    </>
+  ),
+  // Spikes drawn as one zigzag ridge, so they read as spines rather than as fur at 44px.
+  hedgehog: (
+    <>
+      <path
+        d='M7 34 L9 22 L13 28 L16 15 L20 25 L24 12 L28 25 L32 15 L35 28 L39 22 L41 34 Z'
+        fill='#6f4a22'
+      />
+      <ellipse cx='24' cy='34' rx='17' ry='9' fill='#6f4a22' />
+      <circle cx='16' cy='32' r='3' fill='#d9b48a' />
+      <ellipse cx='24' cy='36' rx='9.5' ry='7' fill='#e0c49a' />
+      <circle className={styles.eye} cx='20.5' cy='34' r='1.5' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='27.5' cy='34' r='1.5' fill='#1c1c1c' />
+      <circle cx='24' cy='40' r='2.2' fill='#1c1c1c' />
+    </>
+  ),
+  butterfly: (
+    <>
+      <path className={styles.line} d='M22 15 C19 10 15 7 12 6 M26 15 C29 10 33 7 36 6' stroke='#1c1c1c' />
+      <circle className={styles.dot} cx='12' cy='6' r='1.8' fill='#1c1c1c' />
+      <circle className={styles.dot} cx='36' cy='6' r='1.8' fill='#1c1c1c' />
+      <path d='M23 20 C18 12 9 11 6.5 17 C4.5 23 10 28 22 26 Z' fill='#f07c0a' />
+      <path d='M25 20 C30 12 39 11 41.5 17 C43.5 23 38 28 26 26 Z' fill='#f07c0a' />
+      <path d='M23 27 C17 27 11 30 12 35 C13 40 20 39 23 33 Z' fill='#e8546b' />
+      <path d='M25 27 C31 27 37 30 36 35 C35 40 28 39 25 33 Z' fill='#e8546b' />
+      <circle className={styles.dot} cx='14' cy='18.5' r='2.4' fill='#ffe9a8' />
+      <circle className={styles.dot} cx='34' cy='18.5' r='2.4' fill='#ffe9a8' />
+      <ellipse cx='24' cy='27' rx='2.6' ry='11' fill='#4a3520' />
+      <circle cx='24' cy='16' r='3' fill='#4a3520' />
+    </>
+  ),
   // The dip at the stem is the whole difference between an apple and a tomato.
   apple: (
     <>
