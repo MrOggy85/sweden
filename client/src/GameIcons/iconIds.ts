@@ -95,6 +95,13 @@ export const OBJECT_ICON_IDS = [
   'trousers',
   'mitten',
   'sock',
+  'dinosaur',
+  'crown',
+  'teddy',
+  'balloon',
+  'cake',
+  'icecream',
+  'candy',
 ] as const;
 
 export type ObjectIconId = typeof OBJECT_ICON_IDS[number];

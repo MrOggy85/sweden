@@ -7,7 +7,16 @@
 //
 // Run via `make generate-content`, alongside scripts/generate-content.ts.
 
-import { type GamePair, gamePairAudioUrl, loadAllGamePairs, loadGamePhrases, loadUiSounds } from './gameContent.ts';
+import {
+  GAME_WORD_KEYS,
+  type GamePair,
+  gamePairAudioUrl,
+  loadAllGamePairs,
+  loadGamePhrases,
+  loadUiSounds,
+  travelStops,
+  WORDS_FILE,
+} from './gameContent.ts';
 import {
   assertNoSlugCollisions,
   type ClipClaim,
@@ -53,6 +62,7 @@ function assertIconsExist(lists: Record<string, GamePair[]>): void {
   const unknown: string[] = [];
 
   for (const [file, pairs] of Object.entries(lists)) {
+    if (file === WORDS_FILE) continue;
     for (const pair of pairs) {
       const known = pair.icon.startsWith(COLOR_ICON_PREFIX)
         ? colors.has(pair.icon.slice(COLOR_ICON_PREFIX.length))
@@ -118,6 +128,18 @@ const pairs = lists['connect-pairs.md'] ?? [];
 const cooking = lists['cooking.md'] ?? [];
 const dishes = lists['dishes.md'] ?? [];
 const kitchen = lists['kitchen.md'] ?? [];
+const shop = lists['shop.md'] ?? [];
+const hotel = lists['hotel.md'] ?? [];
+const travel = travelStops(lists['travel.md'] ?? [], pairs, 'games/travel.md');
+
+const wordList = lists[WORDS_FILE] ?? [];
+const words = Object.fromEntries(
+  GAME_WORD_KEYS.map((key) => {
+    const word = wordList.find((w) => w.sv === key);
+    if (!word) throw new Error(`games/${WORDS_FILE}: missing "${key}", which a game says`);
+    return [key, word.audio];
+  }),
+);
 
 const uiSoundUrls = Object.fromEntries(
   Object.entries(uiSounds).map(([role, sounds]) => [role, sounds.map((sound) => sound.audio)]),
@@ -125,17 +147,22 @@ const uiSoundUrls = Object.fromEntries(
 
 await Deno.writeTextFile(
   OUT,
-  `${HEADER}import type { GamePair } from './gameContent';\n\n` +
+  `${HEADER}import type { GamePair, TravelStop } from './gameContent';\n\n` +
     `export const GAME_PAIRS: GamePair[] = ${JSON.stringify(pairs, null, 2)};\n\n` +
     `export const COOKING_ITEMS: GamePair[] = ${JSON.stringify(cooking, null, 2)};\n\n` +
     `export const DISHES: GamePair[] = ${JSON.stringify(dishes, null, 2)};\n\n` +
     `export const KITCHEN: GamePair[] = ${JSON.stringify(kitchen, null, 2)};\n\n` +
+    `export const SHOP_ITEMS: GamePair[] = ${JSON.stringify(shop, null, 2)};\n\n` +
+    `export const HOTEL_GUESTS: GamePair[] = ${JSON.stringify(hotel, null, 2)};\n\n` +
+    `export const TRAVEL_STOPS: TravelStop[] = ${JSON.stringify(travel, null, 2)};\n\n` +
+    `export const GAME_WORDS = ${JSON.stringify(words, null, 2)} as const;\n\n` +
     `export const GAME_PHRASES: string[] = ${JSON.stringify(phrases, null, 2)};\n\n` +
     `export const UI_SOUNDS: Record<string, string[]> = ${JSON.stringify(uiSoundUrls, null, 2)};\n`,
 );
 
 console.log(
   `generated ${pairs.length} pairs, ${cooking.length} ingredients, ${dishes.length} dishes, ` +
-    `${kitchen.length} kitchen words, ${phrases.length} phrases, ` +
+    `${kitchen.length} kitchen words, ${shop.length} shop items, ${hotel.length} hotel guests, ` +
+    `${travel.length} travel stops, ${wordList.length} game words, ${phrases.length} phrases, ` +
     `${Object.keys(uiSoundUrls).length} ui sound roles -> ${OUT.pathname}`,
 );

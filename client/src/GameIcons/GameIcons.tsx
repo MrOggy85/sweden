@@ -12,7 +12,7 @@ import styles from './GameIcons.module.css';
 // retunable. These differ in lightness as well as hue, which is what carries the difference
 // when hue perception does not. Green is Okabe-Ito's bluish green because it sits next to
 // red. See ./CLAUDE.md.
-const GAME_COLORS: Record<GameColorId, string> = {
+export const GAME_COLORS: Record<GameColorId, string> = {
   yellow: '#ffd400',
   pink: '#f07cb0',
   orange: '#f07c0a',
@@ -1124,6 +1124,107 @@ const OBJECT_ICONS: Record<ObjectIconId, ReactNode> = {
       <path d='M30 33 C34 34 36 36.5 36.8 39.5 L28.5 39.5 C28.5 36.5 29 34 30 33 Z' fill='#003a69' />
       <path d='M15 9 L31 9 L31 15 L15 15 Z' fill='#e8546b' />
       <path className={styles.fine} d='M15 12 L31 12' stroke='#c04055' />
+    </>
+  ),
+  // Whole animal in profile, long neck: a head alone is a lizard.
+  dinosaur: (
+    <>
+      <path d='M13 30 Q6 31 3 25 Q6 35 16 35 Z' fill='#4a9e4a' />
+      <rect x='14' y='32' width='5' height='10' rx='2' fill='#3b843b' />
+      <rect x='27' y='32' width='5' height='10' rx='2' fill='#3b843b' />
+      <ellipse cx='22' cy='29' rx='12' ry='8.5' fill='#5cb85c' />
+      <path d='M29 25 Q33 14 35 8 L41 9.5 Q37 18 34 31 Z' fill='#5cb85c' />
+      <ellipse cx='39' cy='9' rx='5.5' ry='3.8' fill='#5cb85c' />
+      <circle className={styles.dot} cx='17' cy='25' r='1.8' fill='#9ad89a' />
+      <circle className={styles.dot} cx='23' cy='23.5' r='1.8' fill='#9ad89a' />
+      <circle className={styles.dot} cx='28' cy='26' r='1.5' fill='#9ad89a' />
+      <circle cx='40' cy='7.8' r='1.7' fill='#ffffff' />
+      <circle className={styles.eye} cx='40.4' cy='7.8' r='0.9' fill='#1c1c1c' />
+      <path className={styles.line} d='M41 11 Q42.5 11.5 44 10.5' stroke='#1c1c1c' />
+    </>
+  ),
+  crown: (
+    <>
+      <path d='M8 35 L8 15 L16 25 L24 9 L32 25 L40 15 L40 35 Z' fill='#ffd400' />
+      <rect x='8' y='31' width='32' height='7' rx='1.5' fill='#f0b400' />
+      <circle cx='8' cy='14' r='2.2' fill='#ffd400' />
+      <circle cx='24' cy='8' r='2.2' fill='#ffd400' />
+      <circle cx='40' cy='14' r='2.2' fill='#ffd400' />
+      <circle cx='16' cy='34.5' r='2' fill='#d81e05' />
+      <circle cx='24' cy='34.5' r='2' fill='#0057b8' />
+      <circle cx='32' cy='34.5' r='2' fill='#d81e05' />
+    </>
+  ),
+  // A whole bear sitting, with a bow: `bear` is the head alone.
+  teddy: (
+    <>
+      <circle cx='15' cy='9' r='4' fill='#a8703a' />
+      <circle cx='33' cy='9' r='4' fill='#a8703a' />
+      <ellipse cx='10.5' cy='29' rx='4' ry='6' fill='#a8703a' />
+      <ellipse cx='37.5' cy='29' rx='4' ry='6' fill='#a8703a' />
+      <ellipse cx='16' cy='39.5' rx='5.5' ry='4' fill='#a8703a' />
+      <ellipse cx='32' cy='39.5' rx='5.5' ry='4' fill='#a8703a' />
+      <ellipse cx='24' cy='31' rx='10.5' ry='10' fill='#c8894a' />
+      <ellipse cx='24' cy='33' rx='6' ry='6' fill='#ecc999' />
+      <circle cx='24' cy='16' r='10' fill='#c8894a' />
+      <ellipse cx='24' cy='19.5' rx='4.5' ry='3.5' fill='#ecc999' />
+      <ellipse cx='24' cy='18.2' rx='1.7' ry='1.2' fill='#1c1c1c' />
+      <path
+        className={styles.line}
+        d='M24 19.5 L24 21 M24 21 Q22 22 21.5 20.8 M24 21 Q26 22 26.5 20.8'
+        stroke='#1c1c1c'
+      />
+      <circle cx='20' cy='13.5' r='2' fill='#ffffff' />
+      <circle cx='28' cy='13.5' r='2' fill='#ffffff' />
+      <circle className={styles.eye} cx='20' cy='13.7' r='1.1' fill='#1c1c1c' />
+      <circle className={styles.eye} cx='28' cy='13.7' r='1.1' fill='#1c1c1c' />
+      <path d='M24 26 L18 23 L18 29 Z M24 26 L30 23 L30 29 Z' fill='#d81e05' />
+      <circle cx='24' cy='26' r='1.8' fill='#d81e05' />
+    </>
+  ),
+  balloon: (
+    <>
+      <path className={styles.line} d='M24 32 Q20 36 24 39 Q28 42 24 45' stroke='#1c1c1c' />
+      <path d='M24 30 L21.5 33.5 L26.5 33.5 Z' fill='#b81804' />
+      <ellipse cx='24' cy='17' rx='11' ry='13.5' fill='#d81e05' />
+      <path className={styles.fine} d='M17 11 Q18 7 21.5 6' stroke='#ffffff' />
+    </>
+  ),
+  // Prinsesstårta: the green marzipan dome and the pink rose make it Swedish.
+  cake: (
+    <>
+      <ellipse cx='24' cy='40' rx='19' ry='3.5' fill='#ffffff' />
+      <path d='M7 38 L7 33 Q7 13 24 13 Q41 13 41 33 L41 38 Z' fill='#8fce7a' />
+      <path className={styles.fine} d='M7 33 Q24 36 41 33' stroke='#5e9e4c' />
+      <circle className={styles.dot} cx='15' cy='24' r='0.9' fill='#ffffff' />
+      <circle className={styles.dot} cx='31' cy='22' r='0.9' fill='#ffffff' />
+      <circle className={styles.dot} cx='22' cy='29' r='0.9' fill='#ffffff' />
+      <circle className={styles.dot} cx='35' cy='29' r='0.9' fill='#ffffff' />
+      <path d='M18 13 Q20 9 24 12 Z M30 13 Q28 9 24 12 Z' fill='#3b843b' />
+      <circle cx='24' cy='10' r='4.5' fill='#f07cb0' />
+      <path className={styles.fine} d='M22 10 Q24 7.5 26 10 Q24 12 22.5 10.5' stroke='#b8487e' />
+    </>
+  ),
+  icecream: (
+    <>
+      <path d='M15 23 L33 23 L24 45 Z' fill='#e0a85a' />
+      <path className={styles.fine} d='M18 27 L28 37 M22 25 L30 31 M30 27 L20 37 M26 25 L18 31' stroke='#a8743a' />
+      <circle cx='24' cy='19' r='9' fill='#f7a8c4' />
+      <circle cx='24' cy='10' r='7' fill='#fff4e0' />
+      <circle cx='26.5' cy='3.5' r='2.5' fill='#d81e05' />
+    </>
+  ),
+  // A wrapped sweet: the twisted ends are the whole identity.
+  candy: (
+    <>
+      <path d='M15 24 L5 16 L7 24 L5 32 Z' fill='#c49be8' />
+      <path d='M33 24 L43 16 L41 24 L43 32 Z' fill='#c49be8' />
+      <ellipse cx='24' cy='24' rx='11' ry='8.5' fill='#8f4fd0' />
+      <path
+        className={styles.fine}
+        d='M19 16.5 Q16 24 19 31.5 M24 15.5 Q21 24 24 32.5 M29 16.5 Q26 24 29 31.5'
+        stroke='#ffffff'
+      />
     </>
   ),
 };

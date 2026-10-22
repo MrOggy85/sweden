@@ -1,0 +1,150 @@
+.eggs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 0.3rem;
+  font-size: 1.6rem;
+}
+
+.question {
+  min-width: 88px;
+  min-height: 56px;
+  font: inherit;
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: #fff3d6;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.field {
+  width: 100%;
+  min-height: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  background: #e6f4d7;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+}
+
+.herd {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem;
+  max-width: 340px;
+}
+
+.dino {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  background: #fecc00;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 13px;
+}
+
+.plus {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #005293;
+}
+
+.pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 460px;
+}
+
+.number {
+  min-height: 60px;
+  font: inherit;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: #fff;
+  border: 1.5px solid #1c1c1c;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  cursor: pointer;
+}
+
+.number:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1c1c1c22;
+}
+
+.right {
+  background: #9ad89a;
+}
+
+.wrong {
+  animation: shake 0.3s ease;
+  background: #f6c4cb;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.dance {
+  animation: hop 0.5s ease infinite alternate;
+}
+
+@keyframes hop {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-8px);
+  }
+}
+
+.parade {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem;
+  max-width: 420px;
+}
+
+.phrase {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #005293;
+}

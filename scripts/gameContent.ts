@@ -6,8 +6,21 @@ import { MEDIA_DIR, parseSound, slug, type Sound } from './content.ts';
 export type GamePair = {
   sv: string;
   en: string;
+  // Empty only in words.md, which holds what the games say rather than show.
   icon: string;
   audio: string;
+  // travel.md only: "lat,lon".
+  at?: string;
+};
+
+// A travel stop, with its coordinates parsed and its sticker word looked up.
+export type TravelStop = {
+  sv: string;
+  en: string;
+  audio: string;
+  lat: number;
+  lon: number;
+  sticker: GamePair;
 };
 
 export const GAMES_DIR = new URL('../content/games/', import.meta.url);
@@ -15,6 +28,32 @@ export const GAMES_DIR = new URL('../content/games/', import.meta.url);
 // The two files in content/games/ that are not pair lists.
 const PHRASES_FILE = 'phrases.md';
 const UI_SOUNDS_FILE = 'ui-sounds.md';
+
+// The one pair list without pictures.
+export const WORDS_FILE = 'words.md';
+
+// What the games ask words.md for by spelling. Generated as an object keyed by these, so a
+// typo in a game is a tsc error and a missing row is a build error.
+export const GAME_WORD_KEYS = [
+  'ett',
+  'två',
+  'tre',
+  'fyra',
+  'fem',
+  'sex',
+  'sju',
+  'åtta',
+  'nio',
+  'tio',
+  'hur många',
+  'plus',
+  'är',
+  'en',
+  'krona',
+  'kronor',
+  'tack',
+  'rum',
+] as const;
 
 // What the client asks playSfx() for. Fixed here so a typo in content fails the build
 // rather than silently never playing.
@@ -37,12 +76,33 @@ function bullets(raw: string): string[] {
 }
 
 function parsePair(item: string, filename: string): GamePair {
-  const [sv, en, icon, ...rest] = item.split('|').map((part) => part.trim());
-  if (!sv || !en || !icon || rest.length > 0) {
-    throw new Error(`${filename}: pair "${item}" must be written as "swedish | english | icon"`);
+  const [sv, en, icon = '', at, ...rest] = item.split('|').map((part) => part.trim());
+  const pictured = !filename.endsWith(WORDS_FILE);
+  if (!sv || !en || (pictured && !icon) || rest.length > 0) {
+    throw new Error(
+      `${filename}: pair "${item}" must be written as ` +
+        (pictured ? '"swedish | english | icon"' : '"swedish | english"'),
+    );
   }
   if (!slug(sv)) throw new Error(`${filename}: pair "${sv}" has no letters to build a filename from`);
-  return { sv, en, icon, audio: `${AUDIO_URL_PREFIX}${slug(sv)}.m4a` };
+  const pair: GamePair = { sv, en, icon, audio: `${AUDIO_URL_PREFIX}${slug(sv)}.m4a` };
+  if (at) pair.at = at;
+  return pair;
+}
+
+/** travel.md, resolved: every stop needs coordinates and a sticker that has a word. */
+export function travelStops(stops: GamePair[], connectPairs: GamePair[], filename: string): TravelStop[] {
+  return stops.map((stop) => {
+    const [lat, lon] = (stop.at ?? '').split(',').map(Number);
+    if (lat === undefined || lon === undefined || !Number.isFinite(lat) || !Number.isFinite(lon)) {
+      throw new Error(`${filename}: stop "${stop.sv}" needs "latitude,longitude" as its fourth field`);
+    }
+    const sticker = connectPairs.find((pair) => pair.icon === stop.icon);
+    if (!sticker) {
+      throw new Error(`${filename}: sticker "${stop.icon}" for "${stop.sv}" is not a pair in connect-pairs.md`);
+    }
+    return { sv: stop.sv, en: stop.en, audio: stop.audio, lat, lon, sticker };
+  });
 }
 
 /** One list of `swedish | english | icon` bullets: the connect pairs, the shelf, the dishes. */

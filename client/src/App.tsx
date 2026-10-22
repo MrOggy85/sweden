@@ -2,6 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ConnectGame } from './ConnectGame/ConnectGame';
 import { CookingGame } from './CookingGame/CookingGame';
+import { CountGame } from './CountGame/CountGame';
+import { HotelGame } from './HotelGame/HotelGame';
+import { ShopGame } from './ShopGame/ShopGame';
+import { TravelGame } from './TravelGame/TravelGame';
 import { DevPage } from './Dev/DevPage';
 import { Header } from './Header/Header';
 import { History } from './History/History';
@@ -160,6 +164,14 @@ function App() {
           ? <ConnectGame onBack={() => navigate('/')} />
           : game?.id === 'cooking'
           ? <CookingGame onBack={() => navigate('/')} />
+          : game?.id === 'count'
+          ? <CountGame onBack={() => navigate('/')} />
+          : game?.id === 'shop'
+          ? <ShopGame onBack={() => navigate('/')} />
+          : game?.id === 'hotel'
+          ? <HotelGame onBack={() => navigate('/')} />
+          : game?.id === 'travel'
+          ? <TravelGame onBack={() => navigate('/')} />
           : (
             <PageGrid
               progress={progress}

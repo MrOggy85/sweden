@@ -10,6 +10,10 @@ export type Game = {
 export const GAMES: Game[] = [
   { path: '/connect', id: 'connect', emoji: '🔗', title: 'Connect the words' },
   { path: '/cooking', id: 'cooking', emoji: '🍲', title: 'Laga mat' },
+  { path: '/count', id: 'count', emoji: '🦕', title: 'Räkna dinosaurier' },
+  { path: '/shop', id: 'shop', emoji: '👑', title: 'Kronbutiken' },
+  { path: '/hotel', id: 'hotel', emoji: '🏨', title: 'Djurhotellet' },
+  { path: '/travel', id: 'travel', emoji: '🚂', title: 'Resa genom Sverige' },
 ];
 
 export function gameById(id: string): Game | undefined {

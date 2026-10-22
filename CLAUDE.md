@@ -156,13 +156,27 @@ file with `when:`, an `EVENT_IDS` entry in year order, and a colour in `YearTime
 
 ### Games
 
-The connect game reads `content/games/connect-pairs.md`: `swedish | english | icon`. The
-icon is an id in `client/src/GameIcons/iconIds.ts` (draw new ones in `GameIcons.tsx`) or
-`color-<name>`. An unknown id fails the build. The cooking game reads `cooking.md`,
-`dishes.md` and `kitchen.md` in the same format, and each file explains itself. Read
-`client/src/GameIcons/CLAUDE.md` before drawing an icon. `GAME_COLORS` is deliberately separate from
-avatar `COLORS`, which are stored in profiles. Celebration phrases go in
-`content/games/phrases.md` (no audio).
+Games are routes, listed in `client/src/data/games.ts`, switched in `App.tsx`, and named in
+`RESERVED_IDS` and `LINKABLE_ROUTES` (`scripts/content.ts`). They have no score and send
+nothing to the server. Every list in `content/games/` explains its own format at the top.
+
+- **Pair lists** are `swedish | english | icon`, sampled at random: `connect-pairs.md`,
+  `cooking.md`, `dishes.md`, `kitchen.md`, `shop.md`, `hotel.md`. The icon is an id in
+  `client/src/GameIcons/iconIds.ts` or `color-<name>`. An unknown id fails the build. Read
+  `client/src/GameIcons/CLAUDE.md` before drawing an icon.
+- **`travel.md`** adds `latitude,longitude`. The map projects real coordinates, and the
+  sticker icon must be a pair in `connect-pairs.md`, which is where its word comes from.
+- **`words.md`** holds what the games *say* with no picture: numbers, "hur många", "kronor",
+  "rum". The keys a game uses are in `GAME_WORD_KEYS` (`scripts/gameContent.ts`) and are
+  generated as `GAME_WORDS`, so a typo is a `tsc` error.
+- **`phrases.md`** holds the celebration lines (no audio).
+
+The newer games (`CountGame`, `ShopGame`, `HotelGame`, `TravelGame`) share `GameFrame`
+(title, back button, `Celebration` overlay) and `core/useSpeaker` (clips in order, cut off
+by the next tap). Start a new game from those. Each game teaches through its first tap
+rather than through instructions: a question is spoken, and a wrong answer says what was
+picked. `GAME_COLORS` is deliberately separate from avatar `COLORS`, which are stored in
+profiles.
 
 ## The dev area
 
