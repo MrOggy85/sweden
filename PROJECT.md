@@ -8,6 +8,11 @@ avatar, taps through topics, and the app remembers where they have been.
 
 It exists because a list of facts is boring and a thing you can poke at is not.
 
+The children are learning Swedish as a third language, after Japanese and English. So a
+page shows and says; it does not explain. A picture carries the meaning and a tap plays
+the Swedish — English text, where it exists at all, is alt text. See "Scenes, not facts"
+in `CLAUDE.md`.
+
 ## What the server is for
 
 Two jobs, both persistence:

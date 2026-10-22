@@ -6,15 +6,15 @@ emoji: 🏰
 blurb: The capital, built on 14 islands.
 ---
 
-- A city on fourteen islands.
-- Fifty-seven bridges join them up.
-- One alley is thinner than a door.
+- 🏙️ | en stor stad
+- 🏝️🏝️🏝️ | många öar
+- 🌉🌉🌉 | många broar
 
 ## Words
 
-- stad | city
-- bro | bridge
-- ö | island
+- stad | city | 🏙️
+- bro | bridge | 🌉
+- ö | island | 🏝️
 
 ## Images
 

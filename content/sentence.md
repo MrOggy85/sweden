@@ -2,46 +2,42 @@
 id: sentence
 order: 75
 kind: sentence
-title: Build a Sentence
+title: Säg något!
 emoji: 🗣️
 blurb: Tap words, then press Speak.
 ---
 
-- Tap words. They go in the box.
-- Press Speak and hear your sentence.
-- Silly sentences are the best ones.
-
 ## Words
 
-- jag | I | people
-- du | you | people
-- han | he | people
-- hon | she | people
-- vi | we | people
-- mamma | mum | people
-- pappa | dad | people
-- heter | am called | doing
-- har | have | doing
-- är | am | doing
-- gillar | like | doing
-- ser | see | doing
-- leker | play | doing
-- bok | book | things
-- katt | cat | things
-- hund | dog | things
-- glass | ice cream | things
-- snö | snow | things
-- skog | forest | things
-- hus | house | things
-- stor | big | describing
-- liten | small | describing
-- glad | happy | describing
-- blå | blue | describing
-- gul | yellow | describing
-- en | a | glue
-- ett | a | glue
-- och | and | glue
-- inte | not | glue
+- jag | I | 🙋 | 👥
+- du | you | 👉 | 👥
+- han | he | 👦 | 👥
+- hon | she | 👧 | 👥
+- vi | we | 👫 | 👥
+- mamma | mum | 👩 | 👥
+- pappa | dad | 👨 | 👥
+- heter | am called | 📛 | 🏃
+- har | have | 🤲 | 🏃
+- är | am | 🟰 | 🏃
+- gillar | like | ❤️ | 🏃
+- ser | see | 👀 | 🏃
+- leker | play | 🤸 | 🏃
+- bok | book | 📕 | 🧸
+- katt | cat | 🐱 | 🧸
+- hund | dog | 🐶 | 🧸
+- glass | ice cream | 🍦 | 🧸
+- snö | snow | ❄️ | 🧸
+- skog | forest | 🌲 | 🧸
+- hus | house | 🏠 | 🧸
+- stor | big | 🐘 | 🎨
+- liten | small | 🐭 | 🎨
+- glad | happy | 😀 | 🎨
+- blå | blue | 🔵 | 🎨
+- gul | yellow | 🟡 | 🎨
+- en | a | | 🔗
+- ett | a | | 🔗
+- och | and | ➕ | 🔗
+- inte | not | 🚫 | 🔗
 
 ## Links
 

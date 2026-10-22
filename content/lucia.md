@@ -7,15 +7,16 @@ when: 13 december
 blurb: Candles in the darkest week.
 ---
 
-- The 13th of December, before it is light.
-- A crown of candles, and singing.
-- Saffron buns, yellow from one spice.
+- 👸🕯️ | Lucia
+- 🌑🕯️ | mörkt och ljus
+- 🎶👧👦 | en sång
+- 🟡🌀 | en gul bulle
 
 ## Words
 
-- ljus | candle
-- sång | song
-- bulle | bun
+- ljus | candle | 🕯️
+- sång | song | 🎶
+- bulle | bun | 🌀
 
 ## Images
 

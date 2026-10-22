@@ -6,10 +6,27 @@
 
 export type Word = {
   sv: string;
+  // Never shown: the picture is the translation. Screen readers still get it.
   en: string;
   audio: string;
-  // Optional third field; groups render in the order they first appear in the file.
+  emoji?: string;
+  // Optional fourth field; groups render in the order they first appear in the file.
   group?: string;
+};
+
+// One word of a scene line. `sv` is what the clip is named after; `text` is what is shown,
+// which may carry punctuation the clip does not.
+export type SceneWord = {
+  text: string;
+  sv: string;
+  audio: string;
+};
+
+// A picture plus the Swedish that goes with it, spoken word by word when tapped. Replaces
+// the old English fact list: the picture tells, the line is heard.
+export type Scene = {
+  picture: string;
+  words: SceneWord[];
 };
 
 // Filename is authored, not derived — a meow has no spelling.
@@ -20,7 +37,7 @@ export type Sound = {
   emoji?: string;
 };
 
-// A photo under media/img/, with the caption shown under it. Filename authored, like a
+// A photo under media/img/. The caption is alt text only, never shown. Filename authored, like a
 // sound effect: a photograph has no text to derive one from.
 export type Image = {
   caption: string;
@@ -35,7 +52,7 @@ export type Video = {
   label: string;
 };
 
-// How the client renders the page: a fact list, or the tap-a-word sentence builder.
+// How the client renders the page: scenes, or the tap-a-word sentence builder.
 export const PAGE_KINDS = ['topic', 'sentence'] as const;
 export type PageKind = typeof PAGE_KINDS[number];
 
@@ -49,7 +66,7 @@ export type Page = {
   // Where in the year this falls, as it would be said. Only the högtider have one;
   // YearTimeline captions its markers with it.
   when?: string;
-  facts: string[];
+  scenes: Scene[];
   words: Word[];
   sounds: Sound[];
   images: Image[];
@@ -91,7 +108,7 @@ export function slug(sv: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-export function audioFileUrl(word: Word): URL {
+export function audioFileUrl(word: Pick<Word, 'sv'>): URL {
   return new URL(`${slug(word.sv)}.m4a`, MEDIA_DIR);
 }
 
@@ -117,9 +134,14 @@ export function assertNoSlugCollisions(claims: ClipClaim[]): void {
   }
 }
 
+/** Every clip a page plays: its words, then its scenes' words. */
+export function pageClips(page: Page): Pick<Word, 'sv'>[] {
+  return [...page.words, ...page.scenes.flatMap((scene) => scene.words)];
+}
+
 /** Every topic word as a claim on its clip filename. */
 export function pageClipClaims(pages: Page[]): ClipClaim[] {
-  return pages.flatMap((page) => page.words.map((word) => ({ sv: word.sv, source: page.id })));
+  return pages.flatMap((page) => pageClips(page).map((word) => ({ sv: word.sv, source: page.id })));
 }
 
 export function soundFileUrl(sound: Sound): URL {
@@ -141,17 +163,37 @@ function parseFrontmatter(raw: string, filename: string): Record<string, string>
   return fields;
 }
 
+// A letter in the picture field is a group written where the emoji goes — the format
+// before pictures existed.
+const LETTER = /[A-Za-z]/;
+
 function parseWord(item: string, filename: string): Word {
-  const [sv, en, group, ...rest] = item.split('|').map((part) => part.trim());
-  if (!sv || !en || rest.length > 0) {
+  const [sv, en, emoji, group, ...rest] = item.split('|').map((part) => part.trim());
+  if (!sv || !en || rest.length > 0 || (emoji && LETTER.test(emoji))) {
     throw new Error(
-      `${filename}: word "${item}" must be written as "swedish | english" or "swedish | english | group"`,
+      `${filename}: word "${item}" must be written as "swedish | english | emoji" or "swedish | english | emoji | group"`,
     );
   }
   if (!slug(sv)) throw new Error(`${filename}: word "${sv}" has no letters to build a filename from`);
   const word: Word = { sv, en, audio: `${AUDIO_URL_PREFIX}${slug(sv)}.m4a` };
+  if (emoji) word.emoji = emoji;
   if (group) word.group = group;
   return word;
+}
+
+// `_` holds a two-word clip together (`hej_då`); trailing punctuation is shown, not said.
+function parseScene(item: string, filename: string): Scene {
+  const [picture, line, ...rest] = item.split('|').map((part) => part.trim());
+  if (!picture || !line || rest.length > 0 || LETTER.test(picture)) {
+    throw new Error(`${filename}: scene "${item}" must be written as "emoji | svenska ord"`);
+  }
+  const words = line.split(/\s+/).map((token) => {
+    const text = token.replaceAll('_', ' ');
+    const sv = text.replace(/[!?.,]+$/, '');
+    if (!slug(sv)) throw new Error(`${filename}: scene word "${token}" has no letters to build a filename from`);
+    return { text, sv, audio: `${AUDIO_URL_PREFIX}${slug(sv)}.m4a` };
+  });
+  return { picture, words };
 }
 
 export function parseSound(item: string, filename: string): Sound {
@@ -199,7 +241,7 @@ function parseLink(item: string, filename: string): string {
 }
 
 type Body = {
-  facts: string[];
+  scenes: Scene[];
   words: Word[];
   sounds: Sound[];
   images: Image[];
@@ -207,16 +249,16 @@ type Body = {
   links: string[];
 };
 
-// Bullets before the first `##` are facts; the rest go by heading. Bullets under any other
-// heading are ignored, so prose sections do not become facts.
+// Bullets before the first `##` are scenes; the rest go by heading. Bullets under any other
+// heading are ignored, so prose sections do not become scenes.
 function parseBody(body: string, filename: string): Body {
-  const facts: string[] = [];
+  const scenes: Scene[] = [];
   const words: Word[] = [];
   const sounds: Sound[] = [];
   const images: Image[] = [];
   const videos: Video[] = [];
   const links: string[] = [];
-  let section: 'facts' | 'words' | 'sounds' | 'images' | 'video' | 'links' | 'other' = 'facts';
+  let section: 'scenes' | 'words' | 'sounds' | 'images' | 'video' | 'links' | 'other' = 'scenes';
 
   for (const line of body.split('\n')) {
     const heading = line.match(/^##\s+(.*?)\s*$/);
@@ -232,7 +274,7 @@ function parseBody(body: string, filename: string): Body {
     if (!trimmed.startsWith('- ')) continue;
     const item = trimmed.slice(2).trim();
 
-    if (section === 'facts') facts.push(item);
+    if (section === 'scenes') scenes.push(parseScene(item, filename));
     else if (section === 'words') words.push(parseWord(item, filename));
     else if (section === 'sounds') sounds.push(parseSound(item, filename));
     else if (section === 'images') images.push(parseImage(item, filename));
@@ -240,7 +282,7 @@ function parseBody(body: string, filename: string): Body {
     else if (section === 'links') links.push(parseLink(item, filename));
   }
 
-  return { facts, words, sounds, images, videos, links };
+  return { scenes, words, sounds, images, videos, links };
 }
 
 function requireField(fields: Record<string, string>, name: string, filename: string): string {
@@ -273,14 +315,16 @@ async function loadPage(entryName: string): Promise<Page> {
   const emoji = requireField(fields, 'emoji', entryName);
   const blurb = requireField(fields, 'blurb', entryName);
 
-  // Optional: a page with no `kind` is an ordinary fact list.
+  // Optional: a page with no `kind` is an ordinary topic.
   const kind = (fields.kind ?? 'topic') as PageKind;
   if (!PAGE_KINDS.includes(kind)) {
     throw new Error(`${entryName}: kind "${kind}" must be one of ${PAGE_KINDS.join(', ')}`);
   }
 
-  const { facts, words, sounds, images, videos, links } = parseBody(body, entryName);
-  if (facts.length === 0) throw new Error(`${entryName}: no facts found — expected a Markdown bullet list ("- ...")`);
+  const { scenes, words, sounds, images, videos, links } = parseBody(body, entryName);
+  if (scenes.length === 0 && kind === 'topic') {
+    throw new Error(`${entryName}: no scenes found — expected a bullet list of "emoji | svenska ord"`);
+  }
 
   return {
     id,
@@ -290,7 +334,7 @@ async function loadPage(entryName: string): Promise<Page> {
     emoji,
     blurb,
     ...(fields.when ? { when: fields.when } : {}),
-    facts,
+    scenes,
     words,
     sounds,
     images,

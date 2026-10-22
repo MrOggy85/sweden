@@ -6,15 +6,16 @@ emoji: 🍂
 blurb: Yellow leaves and mushrooms.
 ---
 
-- Leaves turn yellow, orange and red.
-- Mushrooms pop up all over the forest.
-- Rain. Then more rain.
+- 🍂🍁🍂 | gul, orange, röd
+- 🍄🍄 | en svamp i skogen
+- 🌧️🌧️🌧️ | regn, regn, regn
+- 🌬️🍂 | vind
 
 ## Words
 
-- höst | autumn
-- löv | leaf
-- vind | wind
+- höst | autumn | 🍂
+- löv | leaf | 🍁
+- vind | wind | 🌬️
 
 ## Links
 

@@ -13,7 +13,7 @@ and why the data model looks the way it does. Read it before adding features.
 - `client/` — React 18 frontend, bundled by esbuild driven from Deno. Build output goes to
   `api/client/` (gitignored).
 - `content/` — one Markdown file per topic (YAML-ish frontmatter + a bullet list of
-  facts, optionally a `## Words` section). `scripts/generate-content.ts` compiles it into
+  scenes, optionally a `## Words` section). `scripts/generate-content.ts` compiles it into
   `PAGE_IDS`/`PAGES`; see "Adding a topic page" below.
 - `content/games/` — content for mini-games rather than topic pages: `connect-pairs.md`
   (word/icon pairs) and `phrases.md` (celebration phrases), compiled by
@@ -74,7 +74,8 @@ make deploy            # build, then deployctl to Deno Deploy
 
 1. Create `content/<id>.md`: frontmatter with `id`, `order` (an integer — controls grid
    position, leave gaps between topics so you can insert later), `title`, `emoji`, `blurb`,
-   then a Markdown bullet list of facts in the body. `id` must match the filename stem.
+   then a bullet list of scenes in the body (see "Scenes, not facts"). `id` must match the
+   filename stem.
    `when:` is optional and only the högtider carry it — see "The season wheel and the year
    timeline".
 2. Run `make generate-content` — or just `make dev` / `make build` / `make check`, which
@@ -85,17 +86,45 @@ No other wiring is needed: `PageGrid` renders whatever ends up in `PAGES`, and a
 `pageId` is rejected by `POST /api/visits` automatically since both come from the same
 `content/` source.
 
+## Scenes, not facts
+
+The users are children learning Swedish as a third language, after Japanese and English. A
+page does not *tell* them anything in English: there is no fact list, no visible caption,
+no English gloss. The blurb, image captions, video labels and a word's English are
+metadata — screen readers get them, children do not see them.
+
+What a page shows instead is scenes: the bullets *before* the first `##` heading, each
+`emoji | svenska ord`. The emoji is the picture and carries the meaning; the Swedish is
+what a child hears when they tap it, word by word, each word lighting up as it plays.
+
+```md
+- 🫎 | en stor älg
+- 🫐😮 | blå mun!
+- 👋🚪 | hej_då!
+```
+
+- Every word in a scene is a clip, checked and generated exactly like a `## Words` entry.
+  A scene is a sentence a child hears in Alva's voice, so keep it to words worth learning
+  and short enough to see in one glance — reuse the clips that exist before adding one.
+- `_` keeps a two-word clip together (`hej_då` plays `hej-da.m4a`). Trailing `!?.,` is
+  shown but not part of the clip name.
+- Three emoji fit a panel on one line; a fourth wraps.
+- If a fact cannot be drawn with three emoji and a few Swedish words, it is not for this
+  audience.
+
 ## Adding a spoken word
 
-A topic can end with a `## Words` section — bullets of `swedish | english`, plus an
-optional third field naming the group the button renders under. Facts are the bullets
-*before* the first `##` heading; bullets under any other heading are ignored.
+A topic can end with a `## Words` section — bullets of `swedish | english | emoji`, plus an
+optional fourth field naming the group the button renders under (the sentence page uses
+emoji there too). The emoji is what the card shows instead of the English. Bullets under
+any heading not named here are ignored.
 
 ```md
 ## Words
 
-- hej då | bye
-- katt | cat | things
+- hej då | bye | 🚪
+- katt | cat | 🐱 | 🧸
+- och | and | | 🔗
 ```
 
 1. Add the row, then run `make generate-audio` **on macOS** — `say` and `afconvert` do not
@@ -242,9 +271,9 @@ in `scripts/content.ts`) and gets no backlink, having no content file to render 
 
 `kind` in the frontmatter picks the renderer, defaulting to `topic`:
 
-- `topic` — blurb, facts, and any `## Words` as tap-to-hear buttons (`PageView.tsx`).
-- `sentence` — facts as instructions, then `SentenceBuilder`: tap words into a box, press
-  Speak, and the clips play in order. `content/sentence.md` is the only one today.
+- `topic` — scenes, and any `## Words` as tap-to-hear picture cards (`PageView.tsx`).
+- `sentence` — `SentenceBuilder`, with no scenes: tap words into a box, press 🔊, and the
+  clips play in order. `content/sentence.md` is the only one today.
 
 An unknown `kind` is a generate-content error. Adding one means a new value in `PAGE_KINDS`
 (`scripts/content.ts`), a branch in `PageView.tsx`, and the matching union in
@@ -292,7 +321,7 @@ amount of local testing on a Mac can settle for an iPad.
 ## Adding a game word pair
 
 The "connect the words" game (`client/src/ConnectGame/`) draws its content from
-`content/games/`, not from a topic page — a game pair isn't a topic (no facts, no
+`content/games/`, not from a topic page — a game pair isn't a topic (no scenes, no
 frontmatter) and games have no visits/score, so nothing here touches the server or KV.
 
 ```md

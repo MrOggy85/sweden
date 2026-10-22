@@ -2,7 +2,7 @@
 // macOS `say` + `afconvert`. Run by hand; the clips are committed assets. See CLAUDE.md,
 // "Adding a spoken word" — including installing the Swedish voice.
 
-import { audioFileUrl, loadPages, MEDIA_DIR, slug, type Word } from './content.ts';
+import { audioFileUrl, loadPages, MEDIA_DIR, pageClips, slug, type Word } from './content.ts';
 import { gamePairAudioUrl, loadAllGamePairs } from './gameContent.ts';
 import { requireMacos, run } from './macos.ts';
 import { stripFreeBoxes } from './mp4.ts';
@@ -78,19 +78,22 @@ const pages = await loadPages();
 const gameLists = await loadAllGamePairs();
 const overrides = await loadPronunciations();
 assertOverridesUsed(overrides, [
-  ...pages.flatMap((page) => page.words.map((word) => word.sv)),
+  ...pages.flatMap((page) => pageClips(page).map((word) => word.sv)),
   ...Object.values(gameLists).flat().map((pair) => pair.sv),
 ]);
 
 let written = 0;
 let skipped = 0;
+// Scenes repeat words like `en` dozens of times; with --force each would be re-recorded.
+const done = new Set<string>();
 
 function wanted(sv: string): boolean {
   return ONLY_SLUG === null || slug(sv) === ONLY_SLUG;
 }
 
 async function maybeGenerate(word: Pick<Word, 'sv'>, out: URL, source: string): Promise<void> {
-  if (!wanted(word.sv)) return;
+  if (!wanted(word.sv) || done.has(out.href)) return;
+  done.add(out.href);
   if (!FORCE && ONLY_SLUG === null && await exists(out)) {
     skipped++;
     return;
@@ -103,7 +106,7 @@ async function maybeGenerate(word: Pick<Word, 'sv'>, out: URL, source: string): 
 }
 
 for (const page of pages) {
-  for (const word of page.words) await maybeGenerate(word, audioFileUrl(word), page.id);
+  for (const word of pageClips(page)) await maybeGenerate(word, audioFileUrl(word), page.id);
 }
 
 for (const [file, pairs] of Object.entries(gameLists)) {

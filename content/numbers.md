@@ -6,22 +6,23 @@ emoji: 🔢
 blurb: One to ten, out loud.
 ---
 
-- Tap them in order and count along.
-- Sju is the hard one to say.
-- Swedish fingers start counting at the thumb.
+- 👍 | ett!
+- 1️⃣2️⃣3️⃣ | ett, två, tre!
+- 🖐️ | fem
+- 🖐️🖐️ | tio
 
 ## Words
 
-- ett | one
-- två | two
-- tre | three
-- fyra | four
-- fem | five
-- sex | six
-- sju | seven
-- åtta | eight
-- nio | nine
-- tio | ten
+- ett | one | 1️⃣
+- två | two | 2️⃣
+- tre | three | 3️⃣
+- fyra | four | 4️⃣
+- fem | five | 5️⃣
+- sex | six | 6️⃣
+- sju | seven | 7️⃣
+- åtta | eight | 8️⃣
+- nio | nine | 9️⃣
+- tio | ten | 🔟
 
 ## Links
 

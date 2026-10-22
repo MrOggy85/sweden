@@ -59,12 +59,26 @@ export const ANIMAL_LABELS: Record<AnimalId, string> = {
 };
 
 // `audio` is derived from `sv` and guaranteed to exist: generate-content fails without it.
-// `group` labels the row this renders under.
+// `en` is for screen readers only; `emoji` is what a child sees instead. `group` labels the
+// row this renders under.
 export type Word = {
   sv: string;
   en: string;
   audio: string;
+  emoji?: string;
   group?: string;
+};
+
+// `text` is shown, `audio` is played; they differ only by punctuation.
+export type SceneWord = {
+  text: string;
+  sv: string;
+  audio: string;
+};
+
+export type Scene = {
+  picture: string;
+  words: SceneWord[];
 };
 
 // Filename is authored, not derived — a meow has no spelling.
@@ -75,6 +89,7 @@ export type Sound = {
 };
 
 // Filename authored, like a sound effect: a photograph has no text to derive one from.
+// The caption is alt text only.
 export type Image = {
   caption: string;
   src: string;
@@ -98,7 +113,7 @@ export type Page = {
   blurb: string;
   // Only the högtider: where in the year they fall, for YearTimeline's captions.
   when?: string;
-  facts: string[];
+  scenes?: Scene[];
   words?: Word[];
   sounds?: Sound[];
   images?: Image[];

@@ -6,15 +6,16 @@ emoji: 🫐
 blurb: Free, in any forest.
 ---
 
-- You may pick in anyone's forest.
-- Blueberries turn your whole mouth blue.
-- Lingon goes with almost everything.
+- 🫐😮 | blå mun!
+- 🌲🫐🫐 | blåbär i skogen
+- 🔴🔴🔴 | lingon
+- 🌾🍓 | smultron
 
 ## Words
 
-- blåbär | blueberry
-- lingon | lingonberry
-- smultron | wild strawberry
+- blåbär | blueberry | 🫐
+- lingon | lingonberry | 🔴
+- smultron | wild strawberry | 🍓
 
 ## Links
 

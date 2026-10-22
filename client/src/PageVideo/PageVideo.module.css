@@ -56,10 +56,3 @@
   transform: translateY(2px);
   box-shadow: 0 2px 0 #1c1c1c44;
 }
-
-.label {
-  font-size: 1.05rem;
-  font-weight: 700;
-  text-align: center;
-  padding: 0 1rem;
-}

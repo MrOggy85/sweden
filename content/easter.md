@@ -7,15 +7,15 @@ when: mars eller april
 blurb: Eggs, sweets and small witches.
 ---
 
-- Eggs full of sweets, hidden and hunted.
-- Children dress as witches and get treats.
-- Yellow feathers on twigs in every window.
+- 🥚🍬 | ägg och godis
+- 🧙‍♀️🧹 | glad påsk!
+- 🌿🪶🪶 | gul, rosa, lila
 
 ## Words
 
-- påsk | Easter
-- ägg | egg
-- gul | yellow
+- påsk | Easter | 🐣
+- ägg | egg | 🥚
+- gul | yellow | 🟡
 
 ## Links
 

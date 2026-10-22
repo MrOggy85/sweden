@@ -1,20 +1,20 @@
 ---
 id: flag
 order: 10
-title: The Flag
+title: Flaggan
 emoji: 🇸🇪
 blurb: Blue with a yellow cross.
 ---
 
-- Blue like the lakes and the sky.
-- Yellow like fields of grain.
-- More lakes than you can count.
+- ☁️🌊 💙 | blå
+- 🌾🌻 💛 | gul
+- 🇸🇪 | blå och gul
 
 ## Words
 
-- flagga | flag
-- blå | blue
-- gul | yellow
+- flagga | flag | 🇸🇪
+- blå | blue | 🔵
+- gul | yellow | 🟡
 
 ## Images
 

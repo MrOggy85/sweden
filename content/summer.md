@@ -6,15 +6,16 @@ emoji: ☀️
 blurb: Light almost all night.
 ---
 
-- Nights so bright you can play late.
-- Everyone swims, even in cold lakes.
-- Ice cream more or less counts as lunch.
+- 🌃☀️🧒 | vi leker
+- 🏊💦 | bad!
+- 🍦🍦 | glass, glass!
+- 🍓 | en stor jordgubbe
 
 ## Words
 
-- sommar | summer
-- bad | swim
-- glass | ice cream
+- sommar | summer | ☀️
+- bad | swim | 🏊
+- glass | ice cream | 🍦
 
 ## Links
 

@@ -1,20 +1,21 @@
 ---
 id: language
 order: 70
-title: Swedish Words
+title: Hej!
 emoji: 💬
 blurb: A few to try out loud.
 ---
 
-- Hej sounds like "hey". It means hello.
-- Tack means thank you.
-- Three extra letters: å, ä and ö.
+- 👋 | hej!
+- 🎁🙏 | tack!
+- 🙋‍♀️ | jag heter Alva
+- 👋🚪 | hej_då!
 
 ## Words
 
-- hej | hello
-- tack | thank you
-- hej då | bye
+- hej | hello | 👋
+- tack | thank you | 🙏
+- hej då | bye | 🚪
 
 ## Links
 

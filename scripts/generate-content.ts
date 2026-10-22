@@ -9,6 +9,7 @@ import {
   loadPages,
   type Page,
   pageClipClaims,
+  pageClips,
   SFX_DIR,
   SFX_SOURCE_EXTENSIONS,
   soundFileUrl,
@@ -21,10 +22,14 @@ const CLIENT_OUT = new URL('../client/src/data/pages.generated.ts', import.meta.
 // runs first in `deno task build`, so it is a failed deploy instead.
 async function assertClipsExist(pages: Page[]): Promise<void> {
   const missing: string[] = [];
+  // Scenes repeat words; one missing clip is one line.
+  const checked = new Set<string>();
 
   for (const page of pages) {
-    for (const word of page.words) {
+    for (const word of pageClips(page)) {
       const url = audioFileUrl(word);
+      if (checked.has(url.href)) continue;
+      checked.add(url.href);
       try {
         await Deno.stat(url);
       } catch {
@@ -121,14 +126,14 @@ function renderApiModule(pages: Page[]): string {
 function renderClientModule(pages: Page[]): string {
   const literal = JSON.stringify(
     // Omitted when empty: a missing `kind` means topic, and the module stays readable.
-    pages.map(({ id, kind, title, emoji, blurb, when, facts, words, sounds, images, videos, links }) => ({
+    pages.map(({ id, kind, title, emoji, blurb, when, scenes, words, sounds, images, videos, links }) => ({
       id,
       ...(kind === 'topic' ? {} : { kind }),
       title,
       emoji,
       blurb,
       ...(when ? { when } : {}),
-      facts,
+      ...(scenes.length > 0 ? { scenes } : {}),
       ...(words.length > 0 ? { words } : {}),
       ...(sounds.length > 0 ? { sounds } : {}),
       ...(images.length > 0 ? { images } : {}),

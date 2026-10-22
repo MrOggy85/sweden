@@ -6,15 +6,15 @@ emoji: 🍽️
 blurb: What is on the plate.
 ---
 
-- Meatballs, with lingonberry jam beside them.
-- Thursday is pea soup and pancakes.
-- Sausage from a stand, in bread.
+- 🧆🔴 | köttbullar och lingon
+- 🫛🥣🥞 | ärtsoppa och pannkaka
+- 🌭 | en stor korv
 
 ## Words
 
-- köttbullar | meatballs
-- pannkaka | pancake
-- korv | sausage
+- köttbullar | meatballs | 🧆
+- pannkaka | pancake | 🥞
+- korv | sausage | 🌭
 
 ## Images
 
