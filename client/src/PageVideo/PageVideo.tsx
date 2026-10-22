@@ -52,7 +52,6 @@ export function PageVideo({ videos }: Props) {
                 aria-label={`Play video: ${video.label}`}
               >
                 <span className={styles.play} aria-hidden='true'>▶</span>
-                <span className={styles.label}>{video.label}</span>
               </button>
             )}
         </li>

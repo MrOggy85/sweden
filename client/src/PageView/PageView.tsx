@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
-import { EVENT_IDS, type Page, SEASON_IDS } from '../data/pages';
+import { useEffect, useRef, useState } from 'react';
+import { EVENT_IDS, type Page, type Scene, SEASON_IDS } from '../data/pages';
+import { clipUrl, GAP_MS, playToEnd, sleep } from '../core/clips';
 import { PageImages } from '../PageImages/PageImages';
 import { PageLinks } from '../PageLinks/PageLinks';
 import { PageVideo } from '../PageVideo/PageVideo';
@@ -17,20 +18,48 @@ type Props = {
 };
 
 export function PageView({ page, count, onBack }: Props) {
-  // One element for every word, so a second tap cuts the first off.
+  // One element for every clip, so a second tap cuts the first off — and on iOS only the
+  // element a tap unlocked may keep playing a scene's later words.
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Bumped whenever a scene must stop: any other tap, unmount.
+  const runRef = useRef(0);
   // Drives the speaker pulse.
   const [playing, setPlaying] = useState<string | null>(null);
+  // Which scene is talking, and which of its words is lit.
+  const [spoken, setSpoken] = useState<{ scene: number; word: number } | null>(null);
+
+  useEffect(() => () => {
+    runRef.current++;
+    audioRef.current?.pause();
+  }, []);
 
   function play(src: string) {
     const audio = audioRef.current ??= new Audio();
-    // ?v= puts the clip on the immutable cache branch in api/server.ts.
-    audio.src = `${src}?v=${BUILD_HASH}`;
+    runRef.current++;
+    setSpoken(null);
+    audio.src = clipUrl(src);
     audio.currentTime = 0;
     audio.onended = () => setPlaying(null);
     setPlaying(src);
     // A dropped clip is not worth interrupting a child over.
     void audio.play().catch(() => setPlaying(null));
+  }
+
+  async function playScene(scene: Scene, index: number) {
+    const audio = audioRef.current ??= new Audio();
+    const run = ++runRef.current;
+    audio.onended = null;
+    setPlaying(null);
+
+    for (const [word, { audio: src }] of scene.words.entries()) {
+      if (run !== runRef.current) return;
+      setSpoken({ scene: index, word });
+      audio.src = clipUrl(src);
+      await playToEnd(audio);
+      await sleep(GAP_MS);
+    }
+
+    if (run === runRef.current) setSpoken(null);
   }
 
   // A season or a högtid gets a diagram where the emoji would be: it shows the same
@@ -55,13 +84,41 @@ export function PageView({ page, count, onBack }: Props) {
       <h2 className={styles.title}>{page.title}</h2>
       <Stars count={count} />
 
-      {/* Above the facts: the thing to look at should come before the thing to read. */}
       <PageVideo videos={page.videos ?? []} />
       <PageImages images={page.images ?? []} />
 
-      <ul className={styles.facts}>
-        {page.facts.map((fact) => <li key={fact} className={styles.fact}>{fact}</li>)}
-      </ul>
+      {/* No English: the picture says what the Swedish means, and tapping says the Swedish. */}
+      {page.scenes && page.scenes.length > 0 && (
+        <ul className={styles.scenes}>
+          {page.scenes.map((scene, index) => (
+            <li key={index}>
+              <button
+                type='button'
+                className={styles.scene}
+                onClick={() => void playScene(scene, index)}
+                aria-label={`Play ${scene.words.map((w) => w.text).join(' ')}`}
+              >
+                <span
+                  className={`${styles.picture} ${spoken?.scene === index ? motion.pulse : ''}`}
+                  aria-hidden='true'
+                >
+                  {scene.picture}
+                </span>
+                <span className={styles.line}>
+                  {scene.words.map((word, w) => (
+                    <span
+                      key={w}
+                      className={spoken?.scene === index && spoken.word === w ? styles.lit : undefined}
+                    >
+                      {word.text}
+                    </span>
+                  ))}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {page.sounds && page.sounds.length > 0 && (
         <ul className={styles.sounds}>
@@ -95,9 +152,13 @@ export function PageView({ page, count, onBack }: Props) {
                   onClick={() => play(word.audio)}
                   aria-label={`Play ${word.sv}, ${word.en}`}
                 >
-                  <span className={playing === word.audio ? motion.pulse : undefined} aria-hidden='true'>🔊</span>
+                  <span
+                    className={`${styles.wordPicture} ${playing === word.audio ? motion.pulse : ''}`}
+                    aria-hidden='true'
+                  >
+                    {word.emoji ?? '🔊'}
+                  </span>
                   <span className={styles.sv}>{word.sv}</span>
-                  <span className={styles.en}>{word.en}</span>
                 </button>
               </li>
             ))}

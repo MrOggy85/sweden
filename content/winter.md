@@ -6,15 +6,16 @@ emoji: ❄️
 blurb: Dark, snowy, and full of candles.
 ---
 
-- Up north the sun hides for weeks.
-- The sky glows green and purple.
-- There is a hotel made of ice.
+- ⛄❄️ | kallt!
+- 🌑🕯️ | mörkt och ljus
+- 🌌💚💜 | norrsken
+- 🏨🧊 | ett hotell av is
 
 ## Words
 
-- snö | snow
-- kallt | cold
-- mörkt | dark
+- snö | snow | ❄️
+- kallt | cold | 🥶
+- mörkt | dark | 🌑
 
 ## Images
 

@@ -6,8 +6,7 @@ emoji: 🔊
 blurb: Press one. It makes a noise.
 ---
 
-- Every button here makes a noise.
-- Some are animals. Some are not.
+- 👂 | lyssna!
 
 ## Sounds
 

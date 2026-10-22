@@ -27,7 +27,7 @@ export function PageLinks({ ids }: Props) {
 
   return (
     <nav className={styles.links} aria-label='Related pages'>
-      <h3 className={styles.heading}>Go and see</h3>
+      <h3 className={styles.heading} aria-label='Go and see'>👀</h3>
       <ul className={styles.list}>
         {targets.map((target, index) => (
           <li key={target.path}>

@@ -7,15 +7,15 @@ when: 24 december
 blurb: Christmas, on the 24th.
 ---
 
-- Presents come on the 24th, not the 25th.
-- Tomten brings them. He is short.
-- The tree comes indoors and gets lights.
+- 🎄✨ | en stor julgran
+- 🎅🤏 | en liten tomte
+- 🎁 24/12 | god jul!
 
 ## Words
 
-- jul | Christmas
-- tomte | gnome
-- julgran | Christmas tree
+- jul | Christmas | 🎁
+- tomte | gnome | 🎅
+- julgran | Christmas tree | 🎄
 
 ## Sounds
 

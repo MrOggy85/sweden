@@ -6,15 +6,16 @@ emoji: 🍰
 blurb: A coffee break, but important.
 ---
 
-- Stop everything. Eat something sweet.
-- The best bun is the kanelbulle.
-- There is a whole day for cinnamon buns.
+- ☕🍰 | fika!
+- 🌀🌀🌀 | kanelbullar
+- 👩☕ | mamma gillar kaffe
+- 🧒🍪 | jag gillar kaka
 
 ## Words
 
-- bulle | bun
-- kaffe | coffee
-- kaka | cake
+- bulle | bun | 🌀
+- kaffe | coffee | ☕
+- kaka | cake | 🍪
 
 ## Images
 

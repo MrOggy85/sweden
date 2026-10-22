@@ -1,21 +1,21 @@
 ---
 id: midsummer
 order: 50
-title: Midsummer
+title: Midsommar
 emoji: 🌸
 when: juni
 blurb: The longest day of the year.
 ---
 
-- Dance around a pole covered in flowers.
-- Up north the sun never goes down.
-- One dance is about frogs. Everybody hops.
+- 💃🌸🕺 | vi dansar
+- 🐸🐸🐸 | små grodorna
+- 🌞🕛 | sol, inte mörkt
 
 ## Words
 
-- sommar | summer
-- blomma | flower
-- sol | sun
+- sommar | summer | ☀️
+- blomma | flower | 🌸
+- sol | sun | 🌞
 
 ## Links
 

@@ -6,12 +6,13 @@ emoji: 🌱
 blurb: When the snow gives up.
 ---
 
-- The snow melts and everything drips.
-- Birds come back and start singing.
-- First flowers push up through cold ground.
+- ☃️💧 | hej_då, snö!
+- 🐦🎵 | en glad fågel
+- 🌱🌷 | en liten blomma
+- 🌧️☂️ | regn
 
 ## Words
 
-- vår | spring
-- regn | rain
-- fågel | bird
+- vår | spring | 🌱
+- regn | rain | 🌧️
+- fågel | bird | 🐦

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Word } from '../data/pages';
+import { clipUrl, GAP_MS, playToEnd, sleep } from '../core/clips';
 import styles from './SentenceBuilder.module.css';
 
 type Props = {
@@ -8,29 +9,6 @@ type Props = {
 
 // Long enough for anything a child builds; more pushes Speak off screen.
 const MAX_WORDS = 12;
-
-// Back-to-back clips run together into one mumble.
-const GAP_MS = 120;
-
-// ?v= puts the clip on the immutable cache branch in api/server.ts.
-const clipUrl = (word: Word) => `${word.audio}?v=${BUILD_HASH}`;
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/** Resolves when the clip finishes, or immediately if it refuses to play. */
-function playToEnd(audio: HTMLAudioElement): Promise<void> {
-  return new Promise((resolve) => {
-    const done = () => {
-      audio.removeEventListener('ended', done);
-      audio.removeEventListener('error', done);
-      resolve();
-    };
-    audio.addEventListener('ended', done);
-    audio.addEventListener('error', done);
-    // One bad clip must not strand the rest of the sentence.
-    void audio.play().catch(done);
-  });
-}
 
 /** Words in file order, bucketed by group; groups in first-seen order. */
 function byGroup(words: Word[]): { label: string; words: Word[] }[] {
@@ -56,7 +34,7 @@ export function SentenceBuilder({ words }: Props) {
 
   // Warm the HTTP cache so swapping src mid-sentence never waits on the network.
   useEffect(() => {
-    for (const word of words) void fetch(clipUrl(word)).catch(() => {});
+    for (const word of words) void fetch(clipUrl(word.audio)).catch(() => {});
   }, [words]);
 
   // Backing out must stop the sentence, not play it over the grid.
@@ -69,7 +47,7 @@ export function SentenceBuilder({ words }: Props) {
     const audio = audioRef.current ??= new Audio();
     runRef.current++;
     setSpeaking(null);
-    audio.src = clipUrl(word);
+    audio.src = clipUrl(word.audio);
     void audio.play().catch(() => {});
   }
 
@@ -99,7 +77,7 @@ export function SentenceBuilder({ words }: Props) {
     for (const [index, word] of sentence.entries()) {
       if (run !== runRef.current) return;
       setSpeaking(index);
-      audio.src = clipUrl(word);
+      audio.src = clipUrl(word.audio);
       await playToEnd(audio);
       await sleep(GAP_MS);
     }
@@ -111,7 +89,7 @@ export function SentenceBuilder({ words }: Props) {
     <div className={styles.builder}>
       <div className={styles.box}>
         {sentence.length === 0
-          ? <p className={styles.empty}>Your sentence turns up here.</p>
+          ? <p className={styles.empty} aria-label='Tap words below'>👇</p>
           : sentence.map((word, index) => (
             <button
               key={`${word.sv}-${index}`}
@@ -120,7 +98,7 @@ export function SentenceBuilder({ words }: Props) {
               onClick={() => removeAt(index)}
               aria-label={`Remove ${word.sv}`}
             >
-              {word.sv}
+              {word.emoji && <span aria-hidden='true'>{word.emoji}</span>} {word.sv}
             </button>
           ))}
       </div>
@@ -131,16 +109,18 @@ export function SentenceBuilder({ words }: Props) {
           className={styles.speak}
           onClick={() => void speak()}
           disabled={sentence.length === 0}
+          aria-label='Speak'
         >
-          🔊 Speak
+          🔊
         </button>
         <button
           type='button'
           className={styles.clear}
           onClick={clear}
           disabled={sentence.length === 0}
+          aria-label='Clear'
         >
-          Clear
+          🧹
         </button>
       </div>
 
@@ -156,8 +136,8 @@ export function SentenceBuilder({ words }: Props) {
                   onClick={() => add(word)}
                   aria-label={`Add ${word.sv}, ${word.en}`}
                 >
+                  {word.emoji && <span className={styles.emoji} aria-hidden='true'>{word.emoji}</span>}
                   <span className={styles.sv}>{word.sv}</span>
-                  <span className={styles.en}>{word.en}</span>
                 </button>
               </li>
             ))}

@@ -44,23 +44,68 @@
   text-align: center;
 }
 
-.facts {
+.scenes {
   margin: 0.4rem 0 0;
   padding: 0;
   width: 100%;
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.7rem;
 }
 
-.fact {
-  padding: 0.8rem 0.95rem;
-  font-size: 1.15rem;
+/* A comic panel: the picture is the content, the line underneath is what you hear. */
+.scene {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.9rem 0.6rem 0.8rem;
+  font: inherit;
   background: #fff3d6;
   border: 1.5px solid #1c1c1c;
-  border-radius: 12px;
-  line-height: 1.5;
+  border-radius: 14px;
+  box-shadow: 0 4px 0 #1c1c1c22;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.scene:active {
+  transform: scale(0.97) translateY(2px);
+  box-shadow: 0 2px 0 #1c1c1c22;
+}
+
+/* Three glyphs fit a column on one line; a fourth would wrap mid-picture. */
+.picture {
+  display: block;
+  font-size: 2.4rem;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.1em;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1c1c1c;
+}
+
+.line > span {
+  padding: 0 0.15em;
+  border-radius: 6px;
+  transition: background 100ms ease;
+}
+
+.lit {
+  background: #fecc00;
 }
 
 .sounds {
@@ -103,15 +148,16 @@
   gap: 0.6rem;
 }
 
-/* No heading: the speaker glyph says it. */
+/* A picture card: the emoji is the meaning, the word is what you hear. */
 .word {
   display: flex;
-  align-items: baseline;
-  gap: 0.45rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 88px;
   min-height: 52px;
-  padding: 0.7rem 1rem;
+  padding: 0.6rem 0.9rem;
   font: inherit;
-  text-align: left;
   background: #fecc00;
   border: 1.5px solid #1c1c1c;
   border-radius: 12px;
@@ -130,7 +176,8 @@
   font-weight: 700;
 }
 
-.en {
-  font-size: 0.9rem;
-  color: #4a4a4a;
+.wordPicture {
+  display: block;
+  font-size: 2rem;
+  line-height: 1.1;
 }
