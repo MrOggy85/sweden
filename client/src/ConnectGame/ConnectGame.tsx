@@ -209,7 +209,7 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
       <button type='button' className={styles.back} onClick={onBack}>&larr; All topics</button>
 
       <h2 className={styles.title}>
-        <span aria-hidden='true'>🔗</span> Connect the words
+        <span aria-hidden='true'>🔗</span> Para ihop orden
       </h2>
       <p className={styles.blurb}>Drag a word to its picture, or a picture to its word.</p>
 

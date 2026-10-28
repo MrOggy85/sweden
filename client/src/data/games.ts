@@ -8,7 +8,7 @@ export type Game = {
 };
 
 export const GAMES: Game[] = [
-  { path: '/connect', id: 'connect', emoji: '🔗', title: 'Connect the words' },
+  { path: '/connect', id: 'connect', emoji: '🔗', title: 'Para ihop orden' },
   { path: '/cooking', id: 'cooking', emoji: '🍲', title: 'Laga mat' },
   { path: '/count', id: 'count', emoji: '🦕', title: 'Räkna dinosaurier' },
   { path: '/shop', id: 'shop', emoji: '👑', title: 'Kronbutiken' },
