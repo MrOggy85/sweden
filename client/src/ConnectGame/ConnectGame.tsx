@@ -211,7 +211,6 @@ export function ConnectGame({ onBack }: { onBack: () => void }) {
       <h2 className={styles.title}>
         <span aria-hidden='true'>🔗</span> Para ihop orden
       </h2>
-      <p className={styles.blurb}>Drag a word to its picture, or a picture to its word.</p>
 
       <div
         ref={panelRef}

@@ -33,12 +33,6 @@
   color: #005293;
 }
 
-.blurb {
-  margin: 0;
-  font-size: 1.05rem;
-  color: #4a4a4a;
-}
-
 .panel {
   position: relative;
   display: flex;
