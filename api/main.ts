@@ -1,7 +1,13 @@
 import { init } from './server.ts';
 import logger from './logger.ts';
+import { configure } from './config.ts';
+import { useStore } from './db/store.ts';
+import { kvStore } from './db/kvstore.ts';
+import kv from './db/kv.ts';
 
 const DEV = Deno.env.get('DEV') === '1';
+configure({ dev: DEV });
+useStore(kvStore(kv));
 const HOST = Deno.env.get('HOST') || '0.0.0.0';
 const PORT = Deno.env.get('PORT') || '8777';
 

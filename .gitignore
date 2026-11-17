@@ -9,3 +9,7 @@ client/src/data/gameContent.generated.ts
 *.log
 .claude/settings.local.json
 .dev/
+cloudflare/.env
+cloudflare/wrangler.jsonc
+cloudflare/node_modules
+cloudflare/.wrangler/

@@ -6,12 +6,11 @@
 
 import { createDevice, getDevice, getUser, ID_RE } from './db/users.ts';
 import type { Device, User } from './db/types.ts';
+import { config } from './config.ts';
 
 const COOKIE_NAME = 'sw_did';
 /** 400 days — Chrome clamps anything longer, so ask for exactly the ceiling. */
 const COOKIE_MAX_AGE = 34_560_000;
-
-const DEV = Deno.env.get('DEV') === '1';
 
 export type Identity = {
   device: Device;
@@ -34,14 +33,14 @@ function serializeCookie(value: string): string {
   const attrs = [`${COOKIE_NAME}=${value}`, 'Path=/', 'HttpOnly', 'SameSite=Lax', `Max-Age=${COOKIE_MAX_AGE}`];
   // Secure is omitted in dev on purpose: testing on a real iPad means
   // http://<lan-ip>:8777, and a Secure cookie is silently dropped there — only
-  // localhost is exempt. On Deploy it is always set.
-  if (!DEV) attrs.push('Secure');
+  // localhost is exempt. Deployed, it is always set.
+  if (!config().dev) attrs.push('Secure');
   return attrs.join('; ');
 }
 
 /**
- * Resolved from cookie + KV on every request. Nothing is cached in module scope, because
- * Deploy isolates are ephemeral and there are many of them.
+ * Resolved from cookie + storage on every request. Nothing is cached in module scope,
+ * because isolates (Deno Deploy, Workers) are ephemeral and there are many of them.
  */
 export async function resolveIdentity(req: Request): Promise<Identity> {
   const raw = readCookie(req, COOKIE_NAME);

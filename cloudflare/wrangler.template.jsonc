@@ -1,0 +1,48 @@
+// Template for wrangler.jsonc, which ./wr renders from this file and .env (see
+// .env.example), so the account, database id and hostname stay out of the repo.
+// Edit this file, never the output. __NAME__ placeholders are replaced verbatim.
+{
+  "$schema": "/opt/cloudflare/node_modules/wrangler/config-schema.json",
+  "name": "sweden",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "account_id": "__CF_ACCOUNT_ID__",
+
+  // The way in: a Route on the zone, not a Custom Domain. A Custom Domain gets its own
+  // certificate, which publishes the hostname in Certificate Transparency; a Route on a
+  // proxied record (AAAA 100::, made by hand) is served under the zone's wildcard.
+  // workers.dev stays on until that record exists, so the build can be looked at first.
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [{ "pattern": "__HOSTNAME__/*", "zone_name": "__ZONE__" }],
+
+  // The client bundle (deno task build -> api/client). Only /api/* runs the Worker;
+  // every other path is a file, or index.html for a page path (the client's router).
+  "assets": {
+    "directory": "../api/client",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+    "not_found_handling": "single-page-application"
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "__D1_NAME__",
+      "database_id": "__D1_ID__",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // Every cookieless /api request mints a device row, so a ceiling per address keeps a
+  // scanner from filling D1. Approximate, per Cloudflare location.
+  "ratelimits": [
+    { "name": "REQUESTS", "namespace_id": "1001", "simple": { "limit": 300, "period": 60 } }
+  ],
+
+  // Housekeeping: expired empty devices and visits past 180 days (src/d1store.ts, prune).
+  // 18:23 UTC is 03:23 JST.
+  "triggers": { "crons": ["23 18 * * *"] },
+
+  "observability": { "enabled": true }
+}
