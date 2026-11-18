@@ -11,8 +11,9 @@
   // The way in: a Route on the zone, not a Custom Domain. A Custom Domain gets its own
   // certificate, which publishes the hostname in Certificate Transparency; a Route on a
   // proxied record (AAAA 100::, made by hand) is served under the zone's wildcard.
-  // workers.dev stays on until that record exists, so the build can be looked at first.
-  "workers_dev": true,
+  // workers.dev is off since the cut-over (2026-11-18): one address only. Turn it on
+  // for a first look when the Worker is rebuilt from scratch.
+  "workers_dev": false,
   "preview_urls": false,
   "routes": [{ "pattern": "__HOSTNAME__/*", "zone_name": "__ZONE__" }],
 
