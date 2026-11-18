@@ -34,12 +34,11 @@ Local run: `./wr d1 migrations apply DB --local`, then `./wr dev`. Housekeeping 
 
 ## First deployment
 
-1. **Dashboard, once** (the deploy token is Editor, which cannot create):
-   - Workers & Pages → Create → a Hello World Worker named **`sweden`**. The first
-     `./deploy.sh` replaces it.
-   - Storage & Databases → D1 → Create **`sweden`**, location Asia-Pacific. Its id goes
-     in `.env` as `D1_ID`. If the token's D1 permission is scoped to single databases,
-     add this one to it.
+1. **The Worker and the database** (done 2026-11-18). With **Workers: Admin** on the
+   token, the first `./deploy.sh` creates the Worker itself; Editor cannot. The
+   database: `./wr d1 create sweden --location apac`, which the old-style **D1: Edit**
+   checkbox allows (there is no D1 Admin role in the token editor). Its id goes in
+   `.env` as `D1_ID`. Without those, make both in the dashboard instead.
 2. `cp .env.example .env`, fill it in.
 3. `./deploy.sh`, then look at it on the workers.dev address.
 4. Cut-over, later: DNS → `AAAA sweden 100::`, **Proxied**. Not a Custom Domain: that
