@@ -21,7 +21,8 @@ make convert-sfx       # sound effect download -> .m4a, source deleted (macOS on
 make dev               # :8777, also runs the esbuild watcher
 make check             # deno check + tsc --noEmit — the only automated gate
 make fmt               # deno fmt, lineWidth 120, single quotes, semicolons
-make build / deploy    # production bundle / deployctl to Deno Deploy
+make build / deploy    # production bundle / deployctl to Deno Deploy (being retired)
+cloudflare/deploy.sh   # the Cloudflare Worker + D1: cloudflare/README.md
 ```
 
 macOS-only scripts take flags through `ARGS`: `make generate-audio ARGS=--force`,
@@ -36,8 +37,11 @@ macOS-only scripts take flags through `ARGS`: `make generate-audio ARGS=--force`
   `App.tsx`. Refresh works because the server answers every extensionless path with
   `index.html`, so never give a route an extension-like segment. Non-page routes go in
   `RESERVED_IDS` (`scripts/content.ts`).
-- **KV only through `api/db/`**; key layout only in `api/db/keys.ts` (read its comments —
-  the ordering is load-bearing).
+- **Storage only through `api/db/`.** Routes call `users.ts` / `visits.ts`, which delegate
+  to the `Store` in `store.ts`: Deno KV (`kvstore.ts`, key layout only in `keys.ts` — read
+  its comments, the ordering is load-bearing) or D1 (`cloudflare/src/d1store.ts`). A
+  change to storage is made in **both**. `api/app.ts` is the shared `/api` handler and
+  must stay free of `Deno.*`: the Worker bundles it.
 - **CSS Modules, co-located** (`X/X.tsx` + `X.module.css`). Globals via `:global(...)` in
   `App.module.css`. No Tailwind, no CSS-in-JS, no state library.
 - **Touch targets ≥ 44px.** Target devices are an iPad and an iPhone.
